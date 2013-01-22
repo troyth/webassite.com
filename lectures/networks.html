@@ -33,6 +33,18 @@
 </head>
 <body class="deck-container">
 	<div class="timeline-line"></div>
+	<form id="lecture-selector" action="../">
+		<select onchange="window.open(this.options[this.selectedIndex].value,'_top')">
+		    <option value="">Select Lecture</option>
+		    <option value="http://www.webassite.com/lectures/networks.html">Networks 1962-1989</option>
+		    <option value="http://www.webassite.com/lectures/internetworks.html">Internetworks 1974-1986</option>
+		    <option value="http://www.webassite.com/lectures/worldwideweb.html">WorldWideWeb 1989</option>
+		</select>
+	</form>
+
+
+
+
 
 <!-- Begin slides. Just make elements with a class of slide. -->
 
@@ -44,7 +56,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="span12">
-				<blockquote>"In 1962, a nuclear confrontation seemed imminent. The United States (US) and the Union of Soviet Socialist Republics (USSR) were embroiled in the Cuban missile crisis.... Each country pondered post-nuclear attack scenarios. US authorities considered ways to communicate in the aftermath of a nuclear attack. <span class="hilight">How could any sort of 'command and control network' survive?</span>"</blockquote>
+				<blockquote class="fit">"In 1962, a nuclear confrontation seemed imminent. The United States (US) and the Union of Soviet Socialist Republics (USSR) were embroiled in the Cuban missile crisis.... Each country pondered post-nuclear attack scenarios. US authorities considered ways to communicate in the aftermath of a nuclear attack. <span class="hilight">How could any sort of 'command and control network' survive?</span>"</blockquote>
 			</div>
 		</div><!-- /.row -->
 	</div>
@@ -65,13 +77,13 @@
 		<div class="row">
 			<div class="span6">
 				<figure class="fit">
-					<img src="/img/baran_net.jpg">
+					<img src="/lectures/img/baran_net.jpg">
 					<figcaption>Network Types</figcaption>
 				</figure>
 			</div>
 			<div class="span6">
 				<figure class="fit">
-					<img src="/img/baran.jpg">
+					<img src="/lectures/img/baran.jpg">
 					<figcaption>Paul Baran</figcaption>
 				</figure>
 			</div>
@@ -79,7 +91,7 @@
 	</div>
 	<footer>
 		<div class="row">
-			<div class="span8 offset2">
+			<div class="span6 offset3">
 				<p>Paul Baran, a researcher at RAND, offered a solution in the form of a distributed network using "redundancy" and "digital" technology.</p>
 			</div>
 		</div>
@@ -94,17 +106,17 @@
 		<div class="row">
 			<div class="span6">
 				<figure>
-					<img src="/img/circuit-switched.gif">
+					<img src="/lectures/img/circuit-switched.gif">
 					<figcaption>Circuit-switched</figcaption>
 				</figure>
 				<figure>
-					<img src="/img/packet-switched.gif">
+					<img src="/lectures/img/packet-switched.gif">
 					<figcaption>Packet-switched</figcaption>
 				</figure>
 			</div>
 			<div class="span6">
 				<figure class="fit">
-					<img src="/img/Kleinrock_1964_communicationNets.jpg">
+					<img src="/lectures/img/Kleinrock_1964_communicationNets.jpg">
 					<figcaption>Leonard Kleinrock, <cite class="title">Communication Nets</cite>, 1964</figcaption>
 				</figure>
 			</div>
@@ -127,13 +139,13 @@
 		<div class="row">
 			<div class="span6">
 				<figure class="fit">
-					<img src="/img/1963_memo_licklider.png">
+					<img src="/lectures/img/1963_memo_licklider.png">
 					<figcaption>Memorandum</figcaption>
 				</figure>
 			</div>
 			<div class="span6">
 				<figure class="fit">
-					<img src="/img/jcrLicklider.jpg">
+					<img src="/lectures/img/jcrLicklider.jpg">
 					<figcaption>J.C.R. Licklider</figcaption>
 				</figure>
 			</div>
@@ -157,14 +169,14 @@
 		<div class="row">
 			<div class="span6">
 				<figure class="fit">
-					<img src="/img/1967-Roberts-ARPANETplanFig2.gif">
+					<img src="/lectures/img/1967-Roberts-ARPANETplanFig2.gif">
 					<figcaption>Illustration showing IMPs as common interface to the network</figcaption>
 				</figure>
 			</div>
 			<div class="span6">
 				<figure class="fit">
-					<div id="caine-click"><img src="/img/caine-arpanet1967.jpg"></div>
-					<figcaption>Honeywell computer in "Billion Dollar Brain", 1967</figcaption>
+					<div><img src="/lectures/img/Kleinrock-IMP1.png"></div>
+					<figcaption>Leonard Kleinrock with the first IMP</figcaption>
 				</figure>
 			</div>
 		</div><!-- /.row -->
@@ -182,11 +194,46 @@
 
 <section class="slide">
 	<header>
+		<div class="row timeline-date">1967</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span6">
+				<figure class="fit">
+					<div><img src="/lectures/img/caine-arpanet1967.jpg"></div>
+					<figcaption>Michael Caine seated at a Honeywell H200</figcaption>
+				</figure>
+			</div>
+			<div class="span6">
+				<figure class="fit">
+					<iframe width="600" height="450" src="http://www.youtube.com/embed/i8Rv7clC_A4" frameborder="0" allowfullscreen></iframe>
+					<figcaption>Scene from "Billion Dollar Brain"</figcaption>
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<div class="row">
+			<div class="span8 offset2">
+				<p>Honeywell H200 Computer<br>
+					The same computer that would be linked to form the first computer network was used as a set for "Billion Dollar Brain", starring Michael Caine</p>
+			</div>
+		</div>
+	</footer>
+</section>
+
+
+<section class="slide">
+	<header>
 		<div class="row timeline-date">1969</div>
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span12"><img class="fit" src="/img/ARPANET_timeline1969.png"></div>
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/ARPANET_timeline1969.png">
+				</figure>
+			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
@@ -205,7 +252,11 @@
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span12"><img class="fit" src="/img/ARPANET_timeline1970.png"></div>
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/ARPANET_timeline1970.png">
+				</figure>
+			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
@@ -224,7 +275,11 @@
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span12"><img class="fit" src="/img/ARPANET_timeline1972.png"></div>
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/ARPANET_timeline1972.png">
+				</figure>
+			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
@@ -239,74 +294,15 @@
 
 <section class="slide">
 	<header>
-		<div class="row timeline-date">Early 1970s</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span12"><img class="fit" src="/img/ARPANET_islands.png"></div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<div class="row">
-			<div class="span8 offset2">
-				<p>Network Islands<br>
-				Though ARPANET was the largest, other networks were migrating to packet-switching with their own protocols.</p>
-			</div>
-		</div>
-	</footer>
-</section>
-
-
-<section class="slide">
-	<header>
-		<div class="row timeline-date">Early 1970s</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span12"><img class="fit" src="/img/ARPANET_islands2.png"></div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<div class="row">
-			<div class="span8 offset2">
-				<p>Network Islands<br>
-				Each using proprietary communication protocols, the various computer networks were islands: computers on each could only communicate within their networks.</p>
-			</div>
-		</div>
-	</footer>
-</section>
-
-
-<section class="slide">
-	<header>
-		<div class="row timeline-date">1974</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span6"><img class="fit" src="/img/ARPANET_archipelago.png"></div>
-			<div class="span6"><img class="fit" src="/img/Vint-Cerf-and-Bob-Kahn.jpg"></div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<div class="row">
-			<div class="span10 offset1">
-				<p>Network Archipelago<br>
-				Vint Cerf and Bob Kahn introduced Transfer Control Protocol (TCP), a communication protocol that replaced ARPANET's NCP, which was more of a device driver. Later separated into TCP/IP (Internet Protocol), version 4 became the basic communication language of the Internet.</p>
-			</div>
-		</div>
-	</footer>
-</section>
-
-
-
-
-<section class="slide">
-	<header>
 		<div class="row timeline-date">1977</div>
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span12"><img class="fit" src="/img/ARPANET_timeline1977.png"></div>
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/ARPANET_timeline1977.png">
+				</figure>
+			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
@@ -314,7 +310,51 @@
 	</footer>
 </section>
 
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1971</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<blockquote>user@machine</blockquote>
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<div class="row">
+			<div class="span8 offset2">
+				<p>First Killer App: Email<br>
+				Ray Tomlinson sets up email system on ARPANET, inventing use of the @ symbol to identify remote user machine to send first email (“something like QWERTYUIOP") which was never stored</p>
+			</div>
+		</div>
+	</footer>
+</section>
 
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1978</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1975_IPSS_RoyalHolloway2050RJEworkstation.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<div class="row">
+			<div class="span8 offset2">
+				<p>International Packet Switched Service (IPSS)<br>
+					The first international computer network using packet switching developed by the British General Post Office, Western Union International and the United States' Tymnet using the X.25 publicly available protocol</p>
+			</div>
+		</div>
+	</footer>
+</section>
 
 <section class="slide">
 	<header>
@@ -367,61 +407,15 @@
 	</footer>
 </section>
 
-
 <section class="slide">
 	<header>
-		<div class="row timeline-date">1983</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span12"><img class="fit" src="/img/DNS_Carbaugh_3_protocol.jpg"></div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<p>Domain Name Service (DNS)<br>
-			Paul Mockapetris introduces the DNS, which converts Uniform Resource Locators (URLs) into IP addresses.</p>
-	</footer>
-</section>
-
-
-<section class="slide">
-	<header>
-		<div class="row timeline-date">1981-1991</div>
+		<div class="row timeline-date">1980</div>
 	</header>
 	<div class="container">
 		<div class="row">
 			<div class="span6 offset3">
 				<figure class="fit">
-					<pre>
-                        Number of Internet Hosts (logarithmic)
-
-
-    | 1000000
-    |                                                                *.*
-    |                                                        ..*.*..*
-    |                                                     ...
-    | 100000                                          ..**
-    |                                              *.*
-  H |                                          ...*
-  o |                                        .*
-  s | 10000                                ..
-  t |                                    ..
-  s |                               ....*
-    |                         ...*.*
-1000|                   ...*..
-    |                ...
-    |            ...*
-    | ..*....*...
- 100|.
-     -------------------------------------------------------------------
-     8     8     8     8     8     8     8     8     8     9     9     9
-     1     2     3     4     5     6     7     8     9     0     1     2
-                                    Date
-
-     "*"  = data point,  "." = estimate
-
-This graph is a logarithmic plot of the number of Internet hosts.
-					</pre>	
+					<img src="/lectures/img/1981usenet.gif">
 				</figure>	
 			</div>
 		</div><!-- /.row -->
@@ -429,182 +423,36 @@ This graph is a logarithmic plot of the number of Internet hosts.
 	<footer>
 		<div class="row">
 			<div class="span8 offset2">
-				<p>Through the use of TCP/IP as the standard connection protocol - ARPANET adopts it in 1983 - DNS, and the launch of NSFNET in the mid-1980s, the first Internet "backbone", network hosts grow exponentially throughout the 1980s<br>
-					Source: <cite class="source"><a href="http://tools.ietf.org/html/rfc1296" target="_blank">IETF RFC1296</a></p>
+				<p>Duke grad students introduce USENET, the first widespread Bulletin Board Service (BBS) that connects one-to-many<br>
+					Source: <cite class="source"><a href="https://groups.google.com/forum/?fromgroups=#!msg/net.general/u1dxxNcTIX0/mHMWbCVJZswJ" target="_blank">Google Groups USENET Archive</a></p>
 			</div>
 		</div>
 	</footer>
 </section>
 
-
-
 <section class="slide">
 	<header>
-		<div class="row timeline-date">1989</div>
+		<div class="row timeline-date">1986</div>
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span6">
-				<blockquote>Many of the discussions of the future at CERN and the LHC era end with the question - <span class="hilight">"Yes, but how will we ever keep track of such a large project?"</span></blockquote>
-			</div>
-			<div class="span6"><img class="fit" src="/img/CERN_LHCaerialwest.jpg"></div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<p>Source: <cite class="source"><a href="" target="_blank">Information Management, A Proposal</a></cite></p>
-		<p><cite class="author">Tim Berners-Lee</cite>, March 1989 / May 1990, CERN</p>
-	</footer>
-</section>
-
-<section class="slide">
-	<header></header>
-	<div class="container">
-		<div class="row">
-			<div class="span10 offset1">
-				<h5>Losing Information at CERN</h5>
-				<p>CERN is a wonderful organisation. It involves several thousand people, many of them very creative, all working toward common goals. Although they are nominally organised into a hierarchical management structure,this does not constrain the way people will communicate, and share information, equipment and software across groups.</p>
-				<p><span class="hilight">The actual observed working structure of the organisation is a multiply connected "web" whose interconnections evolve with time.</span> In this environment, a new person arriving, or someone taking on a new task, is normally given a few hints as to who would be useful people to talk to. Information about what facilities exist and how to find out about them travels in the corridor gossip and occasional newsletters, and the details about what is required to be done spread in a similar way. All things considered, the result is remarkably successful, despite occasional misunderstandings and duplicated effort.</p>
-				<p><span class="hilight">A problem, however, is the high turnover of people. When two years is a typical length of stay, information is constantly being lost.</span><p>
-				<h5>Linked Information Systems</h5>
-				<p>In providing a system for manipulating this sort of information, <span class="hilight">the hope would be to allow a pool of information to develop which could grow and evolve with the organisation and the projects it describes</span>. For this to be possible, the method of storage must not place its own restraints on the information. This is why a "web" of notes with links (like references) between them is far more useful than a fixed hierarchical system. When describing a complex system, many people resort to diagrams with circles and arrows. Circles and arrows leave one free to describe the interrelationships between things in a way that tables, for example, do not. <span class="hilight">The system we need is like a diagram of circles and arrows, where circles and arrows can stand for anything.</span></p>
-				<h5>The problem with Trees</h5>
-				<p>A tree has the practical advantage of giving every node a unique name. However, it does not allow the system to <span class="hilight">model the real world.</span></p>
-				<h5>The problem with Keywords</h5>
-				<p>...Keywords are a common method of accessing data for which one does not have the exact coordinates. The usual problem with keywords, however, is that <span class="hilight">two people never chose the same keywords</span>. The keywords then become useful only to people who already know the application well.</p>
-			</div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<p><cite class="source"><a href="" target="_blank">Information Management, A Proposal</a></cite></p>
-		<p><cite class="author">Tim Berners-Lee</cite>, March 1989 / May 1990, CERN</p>
-	</footer>
-</section>
-
-
-<section class="slide">
-	<header>
-		<div class="row timeline-date">1990</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span6">
-				<figure>
-					<pre class="brush: bash">
-						HTTP/1.1 200 OK
-						Date: Mon, 21 Jan 2013 05:38:39 GMT
-						Server: Apache/2.2.14 (Ubuntu)
-						Last-Modified: Mon, 21 Jan 2013 05:20:01 GMT
-						ETag: "a2dbe-55de-4d3c59ce34240"
-						Accept-Ranges: bytes
-						Content-Length: 21982
-						Vary: Accept-Encoding
-						Content-Type: text/html</pre>
-					<figcaption>HTTP Header</figcaption>
-				</figure>
-			</div>
-			<div class="span6">
-				<figure>
-					<pre class="brush: bash">
-						<!DOCTYPE html>
-						<html>
-						<head>
-						        <meta charset="utf-8">
-						        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-						        <meta name="viewport" content="width=1024, user-scalable=no">
-
-						        <title>Your deck.js Presentation</title>
-
-						        <!-- Required stylesheet -->
-						        <link rel="stylesheet" href="core/deck.core.css">
-
-						        <!-- Extension CSS files go here. Remove or add as needed. -->
-						        <link rel="stylesheet" href="extensions/goto/deck.goto.css">
-						        <link rel="stylesheet" href="extensions/menu/deck.menu.css">
-						        <link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
-						        <link rel="stylesheet" href="extensions/status/deck.status.css">
-						        <link rel="stylesheet" href="extensions/hash/deck.hash.css">
-						        <link rel="stylesheet" href="extensions/scale/deck.scale.css">
-
-						        <!-- Style theme. More available in /themes/style/ or create your own. -->
-						        <link rel="stylesheet" href="themes/style/WaS.css">
-
-						        <!-- Transition theme. More available in /themes/transition/ or create your own. -->
-						        <link rel="stylesheet" href="themes/transition/horizontal-slide.css">
-
-						        <!-- Required Modernizr file -->
-						        <script src="modernizr.custom.js"></script>
-						</head>
-						<body class="deck-container">
-					        <div class="timeline-line"></div>
-							<!-- Begin slides. Just make elements with a class of slide. -->
-							<section class="slide">
-							        <header>
-							                <div class="row timeline-date">1962</div>
-							        </header>
-							        <div class="container">
-							                <div class="row">
-					...</pre>
-					<figcaption>HTML Payload</figcaption>
-				</figure>
+			<div class="span6 offset3">
+				<figure class="fit">
+					<img src="/lectures/img/1986_usenet_map_large.gif">
+				</figure>	
 			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
 		<div class="row">
 			<div class="span8 offset2">
-				<p>HTTP Header and HTML Payload</p>
+				<p>USENET Network<br>
+					USENET spreads globally as one of the first Bulletin Board Services (BBS), the core application of the fledgling internet next to email</p>
 			</div>
 		</div>
 	</footer>
 </section>
 
-
-
-
-
-<section class="slide">
-	<header></header>
-	<div class="container">
-		<div class="row">
-			<iframe height="100%" width="100%" src="http://www.google.com/googlegroups/archive_announce_20.html"></iframe>
-		</div>
-	</div>
-	<footer>
-		<p><cite class="title">Top 40 Newsgroups in Order by Number of Readers, July 1995</cite></p>
-		<p>Source: <cite class="source"><a href="http://web.archive.org/web/20080404212007/http://www.tlsoft.com/arbitron/jul95/Top40Groups.html" target="_blank">Web Archive</a></cite></p>
-	</footer>
-</section>
-
-
-<section class="slide">
-	<header></header>
-	<div class="container">
-		<div class="row">
-			<figure class="fit">
-				<img src="/img/wordpressPageviews.png">
-				<figcaption>Pageviews on Wordpress.com sites</figcaption>
-			</figure>
-		</div>
-	</div>
-	<footer>
-		<p>Growth of Wordpress</p>
-		<p>Source: <cite class="source"><a href="http://en.wordpress.com/stats/posting/" target="_blank">Wordpress</a></cite></p>
-	</footer>
-</section>
-
-
-<section class="slide">
-	<header></header>
-	<div class="container">
-		<div class="row">
-			<iframe height="100%" width="100%" src="http://en.wordpress.com/stats/posting/"></iframe>
-		</div>
-	</div>
-	<footer>
-		<p><cite class="title">Wordpress Statistics</cite></p>
-		<p>Source: <cite class="source"><a href="http://en.wordpress.com/stats/posting/" target="_blank">Wordpress</a></cite></p>
-	</footer>
-</section>
 
 <section class="slide">
 	<header></header>
@@ -671,18 +519,8 @@ This graph is a logarithmic plot of the number of Internet hosts.
 	</footer>
 </section>
 
-<section class="slide">
-	<h2>Gopher - Predecessor to the WorldWideWeb</h2>
-	<h3>A description of the User Experience (UX) - A non-intuitive interface for the ordained</h3>
-	<div class="container">
-		<p>On a screen with <b>25 lines of 80 green characters each</b> (<b>no graphics</b> then, long since remedied) you got a <b>series of hierarchical menus</b>. The top level menu might be all the departments and publications (e.g., the campus newspaper) of your university, which had invested in running a Gopher server as a way of delivering documents electronically, at least to the local community.</p>
-		<p>There were <b>no search engines</b> as we know them today. Available information was presented in a series of nested menus, intended to resemble a <b>hierarchical file system of folders</b>, something familiar to computer users who saw any search for information as trying to find that particular file (document) which held a particular answer.</p>
-		<p>If you wanted recent news for the women's volleyball team, you would go to the "Daily Crimson Newspaper" menu item and choose the <b>"Word Search of Latest Month"</b> item. When asked to enter a search string, you would enter the word "volleyball." All articles in the local Daily Crimson newspaper from the last month that contained the word "volleyball" would be listed as a separate menu. You could select which one to get first. In part for lack of bandwidth, the system's presentation was intended to appear as listings of files, without their content. There were no paragraphs from inside the "hits", each with the word "volleyball" in boldface type.</p>
-		<p>And if you don't know what the newspaper is called or even if it is available? Searching a top level menu called <b>"Keyword Search of [all] Gopher Menus"</b> with a keyword "daily" would get you into the Daily Crimson publication you wanted for your "volleyball" search.</p>
-		<p><b>What enabled Gopher to give so many who worked with it a foretaste of the World Wide Web yet to come was the ability to add links to other Gopher servers around the world. Now users could hop from one server to another in "Gopher space" (the first "cloud") without thinking about a single underlying network address.</b></p>
-		<cite>Source: <a href="http://en.wikipedia.org/wiki/Gopher_(protocol)" target="_blank">Wikipedia</a></cite>
-	</div>
-</section>
+
+
 
 
 
@@ -796,9 +634,7 @@ runD3();
 
 $(function() {
 	$(document).ready(function(){
-		$('#caine-click').bind('click', function(){
-			$(this).html( '<iframe width="600" height="450" src="http://www.youtube.com/embed/i8Rv7clC_A4" frameborder="0" allowfullscreen></iframe>' );
-		});
+		
 	});
 });
 

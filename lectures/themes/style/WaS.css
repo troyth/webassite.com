@@ -379,7 +379,9 @@
   margin-bottom:0;
 }
 
-.deck-container .slide .fit img{
+.deck-container .slide .fit img,
+.deck-container .slide .fit iframe{
+  height:100%;
   max-height:100%;
   max-width:100%;
   text-align: center;
@@ -392,7 +394,9 @@
   margin:10px auto 0 !important;
 }
 
-
+.deck-container .slide blockquote.fit{
+  text-align: left;
+}
 
 iframe{
   border:1px solid !important;
@@ -443,3 +447,10 @@ cite.title{
   font-size:14px;
 }
 
+
+#lecture-selector{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:10000;
+}
