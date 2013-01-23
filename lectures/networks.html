@@ -36,7 +36,7 @@
 	<form id="lecture-selector" action="../">
 		<select onchange="window.open(this.options[this.selectedIndex].value,'_top')">
 		    <option value="">Select Lecture</option>
-		    <option value="http://www.webassite.com/lectures/networks.html">Networks 1962-1989</option>
+		    <option value="http://www.webassite.com/lectures/networks.html">Networks 1962-1978</option>
 		    <option value="http://www.webassite.com/lectures/internetworks.html">Internetworks 1974-1986</option>
 		    <option value="http://www.webassite.com/lectures/worldwideweb.html">WorldWideWeb 1989</option>
 		</select>
@@ -48,6 +48,17 @@
 
 <!-- Begin slides. Just make elements with a class of slide. -->
 
+
+<section class="slide">
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<h1>Networks<br>
+					1962-1978</h1>
+			</div>
+		</div><!-- /.row -->
+	</div>
+</section>
 
 <section class="slide">
 	<header>
@@ -356,168 +367,23 @@
 	</footer>
 </section>
 
-<section class="slide">
-	<header>
-		<div class="row timeline-date">1980</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span6 offset3">
-				<figure class="fit">
-					<pre>
-                USENET Logical Map
-                June 1, 1981
-                !-        Uucp links
-                :        Berknet links
-                @        Arpanet links
-
-                                  pdp
-                    (Misc)           ! (NC)        (Misc)
-           decvax sii  reed  phs--unc--grumpy  duke34  utzoo  cincy teklabs
-              ! !  !    !     !    !             !         !        !      !
-              ! +--+----+-----+-+--+-------------+-------+------+      !
-              !                 !                                       !
-              !               duke                                       !
-              !                 !                                       !
-              !          +------+---+-----------------------+--------+ !
-              !          !          !                       !        ! !
-     ucbopt   !  hocsr--mhtsa----research   mh135a        harpo-----chico
-        :     !          !  !                  !
-     ucbcory  !          ! eagle    ihnss   vax135  (Bell Labs)
-  (UCB) :     !          !  !        !         !
-     ucbvax--++----------+--+--+-----+--+------+--------+
-        :    @                 !        !               ! (Silicon Valley)
-     ucbarpa @      (UCSD) sdcsvax      !             menlo70--hao
-        :    @     sdcattb-----+        !             !    !
-     ucbonyx @                 +-----ucsfcgl        sytek sri-unix
-             @     phonlab-----+
-         cca-unix           sdcarl
-         			</pre>	
-				</figure>	
-			</div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<div class="row">
-			<div class="span8 offset2">
-				<p>Duke grad students introduce USENET, the first widespread Bulletin Board Service (BBS) that connects one-to-many<br>
-					Source: <cite class="source"><a href="https://groups.google.com/forum/?fromgroups=#!msg/net.general/u1dxxNcTIX0/mHMWbCVJZswJ" target="_blank">Google Groups USENET Archive</a></p>
-			</div>
-		</div>
-	</footer>
-</section>
-
-<section class="slide">
-	<header>
-		<div class="row timeline-date">1980</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span6 offset3">
-				<figure class="fit">
-					<img src="/lectures/img/1981usenet.gif">
-				</figure>	
-			</div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<div class="row">
-			<div class="span8 offset2">
-				<p>Duke grad students introduce USENET, the first widespread Bulletin Board Service (BBS) that connects one-to-many<br>
-					Source: <cite class="source"><a href="https://groups.google.com/forum/?fromgroups=#!msg/net.general/u1dxxNcTIX0/mHMWbCVJZswJ" target="_blank">Google Groups USENET Archive</a></p>
-			</div>
-		</div>
-	</footer>
-</section>
-
-<section class="slide">
-	<header>
-		<div class="row timeline-date">1986</div>
-	</header>
-	<div class="container">
-		<div class="row">
-			<div class="span6 offset3">
-				<figure class="fit">
-					<img src="/lectures/img/1986_usenet_map_large.gif">
-				</figure>	
-			</div>
-		</div><!-- /.row -->
-	</div>
-	<footer>
-		<div class="row">
-			<div class="span8 offset2">
-				<p>USENET Network<br>
-					USENET spreads globally as one of the first Bulletin Board Services (BBS), the core application of the fledgling internet next to email</p>
-			</div>
-		</div>
-	</footer>
-</section>
 
 
-<section class="slide">
-	<header></header>
-	<div class="container">
-		<div class="row">
-			<pre class="span12 fit">
-				+-- Estimated total number of people who read the group, worldwide.
-				|     +-- Actual number of readers in sampled population
-				|     |   +-- Propagation: how many sites receive this group at all
-				|     |   |     +-- Recent traffic (messages per month)
-				|     |   |     |      +-- Recent traffic (megabytes per month)
-				|     |   |     |      |   +-- Crossposting percentage
-				|     |   |     |      |   |      +-- Cost ratio: $US/month/rdr
-				|     |   |     |      |   |      |     +-- Share: % of newsrders
-				|     |   |     |      |   |      |     |   who read this group.
-				V     V   V     V      V   V      V     V
 
-			    1  623532  3373 91%    39    0.6 22%   0.04  5.7% news.announce.newusers
-			    2  510028  2759 57% 11408   11.5 46%   0.50  4.6% alt.sex
-			    3  463628  2508 51%  8307   58.7 34%   2.29  4.2% alt.sex.stories
-			    4  410019  2218 47% 18619  829.6 25%  29.86  3.7% alt.binaries.pictures.erotica
-			    5  332008  1796 80%    78    0.3  0%   0.02  3.0% rec.humor.funny
-			    6  249191  1348 88%  2451    0.5 99%   0.03  2.3% news.answers
-			    7  244939  1325 40% 11218  375.9 46%  11.51  2.2% alt.binaries.pictures.erotica.female
-			    8  233478  1263 65%    39    0.4  0%   0.02  2.1% rec.arts.erotica
-			    9  229965  1244 80% 34342   51.9 24%   3.18  2.1% misc.jobs.offered
-			   10  222756  1205 87%     1    0.0  0%   0.00  2.0% news.announce.important
-			   11  219798  1189 36%  3168    5.5 58%   0.15  2.0% alt.sex.voyeurism
-			   12  215177  1164 57%  5158    6.7  2%   0.29  2.0% alt.tv.simpsons
-			   13  213328  1154 38%  5066   90.1 50%   2.62  1.9% alt.binaries.pictures.erotica.blondes
-			   14  210740  1140 37%  3681   22.3 59%   0.63  1.9% alt.sex.exhibitionism
-			   15  206858  1119 87%  8296   14.0  2%   0.93  1.9% news.newusers.questions
-			   16  204085  1104 83%  5161    7.0 21%   0.44  1.8% comp.lang.c
-			   17  204085  1104 54%  6499   13.6 22%   0.56  1.8% alt.sex.bondage
-			   18  197800  1070 78%  4752    7.1 14%   0.42  1.8% rec.humor
-			   19  196691  1064 84%  1718    2.9 20%   0.19  1.8% comp.unix.questions
-			   20  196506  1063 50%  5543   10.0 12%   0.38  1.8% alt.sex.movies
-			   21  193918  1049 42%  9762  177.1 28%   5.70  1.8% alt.binaries.pictures.supermodels
-			   22  187817  1016 48%   814    0.9 48%   0.03  1.7% alt.sex.stories.d
-			   23  184120   996 74%   146    0.7 16%   0.04  1.7% rec.arts.movies.reviews
-			   24  177650   961 35%  6346  386.8 12%  10.37  1.6% alt.binaries.pictures.erotica.orientals
-			   25  164155   888 81%     3    0.1  0%   0.01  1.5% comp.risks
-			   26  160828   870 74%   399    1.3  1%   0.07  1.5% rec.food.recipes
-			   27  158240   856 47%  5663    4.1 35%   0.15  1.4% alt.sex.wanted
-			   28  157500   852 50% 10951   18.6 29%   0.71  1.4% alt.2600
-			   29  154727   837 49%  3090    1.9 65%   0.07  1.4% alt.sex.wizards
-			   30  154173   834 63%  1687    3.2 20%   0.15  1.4% alt.bbs
-			   31  152324   824 54%  8028    9.0 23%   0.37  1.4% alt.music.alternative
-			   32  150291   813 57%  5952    7.3 24%   0.32  1.4% alt.personals
-			   33  150106   812 72%    48    0.2  2%   0.01  1.4% rec.arts.startrek.info
-			   34  147518   798 87%  5998   10.6 21%   0.71  1.3% news.groups
-			   35  145669   788 29%    50    0.0 74%   0.00  1.3% alt.sex.breasts
-			   36  145115   785 40%  9910  162.0 54%   4.96  1.3% alt.sex.pictures
-			   37  144560   782 59%  5793    8.8 72%   0.40  1.3% alt.activism
-			   38  143451   776 71%  5738    7.4 26%   0.40  1.3% rec.arts.startrek.current
-			   39  143266   775 43%  2318   23.7 44%   0.78  1.3% alt.binaries.pictures.tasteless
-			   40  142896   773 51%  4240  159.2 17%   6.22  1.3% alt.binaries.pictures.misc
-			</pre>
-		</div>
-	</div>
-	<footer>
-		<p><cite class="title">Top 40 Newsgroups in Order by Number of Readers, July 1995</cite></p>
-		<p>Source: <cite class="source"><a href="http://web.archive.org/web/20080404212007/http://www.tlsoft.com/arbitron/jul95/Top40Groups.html" target="_blank">Web Archive</a></cite></p>
-	</footer>
-</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
