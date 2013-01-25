@@ -22,7 +22,7 @@ mysql_select_db('events_staging') or die('Could not select database');
 
 // run a query: select from <table>
 
-$query = 'SELECT * FROM node';
+$query = "SELECT * FROM node";
 
 $result = mysql_query($query) or die('Query failed: ' . mysql_error());
 

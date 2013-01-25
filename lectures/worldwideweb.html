@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=1024, user-scalable=no">
 
-	<title>Your deck.js Presentation</title>
+	<title>WorldWideWeb</title>
 
 	<!-- Required stylesheet -->
 	<link rel="stylesheet" href="core/deck.core.css">
@@ -38,7 +38,9 @@
 		    <option value="">Select Lecture</option>
 		    <option value="http://www.webassite.com/lectures/networks.html">Networks 1962-1978</option>
 		    <option value="http://www.webassite.com/lectures/internetworks.html">Internetworks 1974-1986</option>
-		    <option value="http://www.webassite.com/lectures/worldwideweb.html">WorldWideWeb 1989</option>
+		    <option value="http://www.webassite.com/lectures/worldwideweb.html">WorldWideWeb 1989-1997</option>
+		    <option value="http://www.webassite.com/lectures/opensource.html">Opensource and Web 2.0 1999-2004</option>
+			<option value="http://www.webassite.com/lectures/webasplatform.html">Web as a Platform 2004-2006</option>
 		</select>
 	</form>
 
@@ -77,36 +79,65 @@
 </section>
 
 
-
-
-	</div>
-	<
-
-
-
 <section class="slide">
-	<header></header>
+	<header>
+		<div class="row timeline-date">1989</div>
+	</header>
 	<div class="container">
 		<div class="row">
-			<div class="span10 offset1">
-				<h5>Losing Information at CERN</h5>
-				<p>CERN is a wonderful organisation. It involves several thousand people, many of them very creative, all working toward common goals. Although they are nominally organised into a hierarchical management structure,this does not constrain the way people will communicate, and share information, equipment and software across groups.</p>
-				<p><span class="hilight">The actual observed working structure of the organisation is a multiply connected "web" whose interconnections evolve with time.</span> In this environment, a new person arriving, or someone taking on a new task, is normally given a few hints as to who would be useful people to talk to. Information about what facilities exist and how to find out about them travels in the corridor gossip and occasional newsletters, and the details about what is required to be done spread in a similar way. All things considered, the result is remarkably successful, despite occasional misunderstandings and duplicated effort.</p>
-				<p><span class="hilight">A problem, however, is the high turnover of people. When two years is a typical length of stay, information is constantly being lost.</span><p>
-				<h5>Linked Information Systems</h5>
-				<p>In providing a system for manipulating this sort of information, <span class="hilight">the hope would be to allow a pool of information to develop which could grow and evolve with the organisation and the projects it describes</span>. For this to be possible, the method of storage must not place its own restraints on the information. This is why a "web" of notes with links (like references) between them is far more useful than a fixed hierarchical system. When describing a complex system, many people resort to diagrams with circles and arrows. Circles and arrows leave one free to describe the interrelationships between things in a way that tables, for example, do not. <span class="hilight">The system we need is like a diagram of circles and arrows, where circles and arrows can stand for anything.</span></p>
-				<h5>The problem with Trees</h5>
-				<p>A tree has the practical advantage of giving every node a unique name. However, it does not allow the system to <span class="hilight">model the real world.</span></p>
-				<h5>The problem with Keywords</h5>
-				<p>...Keywords are a common method of accessing data for which one does not have the exact coordinates. The usual problem with keywords, however, is that <span class="hilight">two people never chose the same keywords</span>. The keywords then become useful only to people who already know the application well.</p>
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1989_client-server.jpg">
+				</figure>
 			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
-		<p><cite class="source"><a href="" target="_blank">Information Management, A Proposal</a></cite></p>
-		<p><cite class="author">Tim Berners-Lee</cite>, March 1989 / May 1990, CERN</p>
+		<p>The client-server model is used in Tim Berners-Lee's original spec for the WorldWideWeb.</p>
 	</footer>
 </section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1989</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span6">
+				<figure class="fit">
+					<img src="/lectures/img/1989_NextEditorBW.gif">
+				</figure>
+			</div>
+			<div class="span6">
+				<figure class="fit">
+					<img class="fit" src="/lectures/img/1989_TBL_NeXT.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Tim Berners-Lee's NeXT computer (right), the worlds first web server, and WorldWideWeb (left), it's first browser.</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date"></div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/Demo_HTTP.png">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Demo: HTTP with cURL command in terminal</p>
+	</footer>
+</section>
+
 
 
 <section class="slide">
@@ -116,140 +147,274 @@
 	<div class="container">
 		<div class="row">
 			<div class="span6">
-				<figure>
-					<pre class="brush: bash">
-						HTTP/1.1 200 OK
-						Date: Mon, 21 Jan 2013 05:38:39 GMT
-						Server: Apache/2.2.14 (Ubuntu)
-						Last-Modified: Mon, 21 Jan 2013 05:20:01 GMT
-						ETag: "a2dbe-55de-4d3c59ce34240"
-						Accept-Ranges: bytes
-						Content-Length: 21982
-						Vary: Accept-Encoding
-						Content-Type: text/html</pre>
-					<figcaption>HTTP Header</figcaption>
+				<figure class="fit">
+					<img src="/lectures/img/1990_gopher1.jpg">
 				</figure>
 			</div>
 			<div class="span6">
-				<figure>
-					<pre class="brush: bash">
-						<!DOCTYPE html>
-						<html>
-						<head>
-						        <meta charset="utf-8">
-						        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-						        <meta name="viewport" content="width=1024, user-scalable=no">
-
-						        <title>Your deck.js Presentation</title>
-
-						        <!-- Required stylesheet -->
-						        <link rel="stylesheet" href="core/deck.core.css">
-
-						        <!-- Extension CSS files go here. Remove or add as needed. -->
-						        <link rel="stylesheet" href="extensions/goto/deck.goto.css">
-						        <link rel="stylesheet" href="extensions/menu/deck.menu.css">
-						        <link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
-						        <link rel="stylesheet" href="extensions/status/deck.status.css">
-						        <link rel="stylesheet" href="extensions/hash/deck.hash.css">
-						        <link rel="stylesheet" href="extensions/scale/deck.scale.css">
-
-						        <!-- Style theme. More available in /themes/style/ or create your own. -->
-						        <link rel="stylesheet" href="themes/style/WaS.css">
-
-						        <!-- Transition theme. More available in /themes/transition/ or create your own. -->
-						        <link rel="stylesheet" href="themes/transition/horizontal-slide.css">
-
-						        <!-- Required Modernizr file -->
-						        <script src="modernizr.custom.js"></script>
-						</head>
-						<body class="deck-container">
-					        <div class="timeline-line"></div>
-							<!-- Begin slides. Just make elements with a class of slide. -->
-							<section class="slide">
-							        <header>
-							                <div class="row timeline-date">1962</div>
-							        </header>
-							        <div class="container">
-							                <div class="row">
-					...</pre>
-					<figcaption>HTML Payload</figcaption>
+				<figure class="fit">
+					<img src="/lectures/img/1990_gopher2.jpg">
 				</figure>
 			</div>
 		</div><!-- /.row -->
 	</div>
 	<footer>
+		<p>University of Minnesota's Gopher, contemporaneous with the WorldWideWeb</p>
+	</footer>
+</section>
+
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1989</div>
+	</header>
+	<div class="container">
 		<div class="row">
-			<div class="span8 offset2">
-				<p>HTTP Header and HTML Payload</p>
+			<div class="span12">
+				<blockquote>CERN is a wonderful organisation. It involves several thousand people, many of them very creative, all working toward common goals. Although they are nominally organised into a hierarchical management structure,this does not constrain the way people will communicate, and share information, equipment and software across groups. The actual observed working structure of the organisation is <span class="hilight">a multiply connected "web"</span>...</blockquote>
 			</div>
-		</div>
-	</footer>
-</section>
-
-
-
-
-
-<section class="slide">
-	<header></header>
-	<div class="container">
-		<div class="row">
-			<iframe height="100%" width="100%" src="http://www.google.com/googlegroups/archive_announce_20.html"></iframe>
-		</div>
+		</div><!-- /.row -->
 	</div>
 	<footer>
-		<p><cite class="title">Top 40 Newsgroups in Order by Number of Readers, July 1995</cite></p>
-		<p>Source: <cite class="source"><a href="http://web.archive.org/web/20080404212007/http://www.tlsoft.com/arbitron/jul95/Top40Groups.html" target="_blank">Web Archive</a></cite></p>
+		<p><cite class="source"><a href="" target="_blank">Information Management, A Proposal</a></cite><br>
+		<cite class="author">Tim Berners-Lee</cite>, March 1989 / May 1990, CERN</p>
 	</footer>
 </section>
 
-
 <section class="slide">
-	<header></header>
+	<header>
+		<div class="row timeline-date">1989</div>
+	</header>
 	<div class="container">
 		<div class="row">
-			<figure class="fit">
-				<img src="/img/wordpressPageviews.png">
-				<figcaption>Pageviews on Wordpress.com sites</figcaption>
-			</figure>
-		</div>
+			<div class="span6">
+				<blockquote>A tree has the practical advantage of giving every node a unique name. However, it does not allow the system to <span class="hilight">model the real world.</span></blockquote>
+			</div>
+			<div class="span6">
+				<figure class="fit">
+					<img src="/lectures/img/1989_Map-of-the-Internet.png">
+				</figure>
+			</div>
+		</div><!-- /.row -->
 	</div>
 	<footer>
-		<p>Growth of Wordpress</p>
-		<p>Source: <cite class="source"><a href="http://en.wordpress.com/stats/posting/" target="_blank">Wordpress</a></cite></p>
+		<p><cite class="source"><a href="" target="_blank">Information Management, A Proposal</a></cite><br>
+		<cite class="author">Tim Berners-Lee</cite>, March 1989 / May 1990, CERN</p>
 	</footer>
 </section>
 
 
 <section class="slide">
-	<header></header>
+	<header>
+		<div class="row timeline-date">1989</div>
+	</header>
 	<div class="container">
 		<div class="row">
-			<iframe height="100%" width="100%" src="http://en.wordpress.com/stats/posting/"></iframe>
-		</div>
+			<div class="span6">
+				<figure class="fit">
+					<img src="/lectures/img/1991_violawww.png">
+				</figure>
+			</div>
+			<div class="span6">
+				<figure class="fit">
+					<img src="/lectures/img/1991_samba_for_mac.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
 	</div>
 	<footer>
-		<p><cite class="title">Wordpress Statistics</cite></p>
-		<p>Source: <cite class="source"><a href="http://en.wordpress.com/stats/posting/" target="_blank">Wordpress</a></cite></p>
+		<p>Tim Berners-Lee's original WWW browser was only useful for the rare owners of a NeXT machine, but within the next three years a number of other browsers were developed, such as ViolaWWW for unix (left) and Samba for the Mac (right).</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date"></div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/Demo_lynx.png">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Demo: Browsing the web with Lynx</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1993</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span6">
+				<figure class="fit">
+					<img src="/lectures/img/1993_mosaicbrowser1995.jpg">
+				</figure>
+			</div>
+			<div class="span6">
+				<figure class="fit">
+					<img src="/lectures/img/1993_mosaic_gopher.gif">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Mosaic launches with support for WWW (left), Gopher (right), FTP and other protocols</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1993</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1993_mosaic_image.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Mosaic was also the first browser to introduce inline images and the img tag</p>
 	</footer>
 </section>
 
 
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1993</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1994_netscape.gif">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Marc Andreessen leaves NCSA to start the first commercial browser company, Netscape</p>
+	</footer>
+</section>
 
 <section class="slide">
-	<h2>Gopher - Predecessor to the WorldWideWeb</h2>
-	<h3>A description of the User Experience (UX) - A non-intuitive interface for the ordained</h3>
+	<header>
+		<div class="row timeline-date">1995</div>
+	</header>
 	<div class="container">
-		<p>On a screen with <b>25 lines of 80 green characters each</b> (<b>no graphics</b> then, long since remedied) you got a <b>series of hierarchical menus</b>. The top level menu might be all the departments and publications (e.g., the campus newspaper) of your university, which had invested in running a Gopher server as a way of delivering documents electronically, at least to the local community.</p>
-		<p>There were <b>no search engines</b> as we know them today. Available information was presented in a series of nested menus, intended to resemble a <b>hierarchical file system of folders</b>, something familiar to computer users who saw any search for information as trying to find that particular file (document) which held a particular answer.</p>
-		<p>If you wanted recent news for the women's volleyball team, you would go to the "Daily Crimson Newspaper" menu item and choose the <b>"Word Search of Latest Month"</b> item. When asked to enter a search string, you would enter the word "volleyball." All articles in the local Daily Crimson newspaper from the last month that contained the word "volleyball" would be listed as a separate menu. You could select which one to get first. In part for lack of bandwidth, the system's presentation was intended to appear as listings of files, without their content. There were no paragraphs from inside the "hits", each with the word "volleyball" in boldface type.</p>
-		<p>And if you don't know what the newspaper is called or even if it is available? Searching a top level menu called <b>"Keyword Search of [all] Gopher Menus"</b> with a keyword "daily" would get you into the Daily Crimson publication you wanted for your "volleyball" search.</p>
-		<p><b>What enabled Gopher to give so many who worked with it a foretaste of the World Wide Web yet to come was the ability to add links to other Gopher servers around the world. Now users could hop from one server to another in "Gopher space" (the first "cloud") without thinking about a single underlying network address.</b></p>
-		<cite>Source: <a href="http://en.wikipedia.org/wiki/Gopher_(protocol)" target="_blank">Wikipedia</a></cite>
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1995_ie10.gif">
+				</figure>
+			</div>
+		</div><!-- /.row -->
 	</div>
+	<footer>
+		<p>Microsoft, initially shunning the WWW, licenses Mosaic code and jumps in with Internet Explorer</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1995</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1996_Andreessen_TIME_IPO.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Netscape goes public in 1995 with the largest IPO in history, initially raising over $4bn, stabilizing at $2.9bn. Andreessen ends up on the cover of Time the following year.</p>
+	</footer>
 </section>
 
 
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1997</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1997_mozilla-uber-alles.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Microsoft launches IE 4, which finally reaches feature parity with Netscape.</p>
+	</footer>
+</section>
+
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1996-2009</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1997_browser_share.png">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Browser Market Share<br>
+			Owning 90% of the PC market, Microsoft's bundling strategy kills Netscape</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1998</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<figure class="fit">
+					<img src="/lectures/img/1998_bill-gates-antitrust.jpg">
+				</figure>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>Anti-Trust<br>
+			Microsoft ends up in anti-trust court where a witness testifies that Bill Gates had set out to "cut off Netscape's air supply" in 1995. Microsoft beats the charges and browser innovation goes into the dark ages.</p>
+	</footer>
+</section>
+
+<section class="slide">
+	<header>
+		<div class="row timeline-date">1998</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<blockquote>Microsoft beat the anti-trust suit and browser innovation went into the dark ages. The competitive years between 1995-1998 left us with two core technologies/languages that continue to be the backbone of web development: CSS and Javascript.</blockquote>
+			</div>
+		</div><!-- /.row -->
+	</div>
+	<footer>
+		<p>
+			</p>
+	</footer>
+</section>
 
 <!-- End slides. -->
 
