@@ -23,13 +23,15 @@ $(document).ready(function() {
 	 *	This is creating an instance of the Prompt.Model defined in prompt.js so that
 	 *	you can access the methods and attributes stored in the Prompt.Model object
 	*/
-	model = new Prompt.Model('#wrapper');
+	model = new Prompt.Model('#container');
 
 
 	/*
 	 *	STEP 2: Set and extend the model to add attributes and update defaults as desired
 	 *
 	 *	This is using the Underscore.js extend function, see here: http://underscorejs.org/#extend
+	 *
+	 *	@todo: this is just for example, you may want to change these values and attributes
 	*/
 	_.extend(model, {
 		borderBottom: '2px solid red',
@@ -41,20 +43,39 @@ $(document).ready(function() {
 	*/
 	model.initialize();
 
+	//@todo: once you implement STEP 4, you will want to comment out the line below, this is just for testing
+	model.toggleBackgroundColor('red', '#F799A2', 1000); //toggle the background color from red to #F799A2 after 1000ms
+
+
+
 
 	/*
-	 *	STEP 4: Run your functions here
+	 *	STEP 4: Instantiate the controller passing in the model as it's sole parameter
 	 *
-	 *	Note: later, this is where the controller will go
+	 *	@todo: following step 1 above, create a new Prompt.Controller initialized with model
 	*/
-	//model.toggleBackgroundColor('red', '#F799A2', 1000); //toggle the background color from red to #F799A2 after 1000ms
+	
+	//your code here
 
-	//@TODO: add more functions to the Prompt.Model object in prompt.js and call them here
 
-	controller = new Prompt.Controller(model);
 
-	controller.initialize();
-	controller.randomize(100);
+	/*
+	 *	STEP 5: Initialize controller
+	 *
+	 *	@todo: following step 2 above, initialize the new controller
+	*/
+	
+	//your code here
+
+
+
+	/*
+	 *	STEP 6: Call the surprise function on the controller
+	 *
+	 *	@todo: call the surprise function with the correct parameters
+	*/
+	
+	//your code here
 
 
 });

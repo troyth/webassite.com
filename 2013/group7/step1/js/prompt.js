@@ -57,6 +57,8 @@ _.extend(Model.prototype, {
 	fontFamily: 'Arial, Helvetica, "Helvetica Neue", sans-serif',
 	textAlign: 'center',
 
+	//your code for additional attributes here
+
 	//call this function to intialize the main content container
 	initialize: function(){
 		console.log('Prompt.Model.intialize() with selector: ' + this.selector);
@@ -68,6 +70,9 @@ _.extend(Model.prototype, {
 			.css('fontSize', this.fontSize)
 			.css('fontFamily', this.fontFamily)
 			.css('textAlign', this.textAlign);
+
+		//appends the #container with introductory content
+		$(this.selector).append('<div>The game is about to begin</div>');
 
 		//need to bind *this* to all the functions below so it can be accessed when called
 		//uses the _.bindAll() function from Underscore.js: http://underscorejs.org/#bindAll
@@ -106,6 +111,8 @@ _.extend(Model.prototype, {
 			return true;
 		 }, interval );
 	}
+
+	//your code for additional methods here
 });
 
 
@@ -132,11 +139,10 @@ _.extend(Model.prototype, {
  *			initialize an empty local array called functionArray
  *
  */
-var Controller = Prompt.Controller = function(model){
-	this.model = model;//initialize the controller with its model
-	console.log('#');
-	this.functionArray = [];
-}
+
+//your code here
+
+
 
 /*
  *	STEP 4: Extend the Prompt controller
@@ -150,26 +156,8 @@ var Controller = Prompt.Controller = function(model){
  *			of the functions in functionArray at random after 5 seconds
  *
  */
-_.extend(Controller.prototype, {
 
-	initialize: function(){
-		console.log('Controller.initialize() called');
-		console.dir(this.model);
-		this.functionArray.push(this.model.alert);
-		this.functionArray.push(this.model.toggleBackgroundColor);
-	},
-
-	randomize: function(interval){
-		if(this.functionArray.length <= 0){
-			return false; //if no functions available, abort and return false
-		}else{
-			console.log('should call tbc');
-			this.functionArray[0].call();
-			this.functionArray[1].call();
-			return true;
-		}
-	}
-})
+//your code here
 
 
 
