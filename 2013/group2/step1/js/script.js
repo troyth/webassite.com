@@ -46,9 +46,9 @@ $(document).ready(function() {
 		idx = idx.substr(7,1);
 		idx = parseInt(idx);
 
-		//only increment if within maximum zoom level 
+		//only decrement if greater than 1
 		if(idx > 1){
-			//increment the index
+			//decrement the index
 			idx--;
 			console.log('new idx: '+ idx);//print out the new index
 		}
