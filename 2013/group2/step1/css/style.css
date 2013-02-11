@@ -1,0 +1,20 @@
+#image img{
+	width:100%;
+	height:auto;
+}
+
+#zoom-in{
+	position:fixed;
+	z-index:1;
+	top:10%;
+	left:10%;
+	font-size:24px;
+}
+
+#zoom-out{
+	position:fixed;
+	z-index:1;
+	top:15%;
+	left:10%;
+	font-size:24px;
+}
