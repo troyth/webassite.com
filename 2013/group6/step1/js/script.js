@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 		//get the index of the current image assuming each image will be named cat#.jpg
 		var idx = $('#target').attr('src');
-		idx = idx.substr(3,1);
+		idx = idx.substr(7,1);
 		idx = parseInt(idx);
 
 		//increment the index
@@ -29,7 +29,7 @@ $(document).ready(function() {
 		}
 
 		//construct the new source string
-		var src = 'cat' + idx + '.jpg';
+		var src = 'img/cat' + idx + '.jpg';
 
 		//swap the image for the next
 		$('#target').attr('src', src);
