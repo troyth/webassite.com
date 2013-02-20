@@ -14,8 +14,10 @@ var prompt = {
 	message: {
 		text: "Click anywhere to begin",
 		image: "",
-		video: "",
+		video: ""
 	},
+
+	messageIndex: 0,
 
 	init: function(selector){
 		prompt.selector = selector;
@@ -38,7 +40,7 @@ var prompt = {
 	begin: function(){
 		$(prompt.selector).unbind('click');
 		prompt.toggleBackgroundColor('red', '#F799A2', 50, 15);
-		prompt.message = prompt.messages[0];
+		prompt.message = prompt.messages[messageIndex];
 		prompt.refreshMessage();
 	},
 
@@ -47,6 +49,10 @@ var prompt = {
 		$('.message .text', prompt.selector).html( prompt.message.text );
 		$('.message .image', prompt.selector).html( prompt.message.image );
 		$('.message .video', prompt.selector).html( prompt.message.video );
+	},
+
+	incrementMessage: function(){
+		
 	},
 
 	toggleBackgroundColor: function(firstColor, secondColor, interval, iterations){

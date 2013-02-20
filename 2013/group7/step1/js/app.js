@@ -17,9 +17,7 @@
 $(document).ready(function() {
 	prompt.init('#container');
 
-	//prompt.toggleBackgroundColor('red', '#F799A2', 50, 15); //toggle the background color from red to #F799A2 after 1000ms
 
-	
 
 
 });
