@@ -1,163 +1,87 @@
-/*
-	Prompt.js
-	Part of the Web as Site course at Columbia University's Graduate School of Architecture, Planning and Preservation
-	webassite.com
-	group7.webassite.com
-	
-	[File description]
-	[Date]
-	[Author]
-	[License]
-*/
+var prompt = {
+	selector: null,
+	DEFAULT_cycleTime: 1000,
 
+	//set up default options
+	options: {
+		color: '#000000',
+		backgroundColor: '#ffffff',
+		fontSize: '36px',
+		fontFamily: 'Arial, Helvetica, sans-serif',
+		textAlign: 'center'
+	},
 
-//initialize the Prompt object which will later be extend with Model and perhaps View, Controller, etc.
-var Prompt = {};
+	message: {
+		text: "Click anywhere to begin",
+		image: "",
+		video: "",
+	},
 
-
-
-/****************************************************************************************
-*****************************************************************************************
-	Model
-
-	The model is the javascript object that will hold the attribute values for the selected
-	HTML element to be updated with prompts. It will be controlled, eventually, by a
-	controller.
-*/
-
-/*
- *	STEP 1: Create the Prompt model
- *	
- *	Create the Prompt model to be extended with the minimum necessary variables and the
- *	required parameter to construct the object.
- *
- *	selector: the selector of the HTML element to display prompts
- *
- *	@todo: 	nothing
- *
- */
-var Model = Prompt.Model = function(selector){
-	this.selector = selector;
-}
-
-/*
- *	STEP 2: Extend the Prompt model
- *	
- *	Use the Underscore.js _.extend(object, extension) function to extend the attributes 
- *	and methods of the Prompt model.
- *
- *	@todo: 	add additional attributes and methods for controlling the DOM with prompts
- *
- */
-_.extend(Model.prototype, {
-	//declare default attributes
-	color: '#FF0000',
-	backgroundColor: '#FFFFFF',
-	fontSize: '36px',
-	fontFamily: 'Arial, Helvetica, "Helvetica Neue", sans-serif',
-	textAlign: 'center',
-
-	//your code for additional attributes here
-
-	//call this function to intialize the main content container
-	initialize: function(){
-		console.log('Prompt.Model.intialize() with selector: ' + this.selector);
+	init: function(selector){
+		prompt.selector = selector;
+		console.log('Prompt.Model.intialize() with selector: ' + prompt.selector);
 
 		//apply all of the default css attributes to the selected HTML element
-		$(this.selector)
-			.css('color', this.color)
-			.css('backgroundColor', this.backgroundColor)
-			.css('fontSize', this.fontSize)
-			.css('fontFamily', this.fontFamily)
-			.css('textAlign', this.textAlign);
+		$(prompt.selector)
+			.css('color', prompt.options.color)
+			.css('backgroundColor', prompt.options.backgroundColor)
+			.css('fontSize', prompt.options.fontSize)
+			.css('fontFamily', prompt.options.fontFamily)
+			.css('textAlign', prompt.options.textAlign);
 
 		//appends the #container with introductory content
-		$(this.selector).append('<div>The game is about to begin</div>');
 
-		//need to bind *this* to all the functions below so it can be accessed when called
-		//uses the _.bindAll() function from Underscore.js: http://underscorejs.org/#bindAll
-		_.bindAll(this, 'alert', 'toggleBackgroundColor');
+		prompt.refreshMessage();
+		$(prompt.selector).bind('click', prompt.begin);
 	},
 
-	//a sample function for altering the DOM
-	alert: function(msg){
-		console.log('Prompt.Model.alert() called with message: ' + msg);
-
-		var message = (msg != undefined) ? msg : 'default message';
-		$(this.selector).text(message);
+	begin: function(){
+		$(prompt.selector).unbind('click');
+		prompt.toggleBackgroundColor('red', '#F799A2', 50, 15);
+		prompt.message = prompt.messages[0];
+		prompt.refreshMessage();
 	},
 
-	//a more complex sample function for altering the DOM
-	toggleBackgroundColor: function(f, s, i){
-		console.log('Prompt.Model.toggleBackgroundColor() called');
+	//@todo: implement a function to display the message with the current message parameters
+	refreshMessage: function(){
+		$('.message .text', prompt.selector).html( prompt.message.text );
+		$('.message .image', prompt.selector).html( prompt.message.image );
+		$('.message .video', prompt.selector).html( prompt.message.video );
+	},
 
-		//set to defaults in case no variables passed in
-		var first = (f != undefined) ? f : this.backgroundColor;
-		var second = (s != undefined) ? s : 'blue';
-		var interval = (i != undefined) ? i : 1000;//measured in milliseconds
+	toggleBackgroundColor: function(firstColor, secondColor, interval, iterations){
+		console.log('toggleBackgroundColor()');
 
-		//set selected HTML element background color to first color
-		$(this.selector).css('backgroundColor', first);
+		var i = 1;
+		var originalColor = $(prompt.selector).css('backgroundColor');
 
-		var _this = this;//need to add a pointer to this so it is available in the setTimeout()
+		var intervalID = setInterval(function(){
+			//toggle back and forth depending on the value of i
+			if(i%2 == 0){
+				$(prompt.selector).css('backgroundColor', secondColor);
+			}else{
+				$(prompt.selector).css('backgroundColor', firstColor);
+			}
 
-		//setTimeout(function, interval) will call function after interval milliseconds
-		setTimeout(function(){ 
-			console.log('Background color of ' + _this.selector + ' should now change to ' + second);
+			i++;
+			if(i > iterations){
+				$(prompt.selector).css('backgroundColor', originalColor);
+				clearInterval( intervalID );
+			}
+		}, interval);
 
-			$(_this.selector).css('backgroundColor', second);
+	},
 
-			//return true for chaining and callbacks
-			return true;
-		 }, interval );
-	}
-
-	//your code for additional methods here
-});
-
-
-
-/****************************************************************************************
-*****************************************************************************************
-	Controller
-
-	The controller is the javascript object that will hold the attribute value and methods
-	for the model. It will eventually control what content gets displayed to the user
-	and when.
-*/
-
-/*
- *	STEP 3: Create the Prompt controller
- *	
- *	Create the Prompt controller to be extended with the minimum necessary variables and the
- *	required parameter to construct the object.
- *
- *	model: 	the instance of a Prompt model that this controller will control
- *
- *	@todo: 	create a controller in the same manner that the model was created above, set
- *			the local model to the parameter that will be passed in on construction and
- *			initialize an empty local array called functionArray
- *
- */
-
-//your code here
-
-
-
-/*
- *	STEP 4: Extend the Prompt controller
- *	
- *	Use the Underscore.js _.extend(object, extension) function to extend the attributes 
- *	and methods of the Prompt controller.
- *
- *	@todo: 	extend the controller in the same manner that the model was extended above and
- *			create a function called initialize that populates the functionArray with each
- *			of the functions of the model and anther function called surprise that calls one
- *			of the functions in functionArray at random after 5 seconds
- *
- */
-
-//your code here
-
-
-
+	messages: [
+		{
+			text: 'starting the game',
+			image: '',
+			video: ''
+		},
+		{
+			text: 'second message',
+			image: '<img src="http://placehold.it/350x150">',
+			video: ''
+		}
+	]
+}
