@@ -7,65 +7,64 @@ h1,h2,h3,h4,h5,h6{
 	font-family:'Avenir LT W01 95 Black';
 }
 
-#map{
-	width:150px;
-	float:left;
-}
+
 
 #wrapper{
-	width:980px;
-	margin:50px auto;
+	width:1024px;
+	margin:0 auto;
+	text-align:center;
+}
+
+#map{
+	width:200px;
+	float:left;
 }
 
 .survivor{
-	width:800px;
-	margin-right:30px;
+	width: 800px;
+	margin-bottom: 40px;
 	float:left;
-	text-align:left;
+	text-align: left;
+	margin-right:24px;
 }
 
-
-.header{
-	width:100%;
+.text{
+	width:500px;
 	float:left;
-	margin-bottom:40px;
-}
-
-.header h3{
-	font-size:18px;
-}
-
-.header h2{
-	font-size: 24px;
-	text-transform: uppercase;
-}
-
-.main{
-}
-
-.info{
-	width:400px;
-	margin-right:20px;
-	margin-bottom:40px;
-	float:left;
-}
-
-.info .details{
-	margin-bottom:30px;
+	margin-bottom:20px;
 }
 
 .video{
-	width:380px;
+	width:100%;
 	float:left;
+	clear:both;
+	margin-bottom:20px;
 }
 
 .gallery{
 	width:100%;
 	float:left;
+	clear:both;
 }
 
-.gallery .gallery-item{
+.comments{
+	width:100%;
 	float:left;
-	margin:0 10px 10px 0;
+	clear:both;
+	border:1px solid black;
 }
+
+
+.gallery-item{
+	float:left;
+	margin:0 20px 20px 0;
+}
+
+.info{
+	margin-bottom: 20px;
+}
+
+
+
+
 
