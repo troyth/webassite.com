@@ -48,10 +48,18 @@ var MAX_ID, MAX_ID_STRING, NEXT_PAGE, PAGE, RESULTS_PER_PAGE, SINCE_ID, SINCE_ID
  
 exports.findById = function(req, res) {
     var id = req.params.id;
-    console.log('Retrieving wine: ' + id);
+    console.log('findById called');
+    console.log('Retrieving tweet: ' + id);
     db.collection('tweets', function(err, collection) {
         collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-            res.send(item);
+        	if(err) {
+                console.log('error: An error has occurred in trying to find a tweet document by id with _id: '+ id);
+                console.log(err);
+            } else {
+                console.log('Success: A tweet has been found and returned with _id: '+ id);
+                res.send(item);
+            }
+            
         });
     });
 };
@@ -78,15 +86,27 @@ exports.showAll = function(){
 }
 
 
+/*
+ *	clear()
+ *
+ *	Deletes all documents in the Mongo db collection 'tweets'
+ *
+*/
 exports.clear = function(){
 	db.collection('tweets', function(err, collection) {
         collection.remove();
     });
 
-    console.log('cleared all');
+    console.log('cleared all documents in tweets collection');
 }
 
 
+/*
+ *	fetch()
+ *
+ *	Fetches tweets from the Twitter search API and puts them in the Mongo db collection 'tweets'
+ *
+*/
 exports.fetch = function(){
 	twit
 		.verifyCredentials(function (err, data) {
@@ -115,7 +135,7 @@ exports.fetch = function(){
 				//results_pruned[i]._id = results_pruned[i].id;//set the mongo primary key, _id, to the tweet id for easy retreival
 				
 				db.collection('tweets', function(err, collection) {
-			        collection.update({_id: results_pruned[i].id}, {"$set": results_pruned[i]}, {safe:true, upsert:true}, function(err, result) {
+			        collection.update({_id:new BSON.ObjectID(results_pruned[i].id)}, {"$set": results_pruned[i]}, {safe:true, upsert:true}, function(err, result) {
 			        	if (err) {
 			                console.log('error: An error has occurred in trying to upsert into the DB tweets collection');
 			                console.log(err);
@@ -125,15 +145,15 @@ exports.fetch = function(){
 			                //res.send(result[0]);
 			            }
 			        });
-		    });
+		    	});
 			}
 				
-
-			
 
 		});
 
 };
+
+
 
  
 /*--------------------------------------------------------------------------------------------------------------------*/
