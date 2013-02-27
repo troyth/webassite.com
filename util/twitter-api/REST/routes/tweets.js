@@ -165,6 +165,10 @@ exports.fetch = function(){
 				
 				console.log('adding to db collection results_pruned['+i+'] with tweet id: '+ results_pruned[i].id_str);
 
+				var timestamp = new Date(results_pruned[i].created_at);
+				console.log('timestamp: '+ timestamp.getTime() );
+
+				results_pruned[i].timestamp = timestamp.getTime();
 
 
 				/*

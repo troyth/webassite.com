@@ -28,6 +28,10 @@ app.get('/tweets/hashtag/:hashtag', tweets.findByHashtag);
 
 app.listen(3000);
 
+//var interval_id = setInterval(function(){ tweets.fetch(); }, 5000);
+
 tweets.fetch();
+//console.log('interval_id: ');
+//console.dir(interval_id);
 
 console.log('Listening on port 3000...');
