@@ -23,8 +23,8 @@ db.open(function(err, db) {
 });
 
 
-var hashtags = ['#235bowery', '#237bowery', '#football'];
-
+var hashtags = ['#235bowery', '#237bowery', '#football', 'bowery', 'museum', 'art', 'the'];
+var RESPONSE_LIMIT = 100;
 
 function prune(results){
 	var returnArray = [];
@@ -88,7 +88,20 @@ exports.findAll = function(req, res) {
 	console.log('trying to findAll');
 
     db.collection('tweets', function(err, collection) {
-        collection.find().toArray(function(err, items) {
+        collection.find().sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            res.send(items);
+        });
+    });
+};
+
+exports.findAllLimited = function(req, res) {
+	var limit = req.params.limit;
+	console.log('trying to findRecent with limit: '+ limit);
+
+	limit = parseInt(limit);
+
+    db.collection('tweets', function(err, collection) {
+        collection.find().sort({"timestamp":-1}).limit(limit).toArray(function(err, items) {
             res.send(items);
         });
     });
@@ -144,7 +157,7 @@ exports.fetch = function(){
 		});
 
 
-	twit.search(searchterms, {}, function(err, data) {
+	twit.search(searchterms, {'geocode':'40.722337,-73.992844,1km'}, function(err, data) {
 			//console.log(data);
 
 			MAX_ID = data.max_id;
@@ -163,7 +176,7 @@ exports.fetch = function(){
 				//@todo: only copy over the fields we need
 				//results_pruned[i]._id = results_pruned[i].id;//set the mongo primary key, _id, to the tweet id for easy retreival
 				
-				console.log('adding to db collection results_pruned['+i+'] with tweet id: '+ results_pruned[i].id_str);
+				//console.log('adding to db collection results_pruned['+i+'] with tweet id: '+ results_pruned[i].id_str);
 
 				var timestamp = new Date(results_pruned[i].created_at);
 				console.log('timestamp: '+ timestamp.getTime() );
@@ -190,7 +203,7 @@ exports.fetch = function(){
 
 				results_pruned[i].id_bson = sb + results_pruned[i].id_str;
 
-				console.log('results_pruned[i].id_bson now: ' + results_pruned[i].id_bson + ' with length: '+results_pruned[i].id_bson.length);
+				//console.log('results_pruned[i].id_bson now: ' + results_pruned[i].id_bson + ' with length: '+results_pruned[i].id_bson.length);
 
 
 				db.collection('tweets', function(err, collection) {
@@ -199,7 +212,7 @@ exports.fetch = function(){
 			                console.log('error: An error has occurred in trying to upsert into the DB tweets collection');
 			                console.log(err);
 			            } else {
-			                console.log('Success: ' + JSON.stringify(result[0]));
+			                //console.log('Success: ' + JSON.stringify(result[0]));
 			                //res.send(result[0]);
 			            }
 			        });

@@ -22,7 +22,9 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
-app.get('/tweets', tweets.findAll);
+app.get('/tweets/geo/bowery', tweets.findAll);
+app.get('/tweets/geo/bowery/limit/:limit', tweets.findAllLimited);
+
 app.get('/tweets/id/:id', tweets.findById);
 app.get('/tweets/hashtag/:hashtag', tweets.findByHashtag);
 
