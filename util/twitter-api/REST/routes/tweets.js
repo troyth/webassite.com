@@ -23,7 +23,7 @@ db.open(function(err, db) {
 });
 
 
-var hashtags = ['#235bowery', '#237bowery', '#football', 'bowery', 'museum', 'art', 'the'];
+var hashtags = ['#235bowery', '#237bowery', '#football', '#bowery', '#museum', '#design', '#art'];
 var RESPONSE_LIMIT = 100;
 
 function prune(results){
@@ -46,19 +46,38 @@ var twit = new twitter({
 
 var MAX_ID, MAX_ID_STRING, NEXT_PAGE, PAGE, RESULTS_PER_PAGE, SINCE_ID, SINCE_ID_STRING, results_pruned;
 
+exports.findByHashtagLimited = function(req, res) {
+    var hashtag = '#' + req.params.hashtag;//prepend #
+    var limit = req.params.limit;
+    limit = parseInt(limit);
 
-
-exports.findByHashtag = function(req, res) {
-    var hashtag = req.params.hashtag;
     console.log('findByHashtag called with hashtag: '+ hashtag);
   
     db.collection('tweets', function(err, collection) {
-        collection.findOne({'hashtag': hashtag}, function(err, item) {
+        collection.find({'hashtags': hashtag}).sort({"timestamp":-1}).limit(limit).toArray(function(err, item) {
         	if(err) {
-                console.log('error: An error has occurred in trying to find a tweet document by id with _id: '+ id);
+                console.log('error: An error has occurred in trying to find a tweets with hashtag: '+ hashtag);
                 console.log(err);
             } else {
-                console.log('Success: A tweet has been found and returned with _id: '+ id);
+                console.log('Success: Tweets have been found and returned with hashtag: '+ hashtag);
+                res.send(item);
+            }
+            
+        });
+    });
+};
+
+exports.findByHashtag = function(req, res) {
+    var hashtag = '#' + req.params.hashtag;//prepend #
+    console.log('findByHashtag called with hashtag: '+ hashtag);
+  
+    db.collection('tweets', function(err, collection) {
+        collection.find({'hashtags': hashtag}).sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, item) {
+        	if(err) {
+                console.log('error: An error has occurred in trying to find a tweets with hashtag: '+ hashtag);
+                console.log(err);
+            } else {
+                console.log('Success: Tweets have been found and returned with hashtag: '+ hashtag);
                 res.send(item);
             }
             
@@ -140,6 +159,46 @@ function createSearchterms(){
 }
 
 
+
+/*
+ *	stream()
+ *
+ *	Streams the twitter API storing all tweets from the Bowery in the last day
+ *
+*/
+exports.stream = function(){
+
+
+	twit.stream('statuses/filter', {'locations':'-73.994401,40.717371,-73.991482,40.725795'}, function(stream) {
+		console.log('starting to stream');
+		stream.on('data', function (data) {
+			//console.log(data);
+
+
+
+			db.collection('tweetstream', function(err, collection) {
+		        collection.insert(data, {safe:true}, function(err, result) {
+		        	if (err) {
+		                console.log('error: An error has occurred in trying to upsert into the DB tweetstream collection');
+		                console.log(err);
+		            } else {
+		                console.log('Success: ' + JSON.stringify(result[0]));
+		                //res.send(result[0]);
+		            }
+		        });
+	    	});
+
+
+		});
+		
+		setTimeout(stream.destroy, 25000);//disconnect after a day86400000
+	});
+
+
+
+}
+
+
 /*
  *	fetch()
  *
@@ -150,7 +209,7 @@ exports.fetch = function(){
 
 	var searchterms = createSearchterms();//create search terms out of the hashtag array
 
-	console.log('****SEARCH TERMS: '+ searchterms);
+	console.log('****FETCHING FROM TWITTER REST API WITH SEARCH TERMS: '+ searchterms);
 
 	twit.verifyCredentials(function (err, data) {
 			//console.log(data);
@@ -159,6 +218,7 @@ exports.fetch = function(){
 
 	twit.search(searchterms, {'geocode':'40.722337,-73.992844,1km'}, function(err, data) {
 			//console.log(data);
+			console.log('FETCH RETURNED '+data.results.length+ ' TWEETS');
 
 			MAX_ID = data.max_id;
 			MAX_ID_STRING = data.max_id_str;
@@ -179,7 +239,6 @@ exports.fetch = function(){
 				//console.log('adding to db collection results_pruned['+i+'] with tweet id: '+ results_pruned[i].id_str);
 
 				var timestamp = new Date(results_pruned[i].created_at);
-				console.log('timestamp: '+ timestamp.getTime() );
 
 				results_pruned[i].timestamp = timestamp.getTime();
 

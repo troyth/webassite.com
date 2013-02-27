@@ -26,13 +26,16 @@ app.get('/tweets/geo/bowery', tweets.findAll);
 app.get('/tweets/geo/bowery/limit/:limit', tweets.findAllLimited);
 
 app.get('/tweets/id/:id', tweets.findById);
-app.get('/tweets/hashtag/:hashtag', tweets.findByHashtag);
+app.get('/tweets/geo/bowery/hashtag/:hashtag', tweets.findByHashtag);
+app.get('/tweets/geo/bowery/hashtag/:hashtag/limit/:limit', tweets.findByHashtagLimited);
 
 app.listen(3000);
 
-//var interval_id = setInterval(function(){ tweets.fetch(); }, 5000);
+tweets.stream();
 
-tweets.fetch();
+var interval_id = setInterval(function(){ tweets.fetch(); }, 20000);//fetch every 20 seconds
+
+//tweets.fetch();
 //console.log('interval_id: ');
 //console.dir(interval_id);
 
