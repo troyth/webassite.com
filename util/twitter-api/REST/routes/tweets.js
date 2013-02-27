@@ -106,26 +106,30 @@ exports.fetch = function(){
 			//results_pruned = prune(data.results);
 
 			results_pruned = data.results;
+			console.log('**********results_pruned.length: '+ results_pruned.length);
+			console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');
+			console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');
 
 			for(var i = 0; i < results_pruned.length; i++){
 				//@todo: only copy over the fields we need
-				results_pruned[i]._id = results_pruned[i].id;//set the mongo primary key, _id, to the tweet id for easy retreival
+				//results_pruned[i]._id = results_pruned[i].id;//set the mongo primary key, _id, to the tweet id for easy retreival
+				
+				db.collection('tweets', function(err, collection) {
+			        collection.update({_id: results_pruned[i].id}, {"$set": results_pruned[i]}, {safe:true, upsert:true}, function(err, result) {
+			        	if (err) {
+			                console.log('error: An error has occurred in trying to upsert into the DB tweets collection');
+			                console.log(err);
+			            } else {
+			                console.log('Success: ' + JSON.stringify(result[0]));
+			                console.log();console.log();console.log();console.log();console.log();
+			                //res.send(result[0]);
+			            }
+			        });
+		    });
 			}
 				
 
-				db.collection('tweets', function(err, collection) {
-			        collection.insert(results_pruned, {safe:true}, function(err, result) {
-			        	if (err) {
-			                console.log('error: An error has occurred in trying to insert into the DB tweets collection');
-			            } else {
-			                console.log('Success: ' + JSON.stringify(result[0]));
-			                //res.send(result[0]);
-			            }
-
-			        });
-			    });
-				
-			//}
+			
 
 		});
 
