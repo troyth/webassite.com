@@ -23,7 +23,8 @@ app.configure(function () {
 });
 
 app.get('/tweets', tweets.findAll);
-app.get('/tweets/:id', tweets.findById);
+app.get('/tweets/id/:id', tweets.findById);
+app.get('/tweets/hashtag/:hashtag', tweets.findByHashtag);
 
 app.listen(3000);
 

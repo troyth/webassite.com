@@ -23,6 +23,9 @@ db.open(function(err, db) {
 });
 
 
+var hashtags = ['#235bowery', '#237bowery', '#football'];
+
+
 function prune(results){
 	var returnArray = [];
 	for(var i = 0; i < results.length; i++){
@@ -45,6 +48,23 @@ var MAX_ID, MAX_ID_STRING, NEXT_PAGE, PAGE, RESULTS_PER_PAGE, SINCE_ID, SINCE_ID
 
 
 
+exports.findByHashtag = function(req, res) {
+    var hashtag = req.params.hashtag;
+    console.log('findByHashtag called with hashtag: '+ hashtag);
+  
+    db.collection('tweets', function(err, collection) {
+        collection.findOne({'hashtag': hashtag}, function(err, item) {
+        	if(err) {
+                console.log('error: An error has occurred in trying to find a tweet document by id with _id: '+ id);
+                console.log(err);
+            } else {
+                console.log('Success: A tweet has been found and returned with _id: '+ id);
+                res.send(item);
+            }
+            
+        });
+    });
+};
  
 exports.findById = function(req, res) {
     var id = req.params.id;
@@ -101,6 +121,12 @@ exports.clear = function(){
 }
 
 
+function createSearchterms(){
+
+	return hashtags.join(' OR ');
+}
+
+
 /*
  *	fetch()
  *
@@ -108,11 +134,17 @@ exports.clear = function(){
  *
 */
 exports.fetch = function(){
-	twit
-		.verifyCredentials(function (err, data) {
+
+	var searchterms = createSearchterms();//create search terms out of the hashtag array
+
+	console.log('****SEARCH TERMS: '+ searchterms);
+
+	twit.verifyCredentials(function (err, data) {
 			//console.log(data);
-		})
-		.search('#football OR #237bowery OR #239bowery', {}, function(err, data) {
+		});
+
+
+	twit.search(searchterms, {}, function(err, data) {
 			//console.log(data);
 
 			MAX_ID = data.max_id;
@@ -126,22 +158,44 @@ exports.fetch = function(){
 			//results_pruned = prune(data.results);
 
 			results_pruned = data.results;
-			console.log('**********results_pruned.length: '+ results_pruned.length);
-			console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');
-			console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');console.log('*');
-
-			for(var i = 0; i < results_pruned.length; i++){
+			
+			for(var i = 0; i < data.results.length; i++){
 				//@todo: only copy over the fields we need
 				//results_pruned[i]._id = results_pruned[i].id;//set the mongo primary key, _id, to the tweet id for easy retreival
 				
+				console.log('adding to db collection results_pruned['+i+'] with tweet id: '+ results_pruned[i].id_str);
+
+
+
+				/*
+				 *	SPECIFICALLY FOR GROUP 2 ONLY : adds the hashtag clearly
+				 *
+				*/
+				results_pruned[i].hashtags = [];
+				for(var k = 0; k < hashtags.length; k++){
+					if(results_pruned[i].text.toLowerCase().indexOf( hashtags[k].toLowerCase() ) >= 0){
+						results_pruned[i].hashtags.push( hashtags[k] );
+					}
+				}
+
+
+				var sb = '';
+				for(var j = 0; j < (24 - results_pruned[i].id_str.length); j++){
+					sb = sb + '0';
+				}
+
+				results_pruned[i].id_bson = sb + results_pruned[i].id_str;
+
+				console.log('results_pruned[i].id_bson now: ' + results_pruned[i].id_bson + ' with length: '+results_pruned[i].id_bson.length);
+
+
 				db.collection('tweets', function(err, collection) {
-			        collection.update({_id:new BSON.ObjectID(results_pruned[i].id)}, {"$set": results_pruned[i]}, {safe:true, upsert:true}, function(err, result) {
+			        collection.update({_id:new BSON.ObjectID(results_pruned[i].id_bson)}, {"$set": results_pruned[i]}, {safe:true, upsert:true}, function(err, result) {
 			        	if (err) {
 			                console.log('error: An error has occurred in trying to upsert into the DB tweets collection');
 			                console.log(err);
 			            } else {
 			                console.log('Success: ' + JSON.stringify(result[0]));
-			                console.log();console.log();console.log();console.log();console.log();
 			                //res.send(result[0]);
 			            }
 			        });
