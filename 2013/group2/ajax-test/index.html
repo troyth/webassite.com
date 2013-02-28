@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AJAX Test for Group 2</title>
+
+    <style>
+      #wrapper{
+        padding:100px;
+      }
+      .container{
+        background-color:#aaa;
+        margin:10px 20px 30px 40px;
+        padding:10px 20px;
+        float:left;
+      }
+      .tweet{
+        padding:30px;
+        background-color:black;
+        color:white;
+        margin:0 0 30px;
+      }
+    </style>
+
+    <!--MUST INCLUDE JQUERY LIBRARY-->
+    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+    <script type="text/javascript">
+
+
+    // the standard jquery loop to be executed after the document is finished loading:
+    
+    $( document ).ready( function() {
+      console.log('document ready');
+
+      $("#ajax-call").click(function() {
+        // set target URL
+        var target_url =  'http://webassite.com/util/twitter-api/REST/tweets/geo/bowery/limit/10';
+        $('#result').children('div').remove();
+
+        // send call and return to an anonymous function
+        $.getJSON(target_url, function(data){
+
+            // loop through data
+            console.dir(data);
+
+            for(var i = 0; i < data.length; i++){
+
+              var html = '<div class="tweet">';
+              html = html + '<div>Tweet number: ' + i + '</div>';
+              html = html + '<div>_id: '+ data[i]._id + '</div>';
+              html = html + '<div>created_at: ' + data[i].created_at + '</div>';
+              html = html + '<div>from_user: @' + data[i].from_user + '</div>';
+              html = html + '<div>text: ' + data[i].text + '</div>';
+              html = html + '</div>';
+
+              $('#result').append(html);
+            }
+        });
+      });
+    });
+
+
+    </script>
+
+
+
+
+  </head>
+  <body>
+    <div id="wrapper">
+      <div class="container">
+        <a href="#" id="ajax-call">Call API</a><br/>
+      <div id="result">
+      </div>
+      </div>
+
+
+    </div>
+  </body>
+</html>
