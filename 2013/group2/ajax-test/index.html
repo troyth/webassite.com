@@ -35,16 +35,20 @@
       $("#ajax-call").click(function() {
         // set target URL
         var target_url =  'http://webassite.com/util/twitter-api/REST/tweets/geo/bowery/limit/10';
-        $('#result').children('div').remove();
+        //$('#result').children('div').remove();
 
-        // send call and return to an anonymous function
-        $.getJSON(target_url, function(data){
-
+        $.ajax({
+          type : "GET",
+          dataType : "jsonp",
+          url : target_url, // ?callback=?
+          success: function(data){
+            console.log('success');
+            // do stuff with data
+            console.log('returned');
             // loop through data
             console.dir(data);
 
             for(var i = 0; i < data.length; i++){
-
               var html = '<div class="tweet">';
               html = html + '<div>Tweet number: ' + i + '</div>';
               html = html + '<div>_id: '+ data[i]._id + '</div>';
@@ -55,7 +59,17 @@
 
               $('#result').append(html);
             }
+          },
+          error: function(e){
+            console.log('error');
+            console.dir(e);
+          },
+          complete: function(data){
+            
+          }
         });
+
+        
       });
     });
 

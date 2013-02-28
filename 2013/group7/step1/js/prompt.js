@@ -4,17 +4,15 @@ var prompt = {
 
 	//set up default options
 	options: {
-		color: '#000000',
-		backgroundColor: '#ffffff',
+		color: '#00FFFF',
+		backgroundColor: '#FFFF00',
 		fontSize: '36px',
 		fontFamily: 'Arial, Helvetica, sans-serif',
 		textAlign: 'center'
 	},
 
 	message: {
-		text: "Click anywhere to begin",
-		image: "",
-		video: ""
+		text: ""
 	},
 
 	messageIndex: 0,
@@ -32,9 +30,28 @@ var prompt = {
 			.css('textAlign', prompt.options.textAlign);
 
 		//appends the #container with introductory content
+	},
 
-		prompt.refreshMessage();
-		$(prompt.selector).bind('click', prompt.begin);
+	randomBackgroundFlash: function(){
+
+		var newBG = ['#ff0000', '#ffff00', '#ff00ff', '#00ff00'];
+		var i = 0;
+
+		var intervalId = setInterval( function(){
+			$(prompt.selector).css('backgroundColor', newBG[i]);
+			i++;
+			if(i > newBG.length){
+				i = 0;
+			}
+		}, 200 );
+
+		return intervalId;
+
+	},
+
+	chooseColor: function(){
+
+
 	},
 
 	begin: function(){
@@ -47,8 +64,6 @@ var prompt = {
 	//@todo: implement a function to display the message with the current message parameters
 	refreshMessage: function(){
 		$('.message .text', prompt.selector).html( prompt.message.text );
-		$('.message .image', prompt.selector).html( prompt.message.image );
-		$('.message .video', prompt.selector).html( prompt.message.video );
 	},
 
 	incrementMessage: function(){
@@ -80,14 +95,10 @@ var prompt = {
 
 	messages: [
 		{
-			text: 'starting the game',
-			image: '',
-			video: ''
+			text: 'Click screen to choose color'
 		},
 		{
-			text: 'second message',
-			image: '<img src="http://placehold.it/350x150">',
-			video: ''
+			text: 'Follow color in background for 5 minutes'
 		}
 	]
 }

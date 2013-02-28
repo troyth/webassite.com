@@ -17,12 +17,16 @@ proxyServer.listen(80);
 
 var app = express();
 
+app.enable("jsonp callback");
+
 app.configure(function () {
     app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
     app.use(express.bodyParser());
 });
 
 app.get('/tweets/geo/bowery', tweets.findAll);
+
+
 app.get('/tweets/geo/bowery/limit/:limit', tweets.findAllLimited);
 
 app.get('/tweets/geo/bowery/id/:id', tweets.findById);

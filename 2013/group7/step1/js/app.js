@@ -17,6 +17,9 @@
 $(document).ready(function() {
 	prompt.init('#container');
 
+	var intvervalId = prompt.randomBackgroundFlash();
+
+ 	$('#container').bind('click', function(){ clearInterval(intvervalId); });
 
 
 

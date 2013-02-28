@@ -121,7 +121,7 @@ exports.findAllLimited = function(req, res) {
 
     db.collection('tweets', function(err, collection) {
         collection.find().sort({"timestamp":-1}).limit(limit).toArray(function(err, items) {
-            res.send(items);
+            res.jsonp(items);
         });
     });
 };
