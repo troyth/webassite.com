@@ -24,7 +24,7 @@ db.open(function(err, db) {
 
 
 var hashtags = ['#235bowery', '#237bowery', '#football', '#bowery', '#museum', '#design', '#art'];
-var RESPONSE_LIMIT = 100;
+var RESPONSE_LIMIT = 300;
 
 function prune(results){
 	var returnArray = [];
@@ -160,6 +160,38 @@ function createSearchterms(){
 
 
 
+exports.countStream = function(){
+	db.collection('tweetstream', function(err, collection) {
+		var total = collection.count(function(err, total) {
+			if(err){
+				console.log('Error: error trying to count total documents in tweetstream db');
+			}else{
+				console.log('####### TOTAL STREAM TWEETS IN DB: '+ total + ' #######');
+			}
+		});
+    });
+
+    db.collection('tweetstream', function(err, collection) {
+		var total = collection.find({"geo": null}).count(function(err, total) {
+			if(err){
+				console.log('Error: error trying to count total documents in tweetstream db');
+			}else{
+				console.log('####### TOTAL STREAM TWEETS IN DB WITHOUT GEO: '+ total + ' #######');
+			}
+		});
+    });
+}
+
+exports.findAllStream = function(req, res) {
+	console.log('trying to findAllStream');
+    
+    db.collection('tweetstream', function(err, collection) {
+        collection.find().limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            res.send(items);
+        });
+    });
+};
+
 /*
  *	stream()
  *
@@ -167,22 +199,17 @@ function createSearchterms(){
  *
 */
 exports.stream = function(){
-
-
 	twit.stream('statuses/filter', {'locations':'-73.994401,40.717371,-73.991482,40.725795'}, function(stream) {
 		console.log('starting to stream');
 		stream.on('data', function (data) {
 			//console.log(data);
-
-
-
 			db.collection('tweetstream', function(err, collection) {
 		        collection.insert(data, {safe:true}, function(err, result) {
 		        	if (err) {
-		                console.log('error: An error has occurred in trying to upsert into the DB tweetstream collection');
+		                console.log('error: An error has occurred in trying to insert into the DB tweetstream collection');
 		                console.log(err);
 		            } else {
-		                console.log('Success: ' + JSON.stringify(result[0]));
+		                //console.log('Success: ' + JSON.stringify(result[0]));
 		                //res.send(result[0]);
 		            }
 		        });
@@ -191,11 +218,8 @@ exports.stream = function(){
 
 		});
 		
-		setTimeout(stream.destroy, 25000);//disconnect after a day86400000
+		setTimeout(stream.destroy, 14400000);//24hrs = 86400000, 14400000 = 4hrs
 	});
-
-
-
 }
 
 
