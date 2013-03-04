@@ -60,7 +60,7 @@ exports.findByHashtagLimited = function(req, res) {
                 console.log(err);
             } else {
                 console.log('Success: Tweets have been found and returned with hashtag: '+ hashtag);
-                res.send(item);
+                res.jsonp(item);
             }
             
         });
@@ -78,7 +78,7 @@ exports.findByHashtag = function(req, res) {
                 console.log(err);
             } else {
                 console.log('Success: Tweets have been found and returned with hashtag: '+ hashtag);
-                res.send(item);
+                res.jsonp(item);
             }
             
         });
@@ -96,7 +96,7 @@ exports.findById = function(req, res) {
                 console.log(err);
             } else {
                 console.log('Success: A tweet has been found and returned with _id: '+ id);
-                res.send(item);
+                res.jsonp(item);
             }
             
         });
@@ -108,7 +108,7 @@ exports.findAll = function(req, res) {
 
     db.collection('tweets', function(err, collection) {
         collection.find().sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
-            res.send(items);
+            res.jsonp(items);
         });
     });
 };
@@ -152,6 +152,14 @@ exports.clear = function(){
     console.log('cleared all documents in tweets collection');
 }
 
+exports.clearStream = function(){
+	db.collection('tweetstream', function(err, collection) {
+        collection.remove();
+    });
+
+    console.log('cleared all documents in tweetstream collection');
+}
+
 
 function createSearchterms(){
 
@@ -170,16 +178,6 @@ exports.countStream = function(){
 			}
 		});
     });
-
-    db.collection('tweetstream', function(err, collection) {
-		var total = collection.find({"geo": null}).count(function(err, total) {
-			if(err){
-				console.log('Error: error trying to count total documents in tweetstream db');
-			}else{
-				console.log('####### TOTAL STREAM TWEETS IN DB WITHOUT GEO: '+ total + ' #######');
-			}
-		});
-    });
 }
 
 exports.findAllStream = function(req, res) {
@@ -187,7 +185,12 @@ exports.findAllStream = function(req, res) {
     
     db.collection('tweetstream', function(err, collection) {
         collection.find().limit(RESPONSE_LIMIT).toArray(function(err, items) {
-            res.jsonp(items);
+        	if(err){
+        		console.log('Error: with findAllStream(), error: ' + err);
+        	}else{
+        		console.log('Success: returning max of ' + items.length + ' tweets');
+            	res.jsonp(items);
+            }
         });
     });
 };
@@ -198,22 +201,80 @@ exports.findAllStream = function(req, res) {
  *	Streams the twitter API storing all tweets from the Bowery in the last day
  *
 */
+
+var streamBoundsStart = [];
+streamBoundsStart[0] = -73.999;//-73.994401
+streamBoundsStart[1] = 40.7;//40.717371
+
+var streamBoundsEnd = [];
+streamBoundsEnd[0] = -73.9;//-73.991482
+streamBoundsEnd[1] = 40.79;//40.725795
+
+var streamBoundsString = streamBoundsStart.join(',') + ',' + streamBoundsEnd.join(',');
+console.log("streamBoundsString: "+ streamBoundsString);
+
+var temp = 0;
+
 exports.stream = function(){
-	twit.stream('statuses/filter', {'locations':'-73.994401,40.717371,-73.991482,40.725795'}, function(stream) {
+	twit.stream('statuses/filter', {'locations': streamBoundsString }, function(stream) {//{'locations':'-73.994401,40.717371,-73.991482,40.725795'}
 		console.log('starting to stream');
 		stream.on('data', function (data) {
-			//console.log(data);
-			db.collection('tweetstream', function(err, collection) {
-		        collection.insert(data, {safe:true}, function(err, result) {
-		        	if (err) {
-		                console.log('error: An error has occurred in trying to insert into the DB tweetstream collection');
-		                console.log(err);
-		            } else {
-		                //console.log('Success: ' + JSON.stringify(result[0]));
-		                //res.send(result[0]);
-		            }
-		        });
-	    	});
+
+			//console.log('');
+			
+
+			var outside = false;
+
+				if( data.geo == null ){
+					//data.splice(i, 1);//remove from data if no geo
+					//console.log('');
+					//console.log('had no geo, removing');
+					//console.log('');
+					outside = true;
+				}else{
+					//console.log('entered for j loop');
+
+					if( streamBoundsStart[1] > parseFloat(data.geo.coordinates[0])){
+						//console.log('outside 1');
+						//outside = true;
+					}
+					if( parseFloat(data.geo.coordinates[0]) > streamBoundsEnd[1]){
+						//console.log('outside 2');
+						//outside = true;
+					}
+					if(streamBoundsEnd[0] > parseFloat(data.geo.coordinates[1])){
+						//console.log('outside 3');
+						//outside = true;
+					}
+					if(parseFloat(data.geo.coordinates[1]) > streamBoundsStart[0]){
+						//console.log('outside 4');
+						//outside = true;
+					}
+
+
+				}
+				
+			//console.log('streaming a tweet with outside: ' + outside);
+
+			if(!outside){
+				var timestamp = new Date(data.created_at);
+				data.timestamp = timestamp.getTime();
+
+				//console.log('*******outside was false, adding to tweetstream');
+
+
+				db.collection('tweetstream', function(err, collection) {
+			        collection.insert(data, {safe:true}, function(err, result) {
+			        	if (err) {
+			                console.log('Stream error: An error has occurred in trying to insert into the DB tweetstream collection');
+			                console.log(err);
+			            } else {
+			                //console.log('Stream success: added ' + data.length + ' tweets to the DB tweetstream collection');
+			                //res.send(result[0]);
+			            }
+			        });
+		    	});
+			}
 
 
 		});
