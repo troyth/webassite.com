@@ -1,22 +1,10 @@
 var express = require('express'),
-    tweets = require('./routes/tweets');
-
-/*
-var httpProxy = require('http-proxy');
-
-
-var options = {
-  router: {
-    'webassite.com/util/twitter-api/REST': '127.0.0.1:3000'
-  }
-};
-
-var proxyServer = httpProxy.createServer(options);
-proxyServer.listen(80);
-*/
+    //tweets = require('./routes/tweets'),
+    twitter_api = require('./routes/twitter_api');
 
 var app = express();
 
+//enable the option to respond to jsonp
 app.enable("jsonp callback");
 
 app.configure(function () {
@@ -24,31 +12,47 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
-app.get('/tweets/geo/bowery', tweets.findAll);
+//GROUP 2 and 4
+//app.get('/tweets/geo/bowery', tweets.findAll);
+//app.get('/tweets/stream/bowery', tweets.findAllStreetCache);
+app.get('/tweets/:collection', twitter_api.findAll);
+
+//GROUP 2
+
+//app.get('/tweets/geo/bowery/limit/:limit', tweets.findAllLimited);
+app.get('/tweets/:collection/limit/:limit', twitter_api.findAllLimited);
+
+//app.get('/tweets/geo/bowery/id/:id', tweets.findById);
+app.get('/tweets/:collection/id/:id', twitter_api.findById);
+
+//app.get('/tweets/geo/bowery/hashtag/:hashtag/limit/:limit', tweets.findByHashtagLimited);
+app.get('/tweets/:collection/hashtag/:hashtag/limit/:limit', twitter_api.findByHashtagLimited);
+
+//app.get('/tweets/geo/bowery/hashtag/:hashtag/recent/:timewindow/count', tweets.countByHashtagLimited);
+app.get('/tweets/:collection/hashtag/:hashtag/recent/:timewindow/count', twitter_api.countByHashtagLimited);
+
+//app.get('/tweets/geo/bowery/block/:block/recent/:timewindow/count', tweets.countByBlockLimited);
+app.get('/tweets/:collection/block/:block/recent/:timewindow/count', twitter_api.countByBlockLimited);
+
+//GROUP 4
+//app.get('/tweets/stream/bowery/recent/:timewindow', tweets.findStreamRecentTimeWindow);
+app.get('/tweets/:collection/recent/:timewindow', twitter_api.findRecent);
 
 
-app.get('/tweets/geo/bowery/limit/:limit', tweets.findAllLimited);
 
-app.get('/tweets/geo/bowery/id/:id', tweets.findById);
-app.get('/tweets/geo/bowery/hashtag/:hashtag', tweets.findByHashtag);
-app.get('/tweets/geo/bowery/hashtag/:hashtag/limit/:limit', tweets.findByHashtagLimited);
-
-
-app.get('/tweets/stream/bowery', tweets.findAllStream);
+//begin the streaming
+twitter_api.stream('movements');
+twitter_api.stream('streetcache');
 
 
+//print out the current counts every 20 seconds
+var interval_id = setInterval(function(){ 
+		twitter_api.count('movements');
+		twitter_api.count('streetcache');
+	}, 20000);//fetch every 20 seconds
 
+
+
+//listen on port 3000
 app.listen(3000);
-
-tweets.stream();
-tweets.countStream();
-
-var interval_id = setInterval(function(){ tweets.fetch(); }, 20000);//fetch every 20 seconds
-
-//tweets.fetch();
-//console.log('interval_id: ');
-//console.dir(interval_id);
-
-setTimeout(function(){ process.exit(); }, 43200000);//14400000 = 4hrs, 43200000 = 12hrs
-
 console.log('Listening on port 3000...');

@@ -26,8 +26,12 @@ db.open(function(err, db) {
 var hashtags = ['#235bowery', '#237bowery', '#football', '#bowery', '#museum', '#design', '#art'];
 
 var block1 = new Array('273bowery', '269bowery', '267bowery', '265bowery', '263bowery', '261bowery', '259bowery', '257bowery', '255bowery', '2stanton');
+
 var block2 = new Array('245bowery', '243bowery', '241bowery', '239bowery', '235bowery', '231bowery', '229bowery', '227bowery', '225bowery', '223bowery', '221bowery', '219bowery', '217bowery', '215bowery', '4rivington', '6rivington', '8rivington', '12rivington', '16rivington', '181chrystie', '183chrystie', '187chrystie', '189chrystie', '191chrystie', '195chrystie', '199chrystie', '201chrystie', '203chrystie', '205chrystie', '9stanton', '11stanton', '13stanton', '15stanton', '17stanton');
+
 var block3 = new Array('213bowery','209bowery','207bowery','199bowery','197bowery','195bowery','193bowery','191bowery','189bowery','187bowery','185bowery','183bowery','6delancey','10delancey','12delancey','14delancey','16delancey','18delancey','155chrystie','157chrystie','159chrystie','163chrystie','165chrystie','167chrystie','169chrystie','173chrystie','17rivington','15rivington','11rivington','7rivington','5rivington');
+
+var bowBlocks = new Array(block1,block2,block3);
 
 
 
@@ -57,163 +61,14 @@ var twit = new twitter({
 
 var MAX_ID, MAX_ID_STRING, NEXT_PAGE, PAGE, RESULTS_PER_PAGE, SINCE_ID, SINCE_ID_STRING, results_pruned;
 
-
-
-/*
- *******************************************************************************************************
- *******************************************************************************************************
- *	HELPER FUNCTIONS
- *******************************************************************************************************
- *******************************************************************************************************
-*/
-
-/*
- *	showAll(col)
- *
- *	logs all tweets in collection col to the console
- *
-*/
-exports.showAll = function(col){
-	console.log('-------showAll() from collection: '+ col);
-	db.collection(col, function(err, collection) {
-        collection.find().toArray(function(err, items) {
-        	if(err){
-        		console.log('Error: showAll() fired an error:');
-        		console.log(err);
-        	}else{
-            	console.log(items);
-            }
-        });
-    });
-
-}
-
-
-/*
- *	clear(col)
- *
- *	Deletes all documents in the col collection
- *
-*/
-exports.clear = function(col){
-	console.log('-------clear() from collection: ' + col);
-	db.collection(col, function(err, collection) {
-        collection.remove();
-    });
-}
-
-
-
-exports.count = function(col){
-	db.collection(col, function(err, collection) {
-		var total = collection.count(function(err, total) {
-			if(err){
-				console.log('Error: error trying to count total documents in ' + col + ' collection');
-			}else{
-				console.log('####### TOTAL TWEETS in ' + col + ' collection: '+ total + ' #######');
-			}
-		});
-    });
-}
-
-
-
-
-
-/*
- *******************************************************************************************************
- *******************************************************************************************************
- *	GROUP 2 - BOWERY MOVEMENTS - TWITTER API MIRROR RESTful ACCESS FUNCTIONS
- *******************************************************************************************************
- *******************************************************************************************************
-*/
-
-
-/*
- *	findAll(req, res)
- *
- *	Returns (up to) the RESPONSE_LIMIT most recent tweets in reverse chronological order 
- *	from the movements collection that have come from the Bowery region
- *
-*/
-exports.findAll = function(req, res) {
-	console.log('findAll() in movements collection');
-
-    db.collection('movements', function(err, collection) {
-        collection.find().sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
-            res.jsonp(items);
-        });
-    });
-};
-
-
-/*
- *	findAllLimited(req, res)
- *
- *	Returns (up to) the :limit most recent tweets with a maximum of RESPONSE_LIMIT tweets in 
- *	reverse chronological order that have come from the Bowery region
- *
-*/
-exports.findAllLimited = function(req, res) {
-	var limit = req.params.limit;
-	console.log('findAllLimited() in movements collection with limit: '+ limit);
-
-	limit = parseInt(limit);
-
-    db.collection('movements', function(err, collection) {
-        collection.find().sort({"timestamp":-1}).limit(limit).toArray(function(err, items) {
-        	if(err){
-        		console.log('Error: findAllLimited() returned with error:');
-        		console.log(err);
-        	}else{
-            	res.jsonp(items);
-            }
-        });
-    });
-};
-
-
-/*
- *	findAllLimited(req, res)
- *
- *	Returns (up to) the :limit most recent tweets with a maximum of RESPONSE_LIMIT tweets in 
- *	reverse chronological order that have come from the Bowery region
- *
-*/
-exports.findById = function(req, res) {
-    var id = req.params.id;
-    console.log('findById() in movements collection with id: ' + id);
-
-    db.collection('movements', function(err, collection) {
-        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-        	if(err) {
-                console.log('error: An error has occurred in trying to find a tweet document in movements collection by id with _id: '+ id);
-                console.log(err);
-            } else {
-                console.log('Success: A tweet in movements collection has been found and returned with _id: '+ id);
-                res.jsonp(item);
-            }
-            
-        });
-    });
-};
-
-
-/*
- *	findByHashtagLimited(req, res)
- *
- *	Returns (up to) the :limit most recent tweets in reverse chronological order that have 
- *	come from the Bowery region with the hashtag of :hashtag
- *
-*/
 exports.findByHashtagLimited = function(req, res) {
     var hashtag = '#' + req.params.hashtag;//prepend #
     var limit = req.params.limit;
     limit = parseInt(limit);
 
-    console.log('findByHashtag called on movements collection with hashtag: '+ hashtag);
+    console.log('findByHashtag called with hashtag: '+ hashtag);
   
-    db.collection('movements', function(err, collection) {
+    db.collection('tweets', function(err, collection) {
         collection.find({'hashtags': hashtag}).sort({"timestamp":-1}).limit(limit).toArray(function(err, item) {
         	if(err) {
                 console.log('error: An error has occurred in trying to find a tweets with hashtag: '+ hashtag);
@@ -227,11 +82,47 @@ exports.findByHashtagLimited = function(req, res) {
     });
 };
 
+exports.findByHashtag = function(req, res) {
+    var hashtag = '#' + req.params.hashtag;//prepend #
+    console.log('findByHashtag called with hashtag: '+ hashtag);
+  
+    db.collection('tweets', function(err, collection) {
+        collection.find({'hashtags': hashtag}).sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, item) {
+        	if(err) {
+                console.log('error: An error has occurred in trying to find a tweets with hashtag: '+ hashtag);
+                console.log(err);
+            } else {
+                console.log('Success: Tweets have been found and returned with hashtag: '+ hashtag);
+                res.jsonp(item);
+            }
+            
+        });
+    });
+};
 
 /*
- *	countByHashtagLimited(req, res)
- *
- *	Returns the number of tweets for a given :hashtag within the last :seconds
+ *	Returns the number of tweets with :hashtag in the db collection 'tweets'
+*/
+exports.countByHashtag = function(req, res) {
+    var hashtag = '#' + req.params.hashtag;//prepend #
+    console.log('findByHashtag called with hashtag: '+ hashtag);
+  
+    db.collection('tweets', function(err, collection) {
+        collection.find({'hashtags': hashtag}).count(function(err, total) {
+        	if(err) {
+                console.log('error: An error has occurred in trying to count the tweets with hashtag: '+ hashtag);
+                console.log(err);
+            } else {
+                console.log('Success: Counted '+ total +' tweets with hashtag: '+ hashtag);
+                res.jsonp(total);
+            }
+            
+        });
+    });
+};
+
+/*
+ *	Returns the number of tweets with :hashtag with a timestamp within the last :timewindow milliseconds in the db collection 'tweets'
 */
 exports.countByHashtagLimited = function(req, res) {
     var hashtag = '#' + req.params.hashtag;//prepend #
@@ -247,7 +138,7 @@ exports.countByHashtagLimited = function(req, res) {
 
     console.log("calling findStreamRecentTimeWindow() with min_time: "+ m.toString() );
   
-    db.collection('movements', function(err, collection) {
+    db.collection('tweets', function(err, collection) {
         collection.find({'hashtags': hashtag,  "timestamp": { $gt: min_time } }).count(function(err, total) {
         	if(err) {
                 console.log('error: An error has occurred in trying to count the tweets with hashtag: '+ hashtag + ' within timewindow: '+time_window);
@@ -260,103 +151,109 @@ exports.countByHashtagLimited = function(req, res) {
         });
     });
 };
+ 
+exports.findById = function(req, res) {
+    var id = req.params.id;
+    console.log('findById called');
+    console.log('Retrieving tweet: ' + id);
+    db.collection('tweets', function(err, collection) {
+        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+        	if(err) {
+                console.log('error: An error has occurred in trying to find a tweet document by id with _id: '+ id);
+                console.log(err);
+            } else {
+                console.log('Success: A tweet has been found and returned with _id: '+ id);
+                res.jsonp(item);
+            }
+            
+        });
+    });
+};
+ 
+exports.findAll = function(req, res) {
+	console.log('trying to findAll');
 
-
-/*
- *	countByBlockLimited(req, res)
- *
- *	Returns the number of tweets for a given :block within the last :seconds where :block can take the values 1, 2 or 3
-*/
-exports.countByBlockLimited = function(req, res) {
-    var block = req.params.block;//prepend #
-    var time_window = req.params.timewindow * 1000;//multiply seconds to milliseconds
-    console.log('findByHashtag called with hashtag: '+ hashtag);
-
-    var d = new Date();
-    var current_time = d.getTime();
-    //current_time = current_time - (d.getTimezoneOffset() * 60 * 1000);//add the offset to convert server time to UTC
-    var min_time = current_time - time_window;
-
-    var m = new Date(min_time);
-
-    console.log("calling findStreamRecentTimeWindow() with min_time: "+ m.toString() );
-
-    var errorThrow = false;
-    var block;
-
-    switch(block){
-    	case 1:
-    		block = new Array(block1);
-    		break;
-    	case 2:
-    		block = new Array(block2);
-    		break;
-    	case 3:
-    		block = new Array(block3);
-    		break;
-    	default:
-    		errorThrow = true;
-    		break;
-    }
-
-    if( !errorThrow ){
-
-    	for(var i = 0; i < block.length; i++){
-    		block[i] = '#' + block[i];
-    	}
-
-    	block = block.join(',');
-  
-	    db.collection('movements', function(err, collection) {
-	        collection.find({'hashtags': block,  "timestamp": { $gt: min_time } }).count(function(err, total) {
-	        	if(err) {
-	                console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
-	                console.log(err);
-	            } else {
-	                console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
-	                res.jsonp(total);
-	            }
-	            
-	        });
-	    });
-	}else{
-		//@todo: need to send a res with status NOT OK
-	}
+    db.collection('tweets', function(err, collection) {
+        collection.find().sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            res.jsonp(items);
+        });
+    });
 };
 
+exports.findAllLimited = function(req, res) {
+	var limit = req.params.limit;
+	console.log('trying to findRecent with limit: '+ limit);
 
+	limit = parseInt(limit);
 
+    db.collection('tweets', function(err, collection) {
+        collection.find().sort({"timestamp":-1}).limit(limit).toArray(function(err, items) {
+            res.jsonp(items);
+        });
+    });
+};
 
+exports.showAll = function(){
+	console.log('trying to showAll');
+	db.collection('tweets', function(err, collection) {
+        collection.find().toArray(function(err, items) {
+        	//@todo: error handling
+            console.log(items);
+        });
+    });
 
-
-
-
-
+}
 
 
 /*
- *******************************************************************************************************
- *******************************************************************************************************
- *	GROUP 4 - STREET CACHE - TWITTER API MIRROR RESTful ACCESS FUNCTIONS
- *******************************************************************************************************
- *******************************************************************************************************
-*/
-
-
-/*
- *	findAllStreetCache(req, res)
+ *	clear()
  *
- *	Returns (up to) the RESPONSE_LIMIT most recent tweets in reverse chronological order 
- *	from the streetcache collection that have come from the Bowery region
+ *	Deletes all documents in the Mongo db collection 'tweets'
  *
 */
-exports.findAllStreetCache = function(req, res) {
-	console.log('trying to findAllStreetCache()');
+exports.clear = function(){
+	db.collection('tweets', function(err, collection) {
+        collection.remove();
+    });
+
+    console.log('cleared all documents in tweets collection');
+}
+
+exports.clearStream = function(){
+	db.collection('tweetstream', function(err, collection) {
+        collection.remove();
+    });
+
+    console.log('cleared all documents in tweetstream collection');
+}
+
+
+function createSearchterms(){
+
+	return hashtags.join(' OR ');
+}
+
+
+
+exports.countStream = function(){
+	db.collection('tweetstream', function(err, collection) {
+		var total = collection.count(function(err, total) {
+			if(err){
+				console.log('Error: error trying to count total documents in tweetstream db');
+			}else{
+				console.log('####### TOTAL STREAM TWEETS IN DB: '+ total + ' #######');
+			}
+		});
+    });
+}
+
+exports.findAllStream = function(req, res) {
+	console.log('trying to findAllStream');
     
-    db.collection('streetcache', function(err, collection) {
+    db.collection('tweetstream', function(err, collection) {
         collection.find().sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
         	if(err){
-        		console.log('Error: with findAllStreetCache(), error: ' + err);
+        		console.log('Error: with findAllStream(), error: ' + err);
         	}else{
         		console.log('Success: returning max of ' + items.length + ' tweets');
             	res.jsonp(items);
@@ -364,11 +261,6 @@ exports.findAllStreetCache = function(req, res) {
         });
     });
 };
-
-
-
-
-
 
 exports.findStreamRecentTimeWindow = function(req, res) {
 	console.log('trying to findStreamRecentTimeWindow');
@@ -386,7 +278,7 @@ exports.findStreamRecentTimeWindow = function(req, res) {
 
 
     
-    db.collection('streetcache', function(err, collection) {
+    db.collection('tweetstream', function(err, collection) {
         collection.find({ "timestamp": { $gt: min_time } }).sort({"timestamp":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
         	if(err){
         		console.log('Error: with findStreamRecentTimeWindow(), error: ' + err);
@@ -463,17 +355,17 @@ exports.stream = function(){
 				var timestamp = new Date(data.created_at);
 				data.timestamp = timestamp.getTime();
 
-				console.log('*******outside was false, adding to streetcache with geo: ');
+				console.log('*******outside was false, adding to tweetstream with geo: ');
 				console.dir(data.geo);
 
 
-				db.collection('streetcache', function(err, collection) {
+				db.collection('tweetstream', function(err, collection) {
 			        collection.insert(data, {safe:true}, function(err, result) {
 			        	if (err) {
-			                console.log('Stream error: An error has occurred in trying to insert into the DB streetcache collection');
+			                console.log('Stream error: An error has occurred in trying to insert into the DB tweetstream collection');
 			                console.log(err);
 			            } else {
-			                //console.log('Stream success: added ' + data.length + ' tweets to the DB streetcache collection');
+			                //console.log('Stream success: added ' + data.length + ' tweets to the DB tweetstream collection');
 			                //res.send(result[0]);
 			            }
 			        });
@@ -483,146 +375,9 @@ exports.stream = function(){
 
 		});
 		
-		//setTimeout(stream.destroy, 14400000);//24hrs = 86400000, 14400000 = 4hrs
+		setTimeout(stream.destroy, 14400000);//24hrs = 86400000, 14400000 = 4hrs
 	});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var mStreamBoundsStart = [];
-mStreamBoundsStart[0] = -76;//-73.994401
-mStreamBoundsStart[1] = 39;//40.717371
-
-var mStreamBoundsEnd = [];
-mStreamBoundsEnd[0] = -70;//-73.991482
-mStreamBoundsEnd[1] = 42;//40.725795
-
-var mStreamBoundsString = mStreamBoundsStart.join(',') + ',' + mStreamBoundsEnd.join(',');
-console.log("streamBoundsString: "+ mStreamBoundsString);
-
-var temp = 0;
-
-
-
-var bowBlocks = new Array(block1,block2,block3);
-
-//add hashtags to beginning of each value
-for(var i = 0; i < bowBlocks.length; i++){
-	bowBlocks[i] = '#' + bowBlocks[i];
-}
-
-var bowBlocksString = bowBlocks.join(',');
-
-
-
-
-exports.streamMovements = function(){
-	twit.stream('statuses/filter', {'track': bowBlocksString, 'locations': mStreamBoundsString }, function(stream) {//{'locations':'-73.994401,40.717371,-73.991482,40.725795'}
-		console.log('starting to stream');
-		stream.on('data', function (data) {
-
-			//console.log('');
-			
-
-			var outside = false;
-
-				if( data.geo == null ){
-					outside = true;
-				}else{
-					if( mStreamBoundsStart[1] > parseFloat(data.geo.coordinates[0])){
-						//console.log(streamBoundsStart[1] + ' > ' + data.geo.coordinates[0] + ' therefore outside 1');
-						outside = true;
-					}
-					if( parseFloat(data.geo.coordinates[0]) > mStreamBoundsEnd[1]){
-						//console.log(data.geo.coordinates[0] + ' > ' + streamBoundsEnd[1] + ' therefore outside 2');
-						outside = true;
-					}
-					if(mStreamBoundsEnd[0] < parseFloat(data.geo.coordinates[1])){
-						//console.log(streamBoundsEnd[0] + ' < ' + data.geo.coordinates[1] + ' therefore outside 3');
-						outside = true;
-					}
-					if(parseFloat(data.geo.coordinates[1]) < mStreamBoundsStart[0]){
-						//console.log(data.geo.coordinates[1] + ' < ' + streamBoundsStart[0] + ' therefore outside 4');
-						outside = true;
-					}
-
-
-				}
-				
-			//console.log('streaming a tweet with outside: ' + outside);
-
-			if(!outside){
-				var timestamp = new Date(data.created_at);
-				data.timestamp = timestamp.getTime();
-
-				console.log('*******outside was false, adding to movements collection with geo: ');
-				console.dir(data.geo);
-
-
-				db.collection('movements', function(err, collection) {
-			        collection.insert(data, {safe:true}, function(err, result) {
-			        	if (err) {
-			                console.log('Stream error: An error has occurred in trying to insert into the DB movements collection');
-			                console.log(err);
-			            } else {
-			                //console.log('Stream success: added ' + data.length + ' tweets to the DB movements collection');
-			                //res.send(result[0]);
-			            }
-			        });
-		    	});
-			}
-
-
-		});
-		
-		//setTimeout(stream.destroy, 14400000);//24hrs = 86400000, 14400000 = 4hrs
-	});
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -633,7 +388,7 @@ exports.streamMovements = function(){
 */
 exports.fetch = function(){
 
-	var searchterms = hashtags.join(' OR ');//create search terms out of the hashtag array
+	var searchterms = createSearchterms();//create search terms out of the hashtag array
 
 	//console.log('****FETCHING FROM TWITTER REST API WITH SEARCH TERMS: '+ searchterms);
 
