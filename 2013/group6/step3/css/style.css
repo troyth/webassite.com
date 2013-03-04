@@ -1,0 +1,26 @@
+#target {
+	height: auto;
+	width: 100%;
+}
+
+#wrapper {
+	background: transparent url('../img/Bowery1.jpg') no-repeat 0 0;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+#fabr {
+	
+	color:white;
+	position: fixed;
+	text-align: center;
+
+}
+.bubble-bg {
+	opacity:1;
+	text-align:center;
+}
+

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      /* basic css to make the map full screen
+      */
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      /* the HTML element that the google map is written into
+      */  
+      #map_canvas { height: 100% }
+      .clock {font-family:Arial; font-size:30px; color:White; margin-left:1000px; line-height:3em;}
+      #clock-list{
+        list-style: none;
+      }
+    
+    #streetcache {font-family:Arial; font-size:30px; color:White; margin-bottom:90px; margin-left:200px; z-index:1000;}
+      #clock-wrapper{
+        position:fixed;
+        z-index:1000;
+        opacity:.6;
+        overflow: hidden;
+        bottom: 0px;
+      }
+
+      #scache{
+        position:fixed;
+        z-index:1000;
+        opacity:.6;
+        overflow: hidden;
+        bottom: 0px;
+}
+
+    </style>
+    
+
+<!-- include the google maps API. 
+
+    Note you must include your developer key. If you set sensor=True then the map will be able to respond
+    to GPS location from devices according to the docs here: 
+
+    https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API
+-->    
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKNTSBxr87BHbpHmwoDilPb7Qw7EpLEKs&sensor=false">
+</script>
+
+
+
+<script type="text/javascript">
+/* this is where we add our own custom maps functionality */
+
+
+// declare a variable to hold our overlay and a source that defines where the image file is located
+// note that srcImage could be a full URL as well such as http://example.com/images/myFile.jpg
+var overlay;
+/*var srcImage = 'imap.jpg';*/
+
+
+/*  the BoweryOverlay is a custom class, that takes most of the functionality from google's own maps.OverlayView
+    and extends it - note: you dont need to worry about the details of this
+*/
+
+//BoweryOverlay.prototype = new google.maps.OverlayView();
+
+
+/*  store coordinates for destinations to map. Note: later these will be taken from the twitter API
+    - to find out coordinates, use this site: http://itouchmap.com/latlong.html
+*/   
+ 
+var cooperSquare = new google.maps.LatLng(40.727511,-73.991488);
+var chathamSquare = new google.maps.LatLng(40.713531,-73.998019);
+
+/*
+ *  mapPan
+ *
+ *  Pans the map, adds the clock
+*/
+
+var c_long, c_lat = 0;
+var tweets_plotted = [];
+
+
+function mapPan(map){
+  console.log('mapPan() called');
+  var pull_tweets = false;
+  interval = 0;
+  setInterval(function() {
+
+
+    /* how to make a random number in javascript:
+
+    */
+    var random_x = Math.random() * 140;
+    var random_y = Math.random() * 120;
+    
+    map.panBy(random_x, random_y); 
+    interval++;
+    var dateObj = new Date();
+
+    var seconds = dateObj.getSeconds();
+    var minutes = dateObj.getMinutes();
+    var hours = dateObj.getHours();
+
+    var mapcenter = map.getCenter();
+    
+    c_lat = mapcenter.hb;
+    c_long = mapcenter.ib;
+    console.log("at lat: " + c_lat + " c long " + c_long);
+
+
+    if (interval % 2 == 0) {
+
+
+
+    // get tweets
+    /*
+    $.ajax({
+      url: 'http://webassite.com/util/twitter-api/REST/tweets/stream/bowery?',
+      dataType: 'jsonp',
+      success: function(data) {
+        for (var x = 0; x < data.length; x++) {
+          var txt  = data[x].text;
+          
+          if (data[x].geo != null) {
+          
+
+          var t_lat = data[x].geo.coordinates[0];
+          var t_long = data[x].geo.coordinates[1];
+          console.log(txt);
+          console.log("lat " + t_lat + " long " + t_long);
+
+            var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(t_lat, t_long),
+            map: map,
+            title: txt
+            });
+          }
+
+
+        }
+
+
+      }, 
+      error: function(e) {
+        console.log('error');
+        console.log(e);
+      }
+    });
+  */
+    }
+  
+
+
+
+
+    var htmlString = '<li class="clock">' + hours + ":" + minutes + ":" + seconds + '</li>';
+
+    $('#clock-list').append( htmlString );
+
+  }, 200);
+}
+
+
+/*---------INSTRAGRAM---------
+
+//GET CURRENT COORDINATES OF MAP THAT IS OPEN
+
+/PASS TO THIS ENDPOINT
+var mapcenter = getCenter() //pass this back out of map function to here.
+
+function initialize() {
+
+https://api.instagram.com/v1/locations/search?lat=48.858844&lng=2.294351&access_token=ACCESS-TOKEN
+  
+
+}
+
+
+
+
+
+
+*/
+
+
+
+// initialize the google maps API functionality  
+function initialize() {
+  // set up some options such as intial zoom level and where to center the map
+  var mapOptions = {
+    zoom: 21,
+    center: cooperSquare, // center on new museum coordinates
+    mapTypeId: google.maps.MapTypeId.SATELLITE // map type is either ROADMAP, SATELLITE, etc.
+  };
+
+  // create a variable to reference the map itself
+  var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+  map.setTilt(0);
+  
+  mapPan(map);
+  
+  
+  /*
+
+  -- image bounds --
+
+  this part is tricky. what you need to do is basically use a geocoding service like this one @ http://itouchmap.com/latlong.html
+  to very precisely set the bounds of the South-West and North-East corners of your image. i found that i had to mess with this for a while
+  in very minute coordinate increments in order to get the image to align as perfectly as possible to the map underneath
+
+  once you have the two points, you create a LatLngBounds object and pass them into it
+  */
+
+  var swBound = new google.maps.LatLng(40.720136,-73.995076);
+  var neBound = new google.maps.LatLng(40.723254,-73.9900 );
+  var bounds = new google.maps.LatLngBounds(swBound, neBound);
+
+
+  // now we initialize the BoweryOverlay object with the bounds, the source image and a reference back to our map
+  srcImage = null;
+  overlay = new BoweryOverlay(bounds, srcImage, map);
+
+
+//here we initialize two variables that keep track of whether or not our custom markers have been added to the map
+var coopersquare_marker_added = false;
+var chathamsquare_marker_added = false;
+
+
+/* 
+
+-- capturing events on the map --
+
+the addListener function below basically registers a 'listener' to the google map. this listener is sort of an abstract object that listens to specific events. in our case we are only interested in 'click' events. you can create listeners for a variety of events such as zoom level changes and so on
+
+https://developers.google.com/maps/documentation/javascript/events
+
+*/
+google.maps.event.addListener(map, 'click', function() {
+
+    
+    // uncomment this to write notifications to the console when something happened
+    // console.log('someone clicked on the map!');
+    
+    // if the new museum marker has not yet been added, then add it now
+    if (newMuseum_marker_added == false) {
+
+      //console.log('adding fake tweet at new museum position');
+      
+      // create a new google maps marker object
+      var marker = new google.maps.Marker({
+        map: map, // the map for the object is our map, which is called 'map'
+        position: newMuseum, // the position for the marker should be the new museum location we created at the start
+        title:"NEW MUSEUM LOCATION", // the marker can have a title 
+        animation: google.maps.Animation.DROP // make the marker DROP onto the map...
+      });
+        
+      // center the map onto this new marker
+      map.setCenter(marker.getPosition());
+      
+      // make our script remember that we added this position already
+      newMuseum_marker_added = true;
+    
+    } else {
+
+      // if the new museum marker has been added, then let's now add the bowery ballroom marker
+
+      // again we look if the bowery ballroom marker has been added 
+      if (boweryBallroom_marker_added == false) {
+
+        //console.log('adding fake tweet at bowery ballroom position');
+
+        // here we are re-using the 'marker' variable we created earlier to make another new marker
+        marker = new google.maps.Marker({
+          map: map, // our map is still the same map
+          position: boweryBallroom, // the position is now different
+          title:"BB LOCATION",
+          animation: google.maps.Animation.DROP
+          });
+
+        // remember that we added this marker
+        boweryBallroom_marker_added = true;
+      }
+    }
+}); // OK done listening for events
+
+} // finished with the 'initialize loop'
+
+
+/* the custom overlay class -- NOTE: do not worry about the below code!
+*/
+
+function BoweryOverlay(bounds, image, map) {
+
+// Now initialize all properties.
+this.bounds_ = bounds;
+this.image_ = image;
+this.map_ = map;
+
+// We define a property to hold the image's div. We'll
+// actually create this div upon receipt of the onAdd()
+// method so we'll leave it null for now.
+this.div_ = null;
+
+// Explicitly call setMap on this overlay
+this.setMap(map);
+}
+
+BoweryOverlay.prototype.onAdd = function() {
+
+// Note: an overlay's receipt of onAdd() indicates that
+// the map's panes are now available for attaching
+// the overlay to the map via the DOM.
+
+// Create the DIV and set some basic attributes.
+var div = document.createElement('div');
+div.style.borderStyle = 'none';
+div.style.borderWidth = '0px';
+div.style.position = 'absolute';
+
+// Create an IMG element and attach it to the DIV.
+var img = document.createElement('img');
+img.src = this.image_;
+img.style.width = '100%';
+img.style.height = '100%';
+img.style.position = 'absolute';
+div.appendChild(img);
+
+// Set the overlay's div_ property to this DIV
+this.div_ = div;
+
+// We add an overlay to a map via one of the map's panes.
+// We'll add this overlay to the overlayLayer pane.
+var panes = this.getPanes();
+panes.overlayLayer.appendChild(div);
+}
+
+BoweryOverlay.prototype.draw = function() {
+
+// Size and position the overlay. We use a southwest and northeast
+// position of the overlay to peg it to the correct position and size.
+// We need to retrieve the projection from this overlay to do this.
+var overlayProjection = this.getProjection();
+
+// Retrieve the southwest and northeast coordinates of this overlay
+// in latlngs and convert them to pixels coordinates.
+// We'll use these coordinates to resize the DIV.
+var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+// Resize the image's DIV to fit the indicated dimensions.
+var div = this.div_;
+div.style.left = sw.x + 'px';
+div.style.top = ne.y + 'px';
+div.style.width = (ne.x - sw.x) + 'px';
+div.style.height = (sw.y - ne.y) + 'px';
+}
+
+BoweryOverlay.prototype.onRemove = function() {
+this.div_.parentNode.removeChild(this.div_);
+this.div_ = null;
+}
+
+
+</script>
+</head>
+
+<!-- here are calling the initialize function as the map is loaded -->
+<body onload="initialize()">
+
+    <div id="clock-wrapper"> 
+      <p>
+        <ul id="clock-list">
+        </ul>
+        </p>
+    </div>
+
+    <!-- <div style="position:fixed; z-index:99; bottom:40px;left:50px; opacity:1"><img src="https://dl.dropbox.com/u/49816350/NEIGHBORHOODWATCH.png" width=111 height=110></div> -->
+    
+
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+
+    <div id="scache"><p id="streetcache">S T R E E T C A C H E</p></div>
+
+
+    
+    <div style="opacity:0.8;">
+      <div class="solid-top" style="position:fixed;top:0px;left:0px;width:100%;height:15%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;top:0px;left:0px;width:15%;height:100%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;bottom:0px;left:0px;width:100%;height:15%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;top:0px;right:0px;width:15%;height:100%;background-color:black;z-index:98"></div>
+    </div>
+
+  </body>
+</html>

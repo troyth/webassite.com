@@ -187,7 +187,7 @@ exports.findAllStream = function(req, res) {
     
     db.collection('tweetstream', function(err, collection) {
         collection.find().limit(RESPONSE_LIMIT).toArray(function(err, items) {
-            res.send(items);
+            res.jsonp(items);
         });
     });
 };

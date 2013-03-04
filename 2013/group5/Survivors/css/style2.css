@@ -1,0 +1,231 @@
+body{
+	font-family: 'Trebuchet MS';
+	color: black;
+}
+
+h2{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 36px;
+}
+
+h3{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 14px;
+}
+
+h4{
+	font-family: 'Baskerville';
+	color: #969696;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+h5{
+	color: black;
+	font-size: 14px;
+	text-decoration: none;
+	line-height: 16.8px;
+}
+
+#wrapper{
+	width: 1024px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#index{
+	width:974px;
+	float:left;
+	text-align:left;
+}
+
+#main{
+	width: 964px;
+	float:left;
+	position: relative;
+}
+
+#map{
+	width: 250px;
+	top:50px;
+	right:0;
+	position: absolute;
+}
+
+.map-logo-a{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 21px;
+}
+
+.map-logo-b{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 42px;
+}
+
+.map-logo-c{
+	font-family: 'Baskerville';
+	color: #969696;
+	font-size: 21px;
+}
+
+.map-logo-d{
+	font-family: 'Trebuchet MS';
+	color: #969696;
+	font-size: 12px;
+	text-align: left;
+}
+
+.survivor{
+	width: 725px;
+	margin-bottom: 75px;
+	float: left;
+	text-align: left;
+	margin-right: 30px;
+}
+
+.title{
+	width: 695px;
+	margin-bottom: 18px;
+	float: left;
+	clear: both;
+}
+
+.survivingsince{
+	width: 695px;
+	float: left;
+	clear: both;
+}
+
+.info{
+	width: 695px;
+	float: left;
+	margin-bottom: 30px;
+	clear: both;
+}
+
+.gallery{
+	width: 705px;
+	float: left;
+	clear: both;
+}
+
+.gallery-item{
+	float: left;
+	margin: 0 10px 20px 0;
+}
+
+.description{
+	width: 695px;
+	float: left;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.video{
+	width: 100%;
+	float: left;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.index-title{
+	font-family: 'Futura';
+	color: black;
+	font-size: 65px;
+	width:100%;
+	margin-bottom: 16px;
+	text-align:left;
+}
+
+.on-bowery{
+	font-family: 'Baskerville';
+	color: black;
+	font-size: 14px;
+	margin-left: 380px;
+	text-align:left;
+}
+
+.index-gallery-item{
+	float: left;
+	margin: 0 10px 20px 0;
+}
+
+.index-gallery{
+	width: 1024px;
+	height: 562px;
+	float: left;
+	clear: both;
+}
+
+#index1{
+	width:98px;
+	height: 108px;
+	background-color: black;
+	padding:15px;
+	text-align:left;
+}
+
+#about-index1{
+	color: white;
+	font-family: 'Baskerville';
+}
+
+#index7{
+	width:202px;
+	height:87px;
+	font-family: 'Avenir';
+	text-align:left;
+}
+
+#index10{
+	width:112px;
+	height:171px;
+	font-family: 'Avenir';
+	text-align:left;
+}
+
+#index14{
+	width:202px;
+	height:87px;
+	background-color:black;
+}
+
+#contribute-index14{
+	margin:15px;
+	font-family:"Avenir";
+	color: white;
+	text-align: right;
+}
+
+/*Sagi Css stles*/
+
+.regular-item{
+	float:left;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+div .description{
+	-moz-column-count:2; /* Firefox */
+-webkit-column-count:2; /* Safari and Chrome */
+column-count:2;
+}
+
+div .description{
+-moz-column-gap:20px; /* Firefox */
+-webkit-column-gap:20px; /* Safari and Chrome */
+column-gap:20px;
+}
+
+div .description{
+text-align:justify;
+text-justify:inter-word;
+}
+
+
+
+
