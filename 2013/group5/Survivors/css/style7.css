@@ -1,0 +1,462 @@
+body{
+	font-family: 'Trebuchet MS';
+	color: black;
+}
+
+h1{
+	font-family: 'Futura';
+	color:black;
+	font-size: 75px;
+	text-align: left;
+}
+
+h2{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 36px;
+}
+
+h3{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 14px;
+}
+
+h4{
+	font-family: 'Baskerville';
+	color: #969696;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+h5{
+	font-family: 'Baskerville';
+	color: #969696;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+#background{
+	background-color: #f1f2f2;
+}
+
+#wrapper{
+	width: 1024px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#index{
+	width:974px;
+	float:left;
+	text-align:left;
+}
+
+#main{
+	width: 964px;
+	float:left;
+	position: relative;
+}
+
+#map{
+	width: 240px;
+	top:50px;
+	right:0;
+}
+
+.affix{
+	position:fixed;
+	width: 240px;
+	top:50px;
+	right:0;
+}
+
+.map-background{
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+
+
+.spy-whitehouse{
+	position:absolute;
+	top:182px;
+	right:131px;
+	width:38px;
+	height:14px;
+	display:block;
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/1B_WhiteHouse.png') no-repeat 0 0;
+}
+
+.spy-whitehouse:hover, .active .spy-whitehouse{
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/1A_WhiteHouse.png') no-repeat 0 0;
+}
+
+
+.spy-bari{
+	position:absolute;
+	top:338px;
+	right:129px;
+	width:39px;
+	height:15px;
+	display:block;
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/3B_Bari.png') no-repeat 0 0;
+}
+
+.spy-bari:hover, .active .spy-bari{
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/3A_Bari.png') no-repeat 0 0;
+}
+
+
+.spy-mission{
+	position:absolute;
+	top:335px;
+	left:124px;
+	width:47px;
+	height:15px;
+	background: transparent url('http://group5.webassite.com/Survivors/images/Map/4B_Mission.png') no-repeat 0 0;
+}
+
+.spy-mission:hover, .active .spy-mission{
+	background: transparent url('http://group5.webassite.com/Survivors/images/Map/4A_Mission.png') no-repeat 0 0;
+}
+
+
+.spy-germania{
+	position:absolute;
+	top:400px;
+	right:129px;
+	width:40px;
+	height:14px;
+	background: transparent url('http://group5.webassite.com/Survivors/images/Map/5B_Germania.png') no-repeat 0 0;
+}
+
+.spy-germania:hover, .active .spy-germania{
+	background: transparent url('http://group5.webassite.com/Survivors/images/Map/5A_Germania.png') no-repeat 0 0;
+}
+
+
+.spy-lighting{
+	position:absolute;
+	top:457px;
+	right:129px;
+	width:40px;
+	height:14px;
+	display: block;
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/6B_Lighting-By-Gregory.png') no-repeat 0 0;
+}
+
+.spy-lighting:hover, .active .spy-lighting{
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/6A_Lighting-By-Gregory.png') no-repeat 0 0;
+}
+
+
+.spy-capitale{
+	position:absolute;
+	top:503px;
+	right:130px;
+	width:39px;
+	height:14px;
+	display: block;
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/7B_Capitale.png') no-repeat 0 0;
+}
+
+.spy-capitale:hover, .active .spy-capitale{
+	background:transparent url('http://group5.webassite.com/Survivors/images/Map/7A_Capitale.png') no-repeat 0 0;
+}
+
+
+.spy-whitehouse:hover,
+.spy-bari:hover,
+.spy-mission:hover,
+.spy-lighting:hover,
+.spy-lighting:hover,
+.spy-capitale:hover{
+	cursor: pointer;
+}
+
+ul.nav{
+	list-style: none;
+}
+
+#map-images{
+	list-style: none;
+}
+
+
+.map-logo-a{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 21px;
+	text-align: left;
+	position: absolute;
+	top:-34px;
+	left:0px;
+}
+
+.map-logo-b{
+	font-family: 'Trebuchet MS';
+	color: black;
+	font-size: 42px;
+	text-align: left;
+	position: absolute;
+	top:-50px;
+	left:32px;
+}
+
+.map-logo-c{
+	font-family: 'Baskerville';
+	color: #969696;
+	font-size: 21px;
+	text-align: right;
+	position:absolute;
+	top:-12px;
+	right:5px;
+}
+
+.map-logo-d{
+	font-family: 'Trebuchet MS';
+	color: #969696;
+	font-size: 12px;
+	position:absolute;
+	top:680px;
+	left:0px;
+	text-align: left;
+	text-decoration: none;
+}
+
+.map-logo-e{
+	font-family: 'Trebuchet MS';
+	color: #969696;
+	font-size: 12px;
+	position:absolute;
+	top:680px;
+	left:60px;
+	text-align: center;
+	text-decoration: none;
+}
+
+.map-logo-f{
+	font-family: 'Trebuchet MS';
+	color: #969696;
+	font-size: 12px;
+	position:absolute;
+	top:680px;
+	right:0px;
+	text-align: right;
+	text-decoration: none;
+}
+
+.spy-index.active .spy-index{
+	color:red;
+	font-weight: bold;
+}
+
+.survivor{
+	width: 725px;
+	margin-bottom: 75px;
+	float: left;
+	text-align: left;
+	margin-right: 30px;
+}
+
+.title{
+	width: 695px;
+	margin-bottom: 18px;
+	float: left;
+	clear: both;
+}
+
+.survivingsince{
+	width: 695px;
+	float: left;
+	clear: both;
+}
+
+.info{
+	width: 695px;
+	float: left;
+	margin-bottom: 30px;
+	clear: both;
+}
+
+.gallery{
+	width: 705px;
+	float: left;
+	clear: both;
+}
+
+.gallery-item{
+	float: left;
+	margin: 0 10px 20px 0;
+}
+
+.description{
+	width: 695px;
+	float: left;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+div .description{
+-moz-column-count:2; /* Firefox */
+-webkit-column-count:2; /* Safari and Chrome */
+column-count:2;
+}
+
+div .description{
+-moz-column-gap:20px; /* Firefox */
+-webkit-column-gap:20px; /* Safari and Chrome */
+column-gap:20px;
+}
+
+div .description{
+	text-align:justify;
+	text-justify:inter-word;
+}
+
+.video{
+	width: 100%;
+	float: left;
+	margin-bottom: 20px;
+	clear: both;
+}
+
+.index-title{
+	font-family: 'Futura';
+	color: black;
+	font-size: 75px;
+	width:100%;
+	text-align:left;
+	margin-top: 20px;
+}
+
+.on-bowery{
+	font-family: 'Baskerville';
+	color: #969696;
+	font-size: 32px;
+	margin-bottom: 20px;
+	margin-right: 335px;
+	text-align:right;
+	margin-top:0px;
+}
+
+.index-gallery-item{
+	float: left;
+	margin: 0 10px 20px 0;
+}
+
+.index-gallery{
+	width: 1024px;
+	height: 562px;
+}
+
+#index1{
+	width:60px;
+	height:68px;
+	background-color: #939598;
+	color: white;
+	font-family: 'Futura';
+	font-size: 18px;
+	padding:35px;
+	text-align:left;
+}
+
+#about-index1{
+	color: white;
+	font-family: 'Baskerville';
+}
+
+#index7{
+	height:90px;
+	width:270px;
+	
+}
+
+#text-index7{
+	font-family:"Baskerville";
+	color: black;
+	text-align: center;
+}
+
+#index10{
+	width:130px;
+	height:171px;
+
+}
+
+#text-index10{
+	font-family:'Baskerville';
+	color: black;
+	text-align: center;
+}
+
+#index14{
+	width:130px;
+	height: 104px;
+	background-color:#939598;
+}
+
+#contribute-index14{
+	margin:15px;
+	font-family:"Futura";
+	color: white;
+	text-align: center;
+}
+
+.no-decoration{
+	text-decoration: none;
+	color: white;
+}
+
+.no-decoration2{
+	text-decoration: none;
+	color: black;
+}
+
+.scroll-about{
+	text-decoration: none;
+	color: white;
+}
+
+.regular-item{
+	float:left;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+.col1{
+	width:130px;
+}
+
+.col2{
+	width:270px;
+}
+
+.col3{
+	width:410px;
+}
+
+.about{
+	background-color: #939598;
+	width:931px;
+	height:135px;
+	margin-bottom: 75px;
+	padding: 20px;
+}
+
+.about1{
+	font-family: 'Futura';
+	color: white;
+	font-size: 28px;
+	text-align: left;
+
+}
+
+.about2{
+	font-family: 'Futura';
+	color: white;
+	font-size: 14px;
+	text-align: left;
+
+}

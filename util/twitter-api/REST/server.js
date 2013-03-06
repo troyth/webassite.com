@@ -16,6 +16,7 @@ app.configure(function () {
 //app.get('/tweets/geo/bowery', tweets.findAll);
 //app.get('/tweets/stream/bowery', tweets.findAllStreetCache);
 app.get('/tweets/:collection', twitter_api.findAll);
+app.get('/tweets/:collection/count', twitter_api.countAll);
 
 //GROUP 2
 
@@ -39,17 +40,28 @@ app.get('/tweets/:collection/block/:block/recent/:timewindow/count', twitter_api
 app.get('/tweets/:collection/recent/:timewindow', twitter_api.findRecent);
 
 
+//POST REQUESTS
+app.post('/tweet/:username', twitter_api.sendTweet);
+
+
 
 //begin the streaming
-twitter_api.stream('movements');
+//twitter_api.stream('movements');
 twitter_api.stream('streetcache');
 
+//twitter_api.clear('movements');
 
+var block = 1;
 //print out the current counts every 20 seconds
 var interval_id = setInterval(function(){ 
 		twitter_api.count('movements');
 		twitter_api.count('streetcache');
-	}, 20000);//fetch every 20 seconds
+		twitter_api.fetch('movements', block);
+		block++;
+		if(block > 3){
+			block = 1;
+		}
+	}, 15000);//fetch every 20 seconds
 
 
 

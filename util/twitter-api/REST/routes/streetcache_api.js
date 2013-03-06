@@ -92,35 +92,6 @@ var twit = new twitter({
 });
 
 
-var streetcacheTwit = new twitter({
-  consumer_key: '7K7jC8lI9tQzJfcyReTxA',
-  consumer_secret: 'PqlONZjcrPAcpJzFn7v3wEm4VlvZI4MjVRPwM4MvCes',
-  access_token_key: '1228783244-ytN5ilwLfePgBUyzw6u2NDPpRSn7rEpXBVlSjGS',
-  access_token_secret: '3ij0V7ZpGJA7J8QrMWwnKkASfKvvVeh5cDsj0E5CQ'
-});
-
-
-
-exports.sendTweet = function(req, res){
-    console.log('');
-    console.log('**** TESTING POST REQUEST ***');
-
-    var tweettext = req.body.tweettext;
-
-    console.log(req.body.tweettext);
-
-    streetcacheTwit.verifyCredentials(function (err, data) {
-    console.log(data);
-  })
-  .updateStatus(tweettext,
-    function (err, data) {
-      console.log(data);
-    }
-  );
-
-}
-
-
 db.open(function(err, db) {
     if(err) {
        console.log("Error opening 'group2_2013_tweetsdb' database:");
