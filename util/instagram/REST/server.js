@@ -15,17 +15,12 @@ app.configure(function () {
 //GET ENDPOINTS
 app.get('/instagram/:collection', instagram.findAll);
 app.get('/instagram/:collection/limit/:limit', instagram.findLimit);
+app.get('/instagram/:collection/variety/limit/:limit', instagram.findVariety);
 
 
 //POST ENDPOINTS
 //app.post('/tweet/:username', twitter_api.sendTweet);
 
-
-//begin the streaming
-//twitter_api.stream('movements');
-//twitter_api.stream('streetcache');
-
-//twitter_api.clear('movements');
 
 var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebeijing','kinnebordeaux','kinnecannes','kinnechandigarh','kinnecopenhagen','kinnegeneva','kinnehyderabad','kinneistanbul','kinnejohannesburg','kinnekochi','kinnekumasi','kinnekyoto','kinnelondon','kinnemedellin','kinnemumbai','kinnenewdelhi','kinneparis','kinnerio','kinnerotterdam','kinnesanfrancisco','kinnesaopaulo','kinneshanghai','kinnetokyo','kinnevenice','kinnevienna'];
 
@@ -51,7 +46,7 @@ function fetchTags(interval){
 	}, interval);
 }
 
-fetchTags(60000);//fetch every minute, looking for a different tag each time
+fetchTags(30000);//fetch every half-minute, looking for a different tag each time
 
 
 //instagram.count('kinneinstagram');

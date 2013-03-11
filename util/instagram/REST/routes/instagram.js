@@ -47,6 +47,38 @@ kinneLocations['kinnetokyo'] = 'Tokyo';
 kinneLocations['kinnevenice'] = 'Venice';
 kinneLocations['kinnevienna'] = 'Vienna';
 
+var region = [];
+
+region['kinneamman'] = 'middle-east';
+region['kinneatacama'] = 'latin-america';
+region['kinneathens'] = 'europe';
+region['kinnebangalore'] = 'south-asia';
+region['kinnebeijing'] = 'east-asia';
+region['kinnebordeaux'] = 'europe';
+region['kinnecannes'] = 'europe';
+region['kinnechandigarh'] = 'south-asia';
+region['kinnecopenhagen'] = 'europe';
+region['kinnegeneva'] = 'europe';
+region['kinnehyderabad'] = 'south-asia';
+region['kinneistanbul'] = 'middle-east';
+region['kinnejohannesburg'] = 'africa';
+region['kinnekochi'] = 'south-asia';
+region['kinnekumasi'] = 'africa';
+region['kinnekyoto'] = 'east-asia';
+region['kinnelondon'] = 'europe';
+region['kinnemedellin'] = 'latin-america';
+region['kinnemumbai'] = 'south-asia';
+region['kinnenewdelhi'] = 'south-asia';
+region['kinneparis'] = 'europe';
+region['kinnerio'] = 'latin-america';
+region['kinnerotterdam'] = 'europe';
+region['kinnesanfrancisco'] = 'north-america';
+region['kinnesaopaulo'] = 'latin-america';
+region['kinneshanghai'] = 'east-asia';
+region['kinnetokyo'] = 'east-asia';
+region['kinnevenice'] = 'europe';
+region['kinnevienna'] = 'europe';
+
 
 
 /*
@@ -220,7 +252,55 @@ exports.findLimit = function(req, res) {
 
 
 
+/*
+ *  findLimit(req, res)
+ *
+ *  Returns (up to) RESPONSE_LIMIT tweets in reverse chronological order that have been tweeted 
+ *  since :timewindow from collection :collection that have come from the Bowery region
+ *
+*/
+exports.findVariety= function(req, res) {
+    var col = req.params.collection;
+    var limit = parseInt( req.params.limit );
+    console.log('');console.log('');console.log('');
+    console.log('findVariety() in ' + col + ' collection with limit: '+ limit);
 
+    var maxItems = 30;
+
+    db.collection(col, function(err, collection) {
+        collection.find().sort({"created_time":-1}).limit(maxItems).toArray(function(err, items) {
+            if(err){
+                console.log('Error: with findVariety(), error: ' + err);
+                console.dir(err);
+            }else{
+                var locations = [];
+                var returnItems = [];
+                var j = 1;
+                locations[0] = items[0].kinne_location;
+
+                loop1:
+                    for(var i = 1; i < maxItems; i++){
+                        console.log('for with i: '+ i + ' and locations: ');
+                        console.dir(locations);
+                        if( locations.indexOf( items[i].kinne_location )  == -1){//if not already registered
+                            locations[j] = items[i].kinne_location;
+                            returnItems.push( items[i] );
+                            j++;
+                        }else{
+                            console.log('already in locations array');
+                        }
+                        if( j > 3){
+                            console.log('breaking loop');
+                            break loop1;
+                        }
+                    }
+
+                console.log('Success: findLimit() returning ' + returnItems.length + ' instagram photos');
+                res.jsonp(returnItems);
+            }
+        });
+    });
+};
 
 
 
@@ -250,6 +330,7 @@ exports.fetch = function(tag){
             for(var i = 0; i < medias.length; i++){
 
                 medias[i].kinne_location = kinneLocations[tag];
+                medias[i].region = region[tag];
 
                 db.collection('kinneinstagram', function(err, collection) {
                     collection.update({id: medias[i].id}, {"$set": medias[i]}, {safe:true, upsert:true}, function(err, result) {
