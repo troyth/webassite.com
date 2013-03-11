@@ -1,16 +1,19 @@
 var fs = require('fs');
 var Flickr = require('flickr-with-uploads').Flickr;
 
-// constructor arguments: new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret, base_url)
-var client = new Flickr('cc1016c94120232d41c0748f68f0d76a', 'ebe17ffcaa2445f9');
-
-function api(method_name, data, callback) {
-  // overloaded as (method_name, data, callback)
-  return client.createRequest(method_name, data, true, callback).send();
-}
 
 
-exports.saveToFlickr = function(){
+
+exports.saveToFlickr = function(oauth_token, oauth_token_secret){
+
+
+	// constructor arguments: new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret, base_url)
+	var client = new Flickr('cc1016c94120232d41c0748f68f0d76a', 'ebe17ffcaa2445f9', oauth_token, oauth_token_secret);
+
+	function api(method_name, data, callback) {
+		// overloaded as (method_name, data, callback)
+		return client.createRequest(method_name, data, true, callback).send();
+	}
 
 	var fullpath = '/srv/www/webassite.com/public_html/util/instagram/REST/images/d30db8f48a5311e28d6622000a1fbc43_6.jpg';
 	var params = {
