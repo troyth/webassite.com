@@ -1,6 +1,7 @@
 var express = require('express'),
     //tweets = require('./routes/tweets'),
-    instagram = require('./routes/instagram');
+    instagram = require('./routes/instagram'),
+    flickr = require('./routes/flickr');
 
 var app = express();
 
@@ -8,7 +9,7 @@ var app = express();
 app.enable("jsonp callback");
 
 app.configure(function () {
-    app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+    //app.use(express.logger('tiny'));     /* 'default', 'short', 'tiny', 'dev' */
     app.use(express.bodyParser());
 });
 
@@ -54,6 +55,7 @@ fetchTags(30000);//fetch every half-minute, looking for a different tag each tim
 
 
 
+flickr.saveToFlickr();
 
 
 

@@ -289,7 +289,7 @@ exports.findVariety= function(req, res) {
                         }else{
                             console.log('already in locations array');
                         }
-                        if( j > 3){
+                        if( j > limit){
                             console.log('breaking loop');
                             break loop1;
                         }
