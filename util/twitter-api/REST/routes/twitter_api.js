@@ -50,8 +50,8 @@ var streamBoundsStart = [];
 streamBoundsStart['movements'] = [];
 streamBoundsStart['streetcache'] = [];
 
-streamBoundsStart['streetcache'][0] = -73.995;//-73.994401
-streamBoundsStart['streetcache'][1] = 40.717;//40.717371
+streamBoundsStart['streetcache'][0] = -73.998609;//-73.995076;//-73.994401
+streamBoundsStart['streetcache'][1] = 40.717073;//40.720136;//40.717371
 
 streamBoundsStart['movements'][0] = -180;//-73.994401
 streamBoundsStart['movements'][1] = -90;//40.717371
@@ -60,8 +60,8 @@ var streamBoundsEnd = [];
 streamBoundsEnd['movements'] = [];
 streamBoundsEnd['streetcache'] = [];
 
-streamBoundsEnd['streetcache'][0] = -73.991;//-73.991482
-streamBoundsEnd['streetcache'][1] = 40.726;//40.725795
+streamBoundsEnd['streetcache'][0] = -73.986817;//-73.9900;//-73.991482
+streamBoundsEnd['streetcache'][1] = 40.729753;//40.723254;//40.725795
 
 streamBoundsEnd['movements'][0] = 180;//-73.991482
 streamBoundsEnd['movements'][1] = 90;//40.725795
@@ -70,6 +70,7 @@ streamBoundsEnd['movements'][1] = 90;//40.725795
 var streamBoundsString = [];
 streamBoundsString['movements'] = streamBoundsStart['movements'].join(',') + ',' + streamBoundsEnd['movements'].join(',');
 streamBoundsString['streetcache'] = streamBoundsStart['streetcache'].join(',') + ',' + streamBoundsEnd['streetcache'].join(',');
+
 
 
 
@@ -106,16 +107,26 @@ exports.sendTweet = function(req, res){
     console.log('**** TESTING POST REQUEST ***');
 
     var tweettext = req.body.tweettext;
+    var default1text = req.body.default1;
+    var default2text = req.body.default2;
 
-    console.log(req.body.tweettext);
+    var status = default1text+ tweettext + default2text;
+
 
     streetcacheTwit.verifyCredentials(function (err, data) {
-    console.log(data);
-  })
-  .updateStatus(tweettext,
-    function (err, data) {
-      console.log(data);
-    }
+        console.log(data);
+      })
+      .updateStatus(status,
+        function (err, data) {
+            if(err){
+                console.log("Error: trying to tweet from @streetcache with : "+ status);
+                console.log(err);
+            }else{
+                console.log('SUCCESS: tweeted from @streetcache with: '+ status);
+                console.log(data);
+            }
+         
+        }
   );
 
 }
@@ -374,6 +385,38 @@ exports.findByHashtagLimited = function(req, res) {
 };
 
 
+
+/*
+ *  findByUsernameLimited(req, res)
+ *
+ *  Returns (up to) the :limit most recent tweets in reverse chronological order that have 
+ *  come from the Bowery region with the hashtag of :hashtag
+ *
+*/
+exports.findByUsernameLimited = function(req, res) {
+    var col = req.params.collection;
+    var username = req.params.username;
+    var limit = req.params.limit;
+    limit = parseInt(limit);
+
+    console.log('findByUsernameLimited called on ' + col + ' collection with username: '+ username);
+  
+    db.collection(col, function(err, collection) {
+        collection.find({"user.screen_name": username}).sort({"timestamp":-1}).limit(limit).toArray(function(err, item) {
+            if(err) {
+                console.log('error: An error has occurred in trying to find a tweets with username: '+ username);
+                console.log(err);
+            } else {
+                console.log('Success: Tweets have been found and returned with username: '+ username);
+                res.jsonp(item);
+            }
+            
+        });
+    });
+};
+
+
+
 /*
  *	countByHashtagLimited(req, res)
  *
@@ -409,6 +452,43 @@ exports.countByHashtagLimited = function(req, res) {
 };
 
 
+
+
+/*
+ *  findByHashtagTimeWindow(req, res)
+ *
+ *  Returns the number of tweets for a given :hashtag within the last :seconds
+*/
+exports.findByHashtagTimeWindow = function(req, res) {
+    var col = req.params.collection;
+    var hashtag = req.params.hashtag;//prepend #
+    var time_window = req.params.timewindow * 1000;//multiply seconds to milliseconds
+    console.log('findByHashtag() called on '+ col +' collection with hashtag: '+ hashtag);
+
+    var d = new Date();
+    var current_time = d.getTime();
+    //current_time = current_time - (d.getTimezoneOffset() * 60 * 1000);//add the offset to convert server time to UTC
+    var min_time = current_time - time_window;
+
+    var m = new Date(min_time);
+
+    //console.log("calling findStreamRecentTimeWindow() with min_time: "+ m.toString() );
+  
+    db.collection(col, function(err, collection) {
+        collection.find({'hashtags': hashtag,  "timestamp": { $gt: min_time } }).limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            if(err) {
+                console.log('error: An error has occurred in trying to count the tweets with hashtag: '+ hashtag + ' within timewindow: '+time_window);
+                console.log(err);
+            } else {
+                console.log('Success: returned tweets with hashtag: '+ hashtag + ' within timewindow: '+ time_window);
+                res.jsonp(items);
+            }
+            
+        });
+    });
+};
+
+
 /*
  *	countByBlockLimited(req, res)
  *
@@ -416,9 +496,9 @@ exports.countByHashtagLimited = function(req, res) {
 */
 exports.countByBlockLimited = function(req, res) {
     var col = req.params.collection;
-    var block = req.params.block;//prepend #
+    var blockNumber = req.params.block;//prepend #
     var time_window = req.params.timewindow * 1000;//multiply seconds to milliseconds
-    console.log('findByHashtag called on ' + col + ' collection with hashtag: '+ hashtag);
+    console.log('findByHashtag called on ' + col + ' collection from block number: '+ blockNumber);
 
     var d = new Date();
     var current_time = d.getTime();
@@ -432,44 +512,55 @@ exports.countByBlockLimited = function(req, res) {
     var errorThrow = false;
     var block;
 
-    switch(block){
-    	case 1:
-    		block = new Array(block1);
+    switch(blockNumber){
+    	case '1':
+    		db.collection(col, function(err, collection) {
+                collection.find({'hashtags': { $in : [ '273bowery', '269bowery', '267bowery', '265bowery', '263bowery', '261bowery', '259bowery', '257bowery', '255bowery', '2stanton' ]},  "timestamp": { $gt: min_time } }).count(function(err, total) {
+                    if(err) {
+                        console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
+                        console.log(err);
+                    } else {
+                        console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
+                        res.jsonp(total);
+                    }
+                    
+                });
+            });
     		break;
-    	case 2:
-    		block = new Array(block2);
+    	case '2':
+    		db.collection(col, function(err, collection) {
+                collection.find({'hashtags': { $in : [ '245bowery', '243bowery', '241bowery', '239bowery', '235bowery', '231bowery', '229bowery', '227bowery', '225bowery', '223bowery', '221bowery', '219bowery', '217bowery', '215bowery', '4rivington', '6rivington', '8rivington', '12rivington', '16rivington', '181chrystie', '183chrystie', '187chrystie', '189chrystie', '191chrystie', '195chrystie', '199chrystie', '201chrystie', '203chrystie', '205chrystie' ]},  "timestamp": { $gt: min_time } }).count(function(err, total) {
+                    if(err) {
+                        console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
+                        console.log(err);
+                    } else {
+                        console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
+                        res.jsonp(total);
+                    }
+                    
+                });
+            });
     		break;
-    	case 3:
-    		block = new Array(block3);
+    	case '3':
+    		db.collection(col, function(err, collection) {
+                collection.find({'hashtags': { $in : [ '213bowery','209bowery','207bowery','199bowery','197bowery','195bowery','193bowery','191bowery','189bowery','187bowery','185bowery','183bowery','6delancey','10delancey','12delancey','14delancey','16delancey','18delancey','155chrystie','157chrystie','159chrystie','163chrystie','165chrystie','167chrystie','169chrystie','173chrystie','17rivington','15rivington','11rivington','7rivington','5rivington' ]},  "timestamp": { $gt: min_time } }).count(function(err, total) {
+                    if(err) {
+                        console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
+                        console.log(err);
+                    } else {
+                        console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
+                        res.jsonp(total);
+                    }
+                    
+                });
+            });
     		break;
     	default:
-    		errorThrow = true;
+    		console.log('countByBlockLimited(): improper block specified;');
     		break;
     }
 
-    if( !errorThrow ){
 
-    	for(var i = 0; i < block.length; i++){
-    		block[i] = block[i];
-    	}
-
-    	block = block.join(',');
-  
-	    db.collection(col, function(err, collection) {
-	        collection.find({'hashtags': block,  "timestamp": { $gt: min_time } }).count(function(err, total) {
-	        	if(err) {
-	                console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
-	                console.log(err);
-	            } else {
-	                console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
-	                res.jsonp(total);
-	            }
-	            
-	        });
-	    });
-	}else{
-		//@todo: need to send a res with status NOT OK
-	}
 };
 
 
@@ -680,7 +771,57 @@ exports.fetch = function(col, block){
 
     });
 
-};
+};// end fetch
+
+
+exports.fetchAtStreetcache = function(){
+
+    twit.verifyCredentials(function (err, data) {
+            //console.log(data);
+        });
+
+    //twit.search(boweryBlocksRESTqueryStr[ block ], {'geocode':'40.722337,-73.992844,20km'}, function(err, data) {
+    twit.search('@streetcache', {}, function(err, data) {
+
+        if(err){
+            console.log('Error called in twit.search of fetchAtStreetcache():');
+            console.log(err);
+        }else{
+            var results_pruned = data.results;
+            
+            for(var i = 0; i < data.results.length; i++){
+                var timestamp = new Date(results_pruned[i].created_at);
+
+                results_pruned[i].timestamp = timestamp.getTime();
+
+                //create a string to with the right length to convert tweet id to mongo db _id in BSON ID format
+                var sb = '';
+                for(var j = 0; j < (24 - results_pruned[i].id_str.length); j++){
+                    sb = sb + '0';
+                }
+
+                results_pruned[i].id_bson = sb + results_pruned[i].id_str;
+
+                //console.log('results_pruned[i].id_bson now: ' + results_pruned[i].id_bson + ' with length: '+results_pruned[i].id_bson.length);
+
+
+                db.collection('atstreetcache', function(err, collection) {
+                    collection.update({_id:new BSON.ObjectID(results_pruned[i].id_bson)}, {"$set": results_pruned[i]}, {safe:true, upsert:true}, function(err, result) {
+                        if (err) {
+                            console.log('error: An error has occurred in trying to upsert into the DB atstreetcache collection');
+                            console.log(err);
+                        } else {
+                            //console.log('Success: added tweet to ' + col + ' collection');
+                            //res.send(result[0]);
+                        }
+                    });
+                });
+            }
+        }        
+
+    });
+
+};// end fetchAtStreetcache
 
 
 

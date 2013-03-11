@@ -1,0 +1,90 @@
+#target {
+	height: auto;
+	width: 100%;
+}
+
+#wrapper {
+	background: transparent url('../img/Bowery1.jpg') no-repeat 0 0;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center center;
+}
+
+
+#fabr {
+	
+	color:white;
+	position: fixed;
+	text-align: center;
+
+}
+
+.text {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 24px;
+	text-align: center;
+	text-transform:uppercase;
+	vertical-align:middle;
+	font-weight: bold;
+	word-wrap: break-word;
+	padding-top: 100px;
+}
+
+.icon.initial {
+position: absolute;
+top: 50%;
+left: 50%;
+margin-top: -45px;
+margin-left: -45px;
+display:none;
+}
+
+.icon {
+	position: absolute;
+	top: 60%;
+	left: 35%;
+}
+
+#bubbles {
+	margin-top:-140px;
+	margin-left:-140px;
+}
+
+#title_text {
+	height:1000px;
+	width:1000px;
+
+}
+
+
+
+#about{
+	height:100%;
+	width:100%;
+	position:fixed;
+	z-index: 1000;
+	top:0%;
+	left:0%;
+	margin-top:0px;
+	margin-left:0px;
+
+	background: transparent url('../img/Icon/white_rectangle.png') no-repeat 0 0;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+
+	text-align: center;
+}
+
+#about .inner{
+	width:400px;
+	margin:30px auto;
+	text-align: left;
+}
+
+
+.buffer-item{
+	display: none;
+}

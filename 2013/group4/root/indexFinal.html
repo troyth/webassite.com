@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+
+
+  <head>
+
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="http://webassite.com/util/assets/reset.min.css">
+    <style type="text/css">
+      /* basic css to make the map full screen
+      */
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      /* the HTML element that the google map is written into
+      */  
+      #map_canvas { height: 100% }
+      
+
+      .clock {font-family:Arial; font-size:30px; color:White; margin-left:100px; line-height:3em;}
+      
+      #clock-list{
+        /*list-style: none;*/
+        z-index:999999;
+      }
+
+      #clock-wrapper{
+        position:fixed;
+        z-index:999999;
+        opacity:.6;
+        /*overflow: hidden;*/
+        bottom: 0px;
+      }
+
+       #streetcache {font-family:Arial; font-size:45px; color:White; margin-bottom:20px; margin-left:200px; z-index:10000;}
+
+      #scache{
+        position:fixed;
+        z-index:1000;
+        opacity:.4;
+        overflow: hidden;
+        bottom: 0px;
+        }
+
+        form{
+          width:300px;
+          height:200px;
+
+        }
+
+        .info-box-top{
+          height:70%;
+          width:95%;
+          position: relative;
+          top:0;
+          left:0;
+          background-color: yellow;
+          margin-bottom:10%;
+        }
+
+
+        #tweetbox{
+          width:100%;
+          height:100%;
+          vertical-align:none !important;
+        }
+
+        .info-box-bottom{
+          height:20%;
+          width:95%;
+          position: relative;
+          top:0;
+          left:0;
+          background-color: gray;
+        }
+
+        .info-box-bottom-appendage{
+          display: inline;
+        }
+
+        .info-box-bottom #input-button{
+          width:20%;
+          display: inline;
+          position:absolute;
+          right:0;
+
+          background-color:black;
+          border:1px solid white;
+          color:white;
+        }
+
+        #splash{
+          margin: auto;
+          opacity:.8;
+          z-index:99999;
+          position:fixed;
+          top:50%;
+          left:40%;
+
+          margin-top:-250px;
+          margin-left:-375px;
+
+          width:750px;
+          height:500px;
+        }
+
+
+          #siteicon {
+          position:absolute;
+          width: 100px;
+          z-index:9999999;
+          margin-left: 10%;
+          }
+          #siteicon li {
+          width:300px;
+          height:50px;
+          float:left;
+          position:static;
+          z-index:9999999;
+          list-style-type:none !important;
+          }
+          #siteicon a {
+          display: block;
+          height:75px;
+          width:75px;
+          /*color: #FFC;
+          text-decoration:none;*/
+          float:left;
+          text-align:left;
+          position:static;
+          z-index:9999999;
+          }
+          #siteicon a img {
+          /*border:0;*/
+          z-index:9999999;
+          position: absolute;
+          margin-top: 10%;
+          }
+          #siteicon a:hover {
+          color: #cff; 
+          background:none;
+          z-index:9999999;
+          }
+          #siteicon a span {display: none; z-index:9999999;}
+          #siteicon a:hover span {
+          display: block;
+          position: absolute; 
+          top: 30px; 
+          left: 100px; 
+          width: 300px;
+          font-family: arial;
+          color:white;
+          z-index:9999999;
+          }
+
+          #tweet-box-atstreetcache{
+            border:1px solid;
+            border-radius: 5px;
+            border-color:RGBA(255,255,255,.2);
+            position:fixed;
+            margin-left:72%;
+            margin-right: 5%;
+            top:15%;
+            z-index:99999999;
+            opacity:0.65;
+            background-color:#333;
+            height:30%;
+            width:297px;
+            overflow:hidden;
+          }
+
+          .tweets-atstreetcache {
+            border:1px solid;
+            border-radius: 5px;
+            border-color: gray;
+            margin-top:10px;
+            margin-bottom:10px;
+            margin-left: 5px;
+            margin-right: 5px;
+            background-color:gray;
+          }
+
+          .tweets-box {
+            width: 200px;
+            height: 57px;
+          }
+
+          .profile-image{
+            position: relative;
+            display: inline;
+            margin-left: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            clear: right;
+            float: left;
+            margin-right: 10px;
+
+          }
+
+          .from-username{
+            position:relative;
+            top:7px;
+            font-family:arial;
+            color:white;
+            margin-bottom: 5px;
+          }
+
+          .tweetattext{
+            margin-left:5px;
+            position:relative;
+            top:5px;
+            display:block;
+            font-family:arial;
+            color:white;
+            font-size:12px;
+          }
+
+          .geo-located{
+            border:1px solid;
+            border-radius: 5px;
+            border-color: #E8425D;
+            margin-top:10px;
+            margin-bottom:10px;
+            margin-left: 5px;
+            margin-right: 5px;
+            background-color:#E8425D;
+          }
+
+          ul, li{
+            list-style: none !important;
+          }
+    </style>
+
+
+<!-- include the google maps API. 
+
+    Note you must include your developer key. If you set sensor=True then the map will be able to respond
+    to GPS location from devices according to the docs here: 
+
+    https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API
+-->    
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKNTSBxr87BHbpHmwoDilPb7Qw7EpLEKs&sensor=false">
+</script>
+
+
+
+<script type="text/javascript">
+/* this is where we add our own custom maps functionality */
+
+/*  store coordinates for destinations to map. Note: later these will be taken from the twitter API
+    - to find out coordinates, use this site: http://itouchmap.com/latlong.html
+*/   
+ 
+var cooperSquare = new google.maps.LatLng(40.727511,-73.991488);
+var chathamSquare = new google.maps.LatLng(40.713531,-73.998019);
+
+var c_long, c_lat = 0;
+var tweets_plotted = [];
+var map_corner_ne = [40.729753,-73.986817];
+var map_corner_sw = [40.717073,-73.998609];
+var direction_x = 1;
+var direction_y = 1;
+var pan_x = 1;
+var pan_y = 1;
+var pan_interval = 10;
+
+
+var INTERVAL_TIME = 30000;//30 seconds interval before pinging the API again
+
+/*
+ *  mapPan
+ *
+ *  Pans the map, adds the clock
+*/
+
+function mapPan(map){
+  console.log('mapPan() called');
+
+
+
+  setInterval(function() {
+    
+
+    c_lat = map.center.ib;
+    c_long = map.center.jb;
+
+    console.log("map at lat " + c_lat + " long " + c_long);
+
+    map.panBy(pan_x, pan_y); 
+    console.log(randomCoordinate());
+
+
+
+/*
+
+north : 40.729753,-73.986817 e
+south : 40.717073, -73.998609 w
+*/
+   
+  }, 2000);
+}
+
+function randomCoordinate_options(negative, c_max) {
+
+  if (c_max == undefined) {
+    c_max = 20;
+  }
+  var i = Math.floor((Math.random()*c_max)+1);
+  if (negative == true) {
+    i *= -1;
+  }
+  return i;
+}
+
+function randomCoordinate() {
+  // return a truly random coordinate
+  var n = Math.random();
+  console.log(n);
+  if (n > 0.5) {
+    return randomCoordinate_options(true);
+  } else {
+    return randomCoordinate_options();
+  }
+}
+
+var tweetsArray = [];
+
+/*
+ *  upsertTweetsArray(tweet)
+ * 
+ *  Helper function to only insert new tweets in the tweetsArray
+ *
+*/
+function upsertTweetsArray(tweet){
+  for(var i = 0; i < tweetsArray.length; i++){
+    if( tweetsArray[i]._id == tweet._id){
+      return false;
+    }
+  }
+  //no conflict found, so add to tweetsArray and return true
+  console.log('adding new tweet');
+  tweetsArray.push( tweet );
+  return true;
+}
+
+var atStreetcacheArray = [];
+
+function upsertAtStreetcacheArray(tweet){
+  for(var i = 0; i < atStreetcacheArray.length; i++){
+    if( (atStreetcacheArray[i]._id == tweet._id) || ( tweet.from_user.toLowerCase() == "streetcache" ) ){
+      return false;
+    }
+  }
+  //no conflict found, so add to tweetsArray and return true
+  console.log('adding new tweet');
+  atStreetcacheArray.unshift( tweet );
+  return true;
+}
+
+
+
+function plotStreamedTweets(map, tweetform){
+
+  var target_url = "http://webassite.com/util/twitter-api/REST/tweets/streetcache/recent/43200";//in seconds 86400=day, 43200=12 hrs
+  $.ajax({
+    type : "GET",
+    dataType : "jsonp",
+    url : target_url, // ?callback=?
+    success: function(data){
+      console.log('success, data:');
+      // loop through data
+      console.dir(data);
+
+      
+      for(var i = 0; i < data.length; i++){
+
+        if( data[i].geo != null){
+          if( upsertTweetsArray(data[i]) ){
+
+            console.log('adding point to : '+ data[i].geo.coordinates[0] + " : " + data[i].geo.coordinates[1] );
+
+            var pos = new google.maps.LatLng( data[i].geo.coordinates[0], data[i].geo.coordinates[1] );
+
+            var  tweetform = '<form method="post" action="http://webassite.com/util/twitter-api/REST/tweet/streetcache"><div class="info-box-top"><input type="hidden" name="default1" value="You have been STREETCACHED on the Bowery - "><input id="tweetbox" name="tweettext" align="top"></div><div class="info-box-bottom"><input type="hidden" name="default2" value=" - streetcache.net @' + data[i].user.screen_name + '"><div class="info-box-bottom-appendage">@streetcache streetcache.net</div><input id="input-button" type="submit" value="Send"></div></form>';
+
+      /*
+      var  tweetform =  
+      '<form method="post" action="http://webassite.com/util/twitter-api/REST/tweet/streetcache"><input id="tweetbox" type="text" name="tweettext"><input type="hidden" name="default" value=" #streetcache streetcache.net @' + data[i].user.screen_name + '"><input id="input-button" type="submit" value="SUBMIT"></form>';
+      */
+
+            var infowindow = new google.maps.InfoWindow({
+                content: tweetform
+            });
+
+            var marker = new google.maps.Marker({
+              map: map, // the map for the object is our map, which is called 'map'
+              position: pos, // the position for the marker should be the new museum location we created at the start
+              //title:"@"+data[i].user.screen_name, // the marker can have a title 
+              icon: "assets/MARKER_01.png",
+              animation: google.maps.Animation.DROP // make the marker DROP onto the map...
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.open(map, this);
+            });
+          
+        
+          }//if not already in tweetsArray
+        }//if data[i].geo != null
+      }
+
+      setTimeout(plotStreamedTweets, INTERVAL_TIME);
+    },
+    error: function(xhr, status, error){
+      console.log('error, status: ' + status + ' error:');
+      console.dir(error);
+    },
+    complete: function(data){
+      console.log('complete, data:');
+    }
+  });
+
+}
+
+
+
+
+
+
+function listTweetsAtStreetcache(map){
+
+  var target_url = "http://webassite.com/util/twitter-api/REST/tweets/atstreetcache/recent/999999999";//in seconds 86400=day, 43200=12 hrs
+  $.ajax({
+    type : "GET",
+    dataType : "jsonp",
+    url : target_url, // ?callback=?
+    success: function(data){
+      console.log('success, data:');
+      // loop through data
+
+      for(var i = 0; i < data.length; i++){
+        if( upsertAtStreetcacheArray(data[i]) ){
+
+          var htmlArray = [];
+          if( data[i].geo != null){
+            htmlArray.push( '<li class="tweets-atstreetcache geo-located">' );
+          }else{
+            htmlArray.push( '<li class="tweets-atstreetcache">' );
+          }
+          htmlArray.push( '<div class="tweets-box">');
+          htmlArray.push( '<div class="profile-image">');
+          htmlArray.push( '<img src="' + data[i].profile_image_url + '">' );
+          htmlArray.push( '</div>' );
+
+          htmlArray.push( '<div class="from-username">');
+          htmlArray.push( data[i].from_user );
+          htmlArray.push( '</div>' );
+
+          htmlArray.push( '<div class="tweetattext">');
+          htmlArray.push( data[i].text );
+          htmlArray.push( '</div>' );
+          htmlArray.push( '</div>' );
+
+          htmlArray.push( '</li>' );
+
+          var html = htmlArray.join('');
+
+          $('#tweets-atstreetcache').prepend( html );
+
+          if( data[i].geo != null){
+
+            var pos = new google.maps.LatLng( data[i].geo.coordinates[0], data[i].geo.coordinates[1] );
+            
+
+            console.log('*************** placing a returned tweet at : '+ pos);
+            //place a marker on the map
+            var infowindow = new google.maps.InfoWindow({
+                content: '@' + data[i].from_user + 'will be streetcached for:'
+            });
+
+            var marker = new google.maps.Marker({
+              map: map, // the map for the object is our map, which is called 'map'
+              position: pos, // the position for the marker should be the new museum location we created at the start
+              //title:"@"+data[i].user.screen_name, // the marker can have a title 
+              icon: "assets/MARKER_02.png",
+              animation: google.maps.Animation.DROP // make the marker DROP onto the map...
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.open(map, this);
+            });
+          }
+
+      
+        }//if not already in tweetsArray
+        
+      }
+
+      setTimeout(listTweetsAtStreetcache, INTERVAL_TIME);
+    },
+    error: function(xhr, status, error){
+      console.log('error, status: ' + status + ' error:');
+      console.dir(error);
+    },
+    complete: function(data){
+      console.log('complete, data:');
+    }
+  });
+
+}
+
+
+
+
+
+
+
+
+
+
+// initialize the google maps API functionality  
+function initialize() {
+  // set up some options such as intial zoom level and where to center the map
+  var mapOptions = {
+    zoom: 18,
+    center: cooperSquare, // center on Cooper Square coordinates
+    scrollwheel: false,
+    navigationControl: false,
+    mapTypeControl: false,
+    scaleControl: false,
+    draggable: false,
+    streetViewControl: false,
+    disableDoubleClickZoom: true,
+    mapTypeId: google.maps.MapTypeId.SATELLITE // map type is either ROADMAP, SATELLITE, etc.
+  };
+
+  // create a variable to reference the map itself
+  var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+  map.setTilt(0);
+  mapPan(map);
+  plotStreamedTweets(map);
+  listTweetsAtStreetcache(map);
+
+
+
+/*
+  setInterval(function() { 
+    var dateObj = new Date();
+    var seconds = dateObj.getSeconds();
+    var minutes = dateObj.getMinutes();
+    var hours = dateObj.getHours();
+
+    var htmlString = '<p class="clock">' + hours + ":" + minutes + ":" + seconds + '</p>';
+    
+    $('#clock-list').append( htmlString );
+
+  }, 1000);
+  /*
+  
+  /*
+  -- image bounds --
+
+  use a geocoding service like this one @ http://itouchmap.com/latlong.html to very precisely set the bounds of the South-West and North-East corners of your image. i found that i had to mess with this for a while
+
+
+EXTRA FORMATTING DESIGN STUFF:
+<div style="opacity:.9;">
+      <div class="solid" style="position:fixed;top:20px;right:30px;width:25%;height:40%;background-color:black;border:2px solid;border-radius:20px;z-index:99"></div>
+      <div class="solid" style="position:fixed;top:50%;right:30px;width:25%;height:40%;background-color:black;border:2px solid;border-radius:20px;z-index:99"></div>
+
+<div id="scache"><p id="streetcache"><strong>S T R E E T C A C H E</strong></p></div>
+
+
+  */
+  var swBound = new google.maps.LatLng(40.720136,-73.995076);
+  var neBound = new google.maps.LatLng(40.723254,-73.9900 );
+  var bounds = new google.maps.LatLngBounds(swBound, neBound);
+  
+    srcImage = null;
+  //overlay = new BoweryOverlay(bounds, srcImage, map); 
+
+} // finished with the 'initialize loop'
+
+
+</script>
+</head>
+
+<!-- here are calling the initialize function as the map is loaded -->
+<body onload="initialize()">
+
+
+
+
+<div id="tweet-box-atstreetcache">
+  <ul id="tweets-atstreetcache">
+  </ul>
+</div>
+
+
+<div style="position:fixed; margin-left:72%; margin-right: 5%; top:47%; z-index:99999999; opacity:0.65;">
+<a class="twitter-timeline" href="https://twitter.com/STREETCACHE" data-widget-id="309169099978706944" data-theme="dark" data-link-color="#cc0000" data-related="twitterapi,twitter" data-aria-polite="assertive" width="300" height="300" lang="EN"></a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></div>
+
+
+
+    <div id="clock-wrapper"> 
+      <p id="clock-list"></p>
+    </div>
+ 
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+
+<!-- SPLASH WELCOME IMAGE -->
+    <img id="splash" src="http://group4.webassite.com/SC.png">
+
+<script>
+$("#splash").bind('click', function () {
+  $(this).animate({
+    height: 0,
+    width: 0,
+    marginTop: 0,
+    marginLeft: 0
+    }, 2000, function () {
+    $(this).remove();
+  });
+});
+</script>
+
+         
+     <div style="opacity:0.8;">
+      <div class="solid-top" style="position:fixed;top:0px;left:0px;width:100%;height:15%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;top:0px;left:0px;width:10%;height:100%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;bottom:0px;left:0px;width:100%;height:15%;background-color:black;z-index:98">
+
+        <div id="siteicon">
+          <ul>
+            <li><a href="#n"><img src="http://group4.webassite.com/SCv2.png" height="75" width="80" /><span><strong>Click a marker to send a message and reveal who is on the street.</strong></span></a></li>
+         </ul>
+        </div>
+      </div>
+      <div class="solid" style="position:fixed;top:0px;right:0px;width:30%;height:100%;background-color:black;z-index:98"></div>
+    </div>
+
+  </body>
+</html>

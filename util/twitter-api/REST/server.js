@@ -32,6 +32,8 @@ app.get('/tweets/:collection/hashtag/:hashtag/limit/:limit', twitter_api.findByH
 //app.get('/tweets/geo/bowery/hashtag/:hashtag/recent/:timewindow/count', tweets.countByHashtagLimited);
 app.get('/tweets/:collection/hashtag/:hashtag/recent/:timewindow/count', twitter_api.countByHashtagLimited);
 
+app.get('/tweets/:collection/hashtag/:hashtag/recent/:timewindow', twitter_api.findByHashtagTimeWindow);
+
 //app.get('/tweets/geo/bowery/block/:block/recent/:timewindow/count', tweets.countByBlockLimited);
 app.get('/tweets/:collection/block/:block/recent/:timewindow/count', twitter_api.countByBlockLimited);
 
@@ -42,6 +44,9 @@ app.get('/tweets/:collection/recent/:timewindow', twitter_api.findRecent);
 
 //POST REQUESTS
 app.post('/tweet/:username', twitter_api.sendTweet);
+
+//app.get('/tweets/geo/bowery/hashtag/:hashtag/limit/:limit', tweets.findByHashtagLimited);
+app.get('/tweets/:collection/username/:username/limit/:limit', twitter_api.findByUsernameLimited);
 
 
 
@@ -57,6 +62,7 @@ var interval_id = setInterval(function(){
 		twitter_api.count('movements');
 		twitter_api.count('streetcache');
 		twitter_api.fetch('movements', block);
+		twitter_api.fetchAtStreetcache();
 		block++;
 		if(block > 3){
 			block = 1;
