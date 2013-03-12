@@ -87,7 +87,7 @@ var countTagIntervalID = setInterval(function(){
 
 var saveToFlickrID = setInterval(function(){
 	instagram.saveToFlickr();
-}, 3600000);//3600000 = once every hour
+}, 1800000);//1800000 = once every half hour
 
 instagram.saveToFlickr();//at boot up
 //instagram.resetUploadedFlag();
