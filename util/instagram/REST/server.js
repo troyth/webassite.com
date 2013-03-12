@@ -43,14 +43,14 @@ app.get('/auth/flickr/callback',
 
 
 passport.use(new FlickrStrategy({
-    consumerKey: 'cc1016c94120232d41c0748f68f0d76a',
-    consumerSecret: 'ebe17ffcaa2445f9',
+    consumerKey: '1361ce967daf59821bc493392809c8e8',
+    consumerSecret: '82a41cbf24541227',
     callbackURL: "http://webassite.com/util/instagram/REST/auth/flickr/callback"
   },
   function(token, tokenSecret, profile, done) {
   	console.log('***** GOT A TOKEN!!! OF: '+ token + ' with tokenSecret: '+ tokenSecret);
 
-  	flickr.saveToFlickr(token, tokenSecret);
+  	//flickr.saveToFlickr(token, tokenSecret);
   	/*
     User.findOrCreate({ flickrId: profile.id }, function (err, user) {
       return done(err, user);
@@ -67,14 +67,30 @@ var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebei
 
 var i = 0;
 
+//instagram.clear('kinneinstagram');
 
 function countAllTags(){
+	console.log('');console.log('');
 	for(var j = 0; j < tags.length; j++){
-		instagram.countByTag('kinneinstagram', tags[j]);	
+		instagram.countByTag('kinneinstagram', tags[j]);
 	}
+	console.log('');console.log('');
 }
 
-//instagram.clear('kinneinstagram');
+//countAllTags();
+
+instagram.count('kinneinstagram');
+
+var countTagIntervalID = setInterval(function(){
+	countAllTags();
+}, 60000);
+
+var saveToFlickrID = setInterval(function(){
+	instagram.saveToFlickr();
+}, 3600000);//3600000 = once every hour
+
+instagram.saveToFlickr();//at boot up
+//instagram.resetUploadedFlag();
 
 function fetchTags(interval){
 	setTimeout(function(){
@@ -86,6 +102,9 @@ function fetchTags(interval){
 		fetchTags(interval);
 	}, interval);
 }
+
+
+
 
 fetchTags(30000);//fetch every half-minute, looking for a different tag each time
 

@@ -1,5 +1,10 @@
 var mongo = require('mongodb');
 var ig = require('instagram-node').instagram();
+
+var fs = require('fs');
+var Flickr = require('flickr-with-uploads').Flickr;
+
+var request = require('request');
  
 var Server = mongo.Server,
     Db = mongo.Db,
@@ -80,6 +85,14 @@ region['kinnevenice'] = 'europe';
 region['kinnevienna'] = 'europe';
 
 
+//Flickr - assumes the tokens don't ever expire (or won't during the 2 weeks of Kinne travel)
+var consumer_key = '1361ce967daf59821bc493392809c8e8';
+var consumer_secret = '82a41cbf24541227';
+var oauth_token = '72157632975405302-c06fccc501805e34';
+var oauth_token_secret = '0e10ea84f7e19ae4';
+
+// constructor arguments: new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret, base_url)
+var client = new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret);
 
 /*
  *******************************************************************************************************
@@ -114,6 +127,13 @@ ig.use({ client_id: 'c590ebe3eda04afebe925e4c4d056fa5',
  *******************************************************************************************************
  *******************************************************************************************************
 */
+
+//for Flickr
+function api(method_name, data, callback) {
+    // overloaded as (method_name, data, callback)
+    return client.createRequest(method_name, data, true, callback).send();
+}
+
 
 function prependHash(arr){
     for(var i = 0; i < arr.length; i++){
@@ -201,7 +221,7 @@ exports.countByTag = function(col, tag){
 /*
  *******************************************************************************************************
  *******************************************************************************************************
- *	TWITTER API MIRROR RESTful ACCESS FUNCTIONS
+ *	INSTAGRAM API MIRROR RESTful ACCESS FUNCTIONS
  *******************************************************************************************************
  *******************************************************************************************************
 */
@@ -262,10 +282,9 @@ exports.findLimit = function(req, res) {
 exports.findVariety= function(req, res) {
     var col = req.params.collection;
     var limit = parseInt( req.params.limit );
-    console.log('');console.log('');console.log('');
-    console.log('findVariety() in ' + col + ' collection with limit: '+ limit);
 
     var maxItems = 30;
+    var totalItems = 3;
 
     db.collection(col, function(err, collection) {
         collection.find().sort({"created_time":-1}).limit(maxItems).toArray(function(err, items) {
@@ -273,29 +292,24 @@ exports.findVariety= function(req, res) {
                 console.log('Error: with findVariety(), error: ' + err);
                 console.dir(err);
             }else{
-                var locations = [];
+                //choose 3 pics from 3 different locations from within the most recent 30 pics
                 var returnItems = [];
-                var j = 1;
-                locations[0] = items[0].kinne_location;
+                var locations = [];
+                var idx = [];
+                var j = 0;
 
-                loop1:
-                    for(var i = 1; i < maxItems; i++){
-                        console.log('for with i: '+ i + ' and locations: ');
-                        console.dir(locations);
-                        if( locations.indexOf( items[i].kinne_location )  == -1){//if not already registered
-                            locations[j] = items[i].kinne_location;
-                            returnItems.push( items[i] );
-                            j++;
-                        }else{
-                            console.log('already in locations array');
-                        }
-                        if( j > limit){
-                            console.log('breaking loop');
-                            break loop1;
-                        }
+                for(var i = 0; i < totalItems; i++){
+
+                    var x = Math.floor(Math.random()*maxItems);
+                    //try another random idx if already selected or if the location is already represented
+                    while( (idx.indexOf(x) > -1) || (locations.indexOf( items[ x ].kinne_location ) > -1) ){
+                        x = Math.floor(Math.random()*maxItems);
                     }
-
-                console.log('Success: findLimit() returning ' + returnItems.length + ' instagram photos');
+                    locations[ i ] = items[ x ].kinne_location;
+                    idx[ i ] = x;
+                    returnItems[ i ] = items[ x ];
+                }
+           
                 res.jsonp(returnItems);
             }
         });
@@ -318,7 +332,8 @@ exports.findVariety= function(req, res) {
  *
 */
 exports.fetch = function(tag){
-    ig.tag_media_recent(tag, function(err, medias, pagination, limit) {
+
+    var loopFetch = function(err, medias, pagination, limit) {
         //console.log('got a return from #kinnecopenhagen:');
         //console.dir(medias);
 
@@ -331,6 +346,7 @@ exports.fetch = function(tag){
 
                 medias[i].kinne_location = kinneLocations[tag];
                 medias[i].region = region[tag];
+                medias[i].uploaded = false;
 
                 db.collection('kinneinstagram', function(err, collection) {
                     collection.update({id: medias[i].id}, {"$set": medias[i]}, {safe:true, upsert:true}, function(err, result) {
@@ -338,8 +354,8 @@ exports.fetch = function(tag){
                             console.log('error: An error has occurred in trying to upsert into the kinneinstagram collection');
                             console.log(err);
                         } else {
-                            console.log('Success: upserted instragram photo to kinneinstagram collection');
-                            console.dir(result);
+                            //console.log('Success: upserted instragram photo to kinneinstagram collection');
+                            //console.dir(result);
                             //res.send(result[0]);
                         }
                     });
@@ -347,18 +363,193 @@ exports.fetch = function(tag){
             }
         }
 
-    });
+        if(pagination.next) {
+            pagination.next(loopFetch); // Will get second page results
+        }
+    };
+
+    ig.tag_media_recent(tag, loopFetch);
+
+
     
 };// end fetch
 
 
 
 
+/*
+ *******************************************************************************************************
+ *******************************************************************************************************
+ *  FLICKR
+ *******************************************************************************************************
+ *******************************************************************************************************
+*/
+
+var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 
+exports.saveToFlickr = function(){
+
+    var path = __dirname + '/images/';
+    var results = [];
+    var filenames = [];
+    var totalFiles = 0;
+    var uploaded = 0;
+
+    var timeoutId;
+
+    var uploadToFlickr = function(){
+       
+
+        for(var i = 0; i < uploaded; i++){
+            var fullpath = path + filenames[i];
+
+            var tags = results[i].tags;
+            tags.push( results[i].kinne_location );
+            tags.push( results[i].user.username );
+            tags.push( 'instagram' );
+            tags.push( 'kinne2013' );
+            tags.push( 'studio-x' );
+            tags.push( 'GSAPP' );
+            tagsString = tags.join(' ');
+
+            //console.log('created: '+results[i].caption.created_time);
+
+            var unixTime = parseInt( results[i].caption.created_time ) * 1000;
+
+            var d = new Date(unixTime);
+
+            var desc = results[i].caption.text + ' -- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
+
+            var params = {
+                title: 'Submitted through instagram by '+ results[i].user.full_name,
+                description: desc,
+                is_public: 1,
+                is_friend: 0,
+                is_family: 0,
+                hidden: 2,
+                content_type: 1,
+                tags: tagsString,
+                photo: fs.createReadStream(fullpath, {flags: 'r'})
+            };
+
+            // the method_name gets the special value of "upload" for uploads.
+            api('upload', params, function(err, response) {
+                if (err) {
+                    console.error("Could not upload photo: ", err.toString() + ". Error message:");
+                    console.error();
+                }
+                else {
+                    // usually, the method name is precisely the name of the API method, as they are here:
+                    api('flickr.photos.getInfo', {photo_id: response.photoid}, function(err, response) {
+
+                        /*api('flickr.photosets.getList',{}, function(err, list) {
+                            console.log('');
+                            console.log("all lists");
+                            var i = 0; 
+                            for(i = 0; i < list.photosets.photoset.length; i++){
+                                if( list.photosets.photoset[i].title._content.indexOf('inne') > -1){
+                                    console.dir(list.photosets.photoset[i]);
+                                }
+                            }
+                            
+                        });*/
+
+                        //console.log('*******response.photo.id: '+ response.photo.id);
+
+                        api('flickr.photosets.addPhoto', {photoset_id: "72157632979278433", photo_id: response.photo.id}, function(err) {
+                            //console.log('');
+                            //console.log("Full photo info:", response.photo);
+                        });
+                    });
+                }
+            });
+        }
+    }
+
+    var downloadCallback = function(param1, param2, param3){
+        uploaded++;
+
+        console.log('uploaded: ' + uploaded);
+
+        if(uploaded >= totalFiles){
+            console.log('calling uploadToFlickr()');
+            clearTimeout(timeoutId);
+            uploadToFlickr();
+        }
+    }
+
+    db.collection('kinneinstagram', function(err, collection) {
+        collection.find({ uploaded: false }).sort({"created_time":-1}).toArray(function(err, items) {
+            console.log('');
+            console.log('found total of non uploaded items: ' + items.length);
+            totalFiles = 20;
+            results = items;
 
 
+            if(items.length > 0 ){
+                for(var i = 0; i < 20; i++){
+                    var filename = items[i].images.standard_resolution.url;
+                    filename = filename.split('/').pop();
+                    var pathname = path + filename;
+                    filenames.push(filename);
+                    //pipe the image to the pathname then trigger the downloadCallback callback
+                    request( items[i].images.standard_resolution.url, downloadCallback ).pipe(fs.createWriteStream( pathname ));
 
+                    var primaryKey = ''+items[i]._id;
+
+                    
+                    console.log('');
+                    //console.log(items[i]);
+                    console.log('');
+                    console.log('****ID: '+ items[i]._id);
+
+                    //items[i].uploaded = true;
+
+                    collection.update({ _id: new BSON.ObjectID(primaryKey) }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
+                        if (err) {
+                            console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
+                            console.log(err);
+                        } else {
+                            //console.log('Success: added tweet to ' + col + ' collection');
+                            //res.send(result[0]);
+                            collection.find({_id: items[i]._id}).toArray(function(err, result){
+                                console.log('DONE!!! the item is now:');
+                                console.log('');
+                                //console.dir(result);
+                            });
+                        }
+                    });
+
+
+                    
+                    
+                   
+                }
+            }
+
+            //call uploadToFlickr after 60 seconds even if not all have been downloaded
+            timeoutId = setTimeout( uploadToFlickr, 60000);
+        });
+    });
+}
+
+
+exports.resetUploadedFlag = function(){
+    db.collection('kinneinstagram', function(err, collection) {
+        collection.update({ uploaded: true }, {"$set": { uploaded: false }}, {safe:true}, function(err, result) {
+            if (err) {
+                console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
+                console.log(err);
+            } else {
+                //console.log('Success: added tweet to ' + col + ' collection');
+                //res.send(result[0]);
+                console.log('reset all photos to not yet uploaded');
+            }
+        });
+    });
+}
 
 
 

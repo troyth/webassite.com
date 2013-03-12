@@ -1,19 +1,21 @@
 var fs = require('fs');
 var Flickr = require('flickr-with-uploads').Flickr;
 
+var consumer_key = '1361ce967daf59821bc493392809c8e8';
+var consumer_secret = '82a41cbf24541227';
+var oauth_token = '72157632975405302-c06fccc501805e34';
+var oauth_token_secret = '0e10ea84f7e19ae4';
+
+// constructor arguments: new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret, base_url)
+var client = new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret);
+
+function api(method_name, data, callback) {
+	// overloaded as (method_name, data, callback)
+	return client.createRequest(method_name, data, true, callback).send();
+}
 
 
-
-exports.saveToFlickr = function(oauth_token, oauth_token_secret){
-
-
-	// constructor arguments: new Flickr(consumer_key, consumer_secret, oauth_token, oauth_token_secret, base_url)
-	var client = new Flickr('cc1016c94120232d41c0748f68f0d76a', 'ebe17ffcaa2445f9', oauth_token, oauth_token_secret);
-
-	function api(method_name, data, callback) {
-		// overloaded as (method_name, data, callback)
-		return client.createRequest(method_name, data, true, callback).send();
-	}
+exports.saveToFlickr = function(){
 
 	var fullpath = '/srv/www/webassite.com/public_html/util/instagram/REST/images/d30db8f48a5311e28d6622000a1fbc43_6.jpg';
 	var params = {
@@ -24,7 +26,7 @@ exports.saveToFlickr = function(oauth_token, oauth_token_secret){
 	  is_family: 0,
 	  hidden: 2,
 	  content_type: 1,
-	  tags: "sepidehkhazaee kinnekochi kochi",
+	  tags: "sepidehkhazaee kinnekochi kochi kinne2013",
 	  photo: fs.createReadStream(fullpath, {flags: 'r'})
 	};
 
