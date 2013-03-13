@@ -217,7 +217,6 @@ exports.countByTag = function(col, tag){
 
 
 
-
 /*
  *******************************************************************************************************
  *******************************************************************************************************
@@ -317,8 +316,56 @@ exports.findVariety= function(req, res) {
 };
 
 
+exports.findUploaded = function(req, res) {
+    var col = req.params.collection;
+    console.log('findAll() in ' + col + ' collection that have been uploaded');
 
+    var number;
 
+    db.collection(col, function(err, collection) {
+        collection.find({ uploaded: true }).count(function(err, result) {
+            number = 'number of uploaded images: ' + result;
+        });
+
+        collection.find({ uploaded: true }).sort({"created_time":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            /*
+            for(var i = 0; i < items.length; i++){
+                collection.update({ id: items[i].id }, {"$set": { uploaded: false }}, {safe:true}, function(err, result) {
+                    if (err) {
+                        console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
+                        console.log(err);
+                    } else {
+                        //console.log('Success: added tweet to ' + col + ' collection');
+                        //res.send(result[0]);
+                        console.log('set to uploaded false');
+                    }
+                });     
+            }   
+            */    
+
+            items.push( number );
+            res.jsonp(items);
+        });
+    });
+};
+
+exports.findNotUploaded = function(req, res) {
+    var col = req.params.collection;
+    console.log('findAll() in ' + col + ' collection that have been uploaded');
+
+    var number;
+
+    db.collection(col, function(err, collection) {
+        collection.find({ uploaded: false }).count(function(err, result) {
+            number = 'number of images not uploaded: ' + result;
+        });
+
+        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            items.push( number );
+            res.jsonp(items);
+        });
+    });
+};
 
 
 
@@ -458,7 +505,7 @@ exports.saveToFlickr = function(){
 
                         //console.log('*******response.photo.id: '+ response.photo.id);
 
-                        api('flickr.photosets.addPhoto', {photoset_id: "72157632979278433", photo_id: response.photo.id}, function(err) {
+                        api('flickr.photosets.addPhoto', {photoset_id: "72157632988912392", photo_id: response.photo.id}, function(err) {
                             //console.log('');
                             //console.log("Full photo info:", response.photo);
                         });
@@ -481,15 +528,15 @@ exports.saveToFlickr = function(){
     }
 
     db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: false }).sort({"created_time":-1}).toArray(function(err, items) {
+        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(3).toArray(function(err, items) {
             console.log('');
             console.log('found total of non uploaded items: ' + items.length);
-            totalFiles = 20;
+            totalFiles = items.length;
             results = items;
 
 
             if(items.length > 0 ){
-                for(var i = 0; i < 20; i++){
+                for(var i = 0; i < totalFiles; i++){
                     var filename = items[i].images.standard_resolution.url;
                     filename = filename.split('/').pop();
                     var pathname = path + filename;
@@ -501,30 +548,27 @@ exports.saveToFlickr = function(){
 
                     
                     console.log('');
-                    //console.log(items[i]);
+                    console.log(items[i]);
                     console.log('');
-                    console.log('****ID: '+ items[i]._id);
+                    console.log('****instagram ID: '+ items[i].id);
 
                     //items[i].uploaded = true;
 
-                    collection.update({ _id: new BSON.ObjectID(primaryKey) }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
+                    collection.update({ id: items[i].id }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
                         if (err) {
                             console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
                             console.log(err);
                         } else {
                             //console.log('Success: added tweet to ' + col + ' collection');
                             //res.send(result[0]);
-                            collection.find({_id: items[i]._id}).toArray(function(err, result){
-                                console.log('DONE!!! the item is now:');
-                                console.log('');
-                                //console.dir(result);
-                            });
+
+                            setTimeout(function(){
+                                collection.find({ uploaded: true}).count(function(err, result){
+                                    console.log('### RETURNED FROM uploadToFlickr(), there are now ' + result + ' images with uploaded: true');
+                                });
+                            }, 5000);
                         }
                     });
-
-
-                    
-                    
                    
                 }
             }

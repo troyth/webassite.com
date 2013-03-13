@@ -24,6 +24,8 @@ app.get('/instagram/:collection', instagram.findAll);
 app.get('/instagram/:collection/limit/:limit', instagram.findLimit);
 app.get('/instagram/:collection/variety/limit/:limit', instagram.findVariety);
 
+app.get('/instagram/:collection/uploaded', instagram.findUploaded);
+app.get('/instagram/:collection/not-uploaded', instagram.findNotUploaded);
 
 
 //FLICKR AUTH
