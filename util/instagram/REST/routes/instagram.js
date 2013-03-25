@@ -51,6 +51,9 @@ kinneLocations['kinneshanghai'] = 'Shanghai';
 kinneLocations['kinnetokyo'] = 'Tokyo';
 kinneLocations['kinnevenice'] = 'Venice';
 kinneLocations['kinnevienna'] = 'Vienna';
+kinneLocations['kinneahmedabad'] = 'Ahmedabad';
+kinneLocations['kinneagra'] = 'Agra';
+kinneLocations['kinnedelhi'] = 'Delhi';
 
 var region = [];
 
@@ -83,6 +86,9 @@ region['kinneshanghai'] = 'east-asia';
 region['kinnetokyo'] = 'east-asia';
 region['kinnevenice'] = 'europe';
 region['kinnevienna'] = 'europe';
+region['kinneahmedabad'] = 'south-asia';
+region['kinneagra'] = 'south-asia';
+region['kinnedelhi'] = 'south-asia';
 
 
 //Flickr - assumes the tokens don't ever expire (or won't during the 2 weeks of Kinne travel)
@@ -368,8 +374,24 @@ exports.findNotUploaded = function(req, res) {
 };
 
 
+exports.findError = function(){
+    db.collection('kinneinstagram', function(err, collection) {
+                    collection.find({id: 22}).count(function(err, number){
+                        if(err){
+                            console.log('^^^^^^^^ findError() got an error, error:');
+                            console.log(err);
+                            console.dir(err);
+                        }else{
+                            console.log('^^^^^^^^ findError() got NO!!! error, number:');
+                            console.log(number);
+                        }
+                    });
 
 
+                    
+                });
+
+}
 
 
 /*
@@ -388,25 +410,48 @@ exports.fetch = function(tag){
             console.log('Error called in ig.tag_media_recent of instagram.fetch():');
             console.log(err);
         }else{
+
+            var media;
             
             for(var i = 0; i < medias.length; i++){
 
-                medias[i].kinne_location = kinneLocations[tag];
-                medias[i].region = region[tag];
-                medias[i].uploaded = false;
+                console.log('');
+                console.log('');
+                console.log('');
+                console.dir(medias[i]);
 
-                db.collection('kinneinstagram', function(err, collection) {
-                    collection.update({id: medias[i].id}, {"$set": medias[i]}, {safe:true, upsert:true}, function(err, result) {
-                        if (err) {
-                            console.log('error: An error has occurred in trying to upsert into the kinneinstagram collection');
-                            console.log(err);
-                        } else {
-                            //console.log('Success: upserted instragram photo to kinneinstagram collection');
-                            //console.dir(result);
-                            //res.send(result[0]);
-                        }
+                media = medias[i];
+
+                if(media != undefined){
+                    if( (kinneLocations[tag] != undefined) && (region[tag] != undefined)){
+                        media.kinne_location = kinneLocations[tag];
+                        media.region = region[tag];
+                    }else{
+                        console.log('region[tag] or kinneLocations[tag] undefined for tag: '+ tag);
+                    }
+                    
+                    media.uploaded = false;
+
+                    db.collection('kinneinstagram', function(err, collection) {
+                        //only upsert (and make uploaded = false) if not already logged
+                        collection.find({id: media.id}).count(function(err, number){
+                            if(number < 1){
+                                collection.update({id: media.id}, {"$set": media}, {safe:true, upsert:true}, function(err, result) {
+                                    if (err) {
+                                        console.log('error: An error has occurred in trying to upsert into the kinneinstagram collection');
+                                        console.log(err);
+                                    } else {
+                                        console.log('Success: upserted instragram photo to kinneinstagram collection');
+                                        //console.dir(result);
+                                        //res.send(result[0]);
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
+                }else{
+                    console.log('loopFetch: media is undefined');
+                }
             }
         }
 
@@ -528,7 +573,7 @@ exports.saveToFlickr = function(){
     }
 
     db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(3).toArray(function(err, items) {
+        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(15).toArray(function(err, items) {
             console.log('');
             console.log('found total of non uploaded items: ' + items.length);
             totalFiles = items.length;
@@ -595,6 +640,49 @@ exports.resetUploadedFlag = function(){
     });
 }
 
+exports.setUploadedFlag = function(req, res){
+    db.collection('kinneinstagram', function(err, collection) {
+        collection.update({ type: 'image' }, {"$set": { uploaded: true }}, {safe:true, multi:true}, function(err, result) {
+            if (err) {
+                console.log('error: An error has occurred in trying to setUploadedFlag()');
+                console.log(err);
+            } else {
+                //console.log('Success: added tweet to ' + col + ' collection');
+                //res.send(result[0]);
+                console.log('set ' + result.length + ' photos to uploaded');
+                console.dir(result);
+                console.log(result);
+                res.jsonp('reset');
+            }
+        });
+    });
+}
+
+
+exports.setKinneLocation = function(req, res){
+    var tag = req.params.tags[0];
+
+    if(tag != undefined){
+        db.collection('kinneinstagram', function(err, collection) {
+            collection.update({ type: 'image' }, {"$set": { uploaded: true }}, {safe:true, multi:true}, function(err, result) {
+                if (err) {
+                    console.log('error: An error has occurred in trying to setUploadedFlag()');
+                    console.log(err);
+                } else {
+                    //console.log('Success: added tweet to ' + col + ' collection');
+                    //res.send(result[0]);
+                    console.log('set ' + result.length + ' photos to uploaded');
+                    console.dir(result);
+                    console.log(result);
+                    res.jsonp('reset');
+                }
+            });
+        });
+
+    }
+
+    
+}
 
 
 

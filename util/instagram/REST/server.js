@@ -27,6 +27,9 @@ app.get('/instagram/:collection/variety/limit/:limit', instagram.findVariety);
 app.get('/instagram/:collection/uploaded', instagram.findUploaded);
 app.get('/instagram/:collection/not-uploaded', instagram.findNotUploaded);
 
+//Set all photos to uploaded remotely
+app.get('/instagram/kinneinstagram/set-uploaded', instagram.setUploadedFlag);
+
 
 //FLICKR AUTH
 app.get('/auth/flickr',
@@ -65,7 +68,8 @@ passport.use(new FlickrStrategy({
 //app.post('/tweet/:username', twitter_api.sendTweet);
 
 
-var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebeijing','kinnebordeaux','kinnecannes','kinnechandigarh','kinnecopenhagen','kinnegeneva','kinnehyderabad','kinneistanbul','kinnejohannesburg','kinnekochi','kinnekumasi','kinnekyoto','kinnelondon','kinnemedellin','kinnemumbai','kinnenewdelhi','kinneparis','kinnerio','kinnerotterdam','kinnesanfrancisco','kinnesaopaulo','kinneshanghai','kinnetokyo','kinnevenice','kinnevienna'];
+
+var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebeijing','kinnebordeaux','kinnecannes','kinnechandigarh','kinnecopenhagen','kinnegeneva','kinnehyderabad','kinneistanbul','kinnejohannesburg','kinnekochi','kinnekumasi','kinnekyoto','kinnelondon','kinnemedellin','kinnemumbai','kinnenewdelhi','kinneparis','kinnerio','kinnerotterdam','kinnesanfrancisco','kinnesaopaulo','kinneshanghai','kinnetokyo','kinnevenice','kinnevienna', 'kinneahmedabad', 'kinneagra', 'kinnedelhi'];
 
 var i = 0;
 
@@ -81,7 +85,7 @@ function countAllTags(){
 
 //countAllTags();
 
-instagram.count('kinneinstagram');
+//instagram.count('kinneinstagram');
 
 var countTagIntervalID = setInterval(function(){
 	countAllTags();
@@ -93,6 +97,9 @@ var saveToFlickrID = setInterval(function(){
 
 instagram.saveToFlickr();//at boot up
 //instagram.resetUploadedFlag();
+
+
+//instagram.findError();
 
 function fetchTags(interval){
 	setTimeout(function(){
