@@ -529,14 +529,13 @@ exports.saveToFlickr = function(){
 
     var uploadToFlickr = function(){
        
-
         for(var i = 0; i < uploaded; i++){
-            console.log('uploading to flickr');
+            console.log('  ' + i + ' * uploading a photo to flickr');
 
             var fullpath = path + filenames[i];
 
             var tags = results[i].tags;
-            tags.push( results[i].kinne_location );
+            tags.push( results[i].kinne_location.split(' ').join('-') );//replace spaces with dashes
             tags.push( results[i].user.username );
             tags.push( 'instagram' );
             tags.push( 'kinne2013' );
@@ -546,14 +545,14 @@ exports.saveToFlickr = function(){
 
             //console.log('created: '+results[i].caption.created_time);
 
+            var unixTime = parseInt( results[i].created_time ) * 1000;
+            var d = new Date(unixTime);
+
             if(results[i].caption != null){
-                var unixTime = parseInt( results[i].caption.created_time ) * 1000;
-
-                var d = new Date(unixTime);
-
                 var desc = results[i].caption.text + ' -- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
             }else{
-                var desc = '';
+                console.log('photo has blank caption');
+                var desc = '-- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
             }
 
             
@@ -571,57 +570,64 @@ exports.saveToFlickr = function(){
 
             // the method_name gets the special value of "upload" for uploads.
             api('upload', params, function(err, response) {
-                if (err) {
-                    console.error("Could not upload photo: ", err.toString() + ". Error message:");
-                    console.error();
-                }
-                else {
+                if(err){
+                    console.error("Could not upload photo. Error message:");
+                    console.error(err.toString());
+                    console.log('response: '+ response);
+                }else{
+                    console.log('successfully uploaded photo with id '+ results[i].id + ' to flickr');
+
+                    db.collection('kinneinstagram', function(err, collection) {
+                        collection.update({ id: results[i].id }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
+                            if (err) {
+                                console.log('error: An error has occurred trying to set uploaded flag for photo with id: '+ results[i].id);
+                                console.log(err);
+                            } else {
+                                console.log('set uploaded flag for photo with id '+ results[i].id);
+                            }
+                        });
+                    });
+
                     // usually, the method name is precisely the name of the API method, as they are here:
                     api('flickr.photos.getInfo', {photo_id: response.photoid}, function(err, response) {
+                        if(err){
+                            console.log('Error getting info for photo on flickr');
+                            console.log(err);
+                        }else{
 
-                        /*api('flickr.photosets.getList',{}, function(err, list) {
-                            console.log('');
-                            console.log("all lists");
-                            var i = 0; 
-                            for(i = 0; i < list.photosets.photoset.length; i++){
-                                if( list.photosets.photoset[i].title._content.indexOf('inne') > -1){
-                                    console.dir(list.photosets.photoset[i]);
+                            api('flickr.photosets.addPhoto', {photoset_id: "72157633086370649", photo_id: response.photo.id}, function(err) {
+                                if(err){
+                                    console.log('Error: attempting to migrate to photoset with id 72157633086370649');
+                                    console.log(err);
+                                }else{
+                                    console.log('Successfully migrated flickr photo to set with id 72157633086370649');
+                                    console.log('');console.log('');
                                 }
-                            }
-                            
-                        });*/
-
-                        //console.log('*******response.photo.id: '+ response.photo.id);
-
-                        api('flickr.photosets.addPhoto', {photoset_id: "72157633086370649", photo_id: response.photo.id}, function(err) {
-                            //console.log('');
-                            //console.log("Full photo info:", response.photo);
-                        });
+                            });
+                        }
                     });
                 }
             });
         }
     }
 
+    //gets called each time an image is downloaded
     var downloadCallback = function(param1, param2, param3){
         uploaded++;
 
-        console.log('uploaded: ' + uploaded);
-
         if(uploaded >= totalFiles){
-            console.log('calling uploadToFlickr()');
+            console.log('all photos have been downloaded, attempting to upload to flickr');
             clearTimeout(timeoutId);
             uploadToFlickr();
         }
     }
 
     db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(5).toArray(function(err, items) {
+        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(1).toArray(function(err, items) {
             console.log('');
-            console.log('found total of non uploaded items: ' + items.length);
+            console.log('attempting to download ' + items.length + ' photos from instagram');
             totalFiles = items.length;
             results = items;
-
 
             if(items.length > 0 ){
                 for(var i = 0; i < totalFiles; i++){
@@ -631,38 +637,14 @@ exports.saveToFlickr = function(){
                     filenames.push(filename);
                     //pipe the image to the pathname then trigger the downloadCallback callback
                     request( items[i].images.standard_resolution.url, downloadCallback ).pipe(fs.createWriteStream( pathname ));
-
-                    var primaryKey = ''+items[i]._id;
-
-                    
-                    console.log('');
-                    console.log(items[i]);
-                    console.log('');
-                    console.log('****instagram ID: '+ items[i].id);
-
-                    //items[i].uploaded = true;
-
-                    collection.update({ id: items[i].id }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
-                        if (err) {
-                            console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
-                            console.log(err);
-                        } else {
-                            //console.log('Success: added tweet to ' + col + ' collection');
-                            //res.send(result[0]);
-
-                            setTimeout(function(){
-                                collection.find({ uploaded: true}).count(function(err, result){
-                                    console.log('### RETURNED FROM uploadToFlickr(), there are now ' + result + ' images with uploaded: true');
-                                });
-                            }, 5000);
-                        }
-                    });
-                   
                 }
+                return true;
+            }else{
+                return false;//no more items
             }
 
             //call uploadToFlickr after 60 seconds even if not all have been downloaded
-            timeoutId = setTimeout( uploadToFlickr, 60000);
+            timeoutId = setTimeout( uploadToFlickr, 29000);
         });
     });
 }

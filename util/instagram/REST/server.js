@@ -98,11 +98,11 @@ countAllTags();
 //}, 60000);
 
 var saveToFlickrID = setInterval(function(){
-	//instagram.saveToFlickr();
-}, 10000);//1800000 = once every half hour
+	instagram.saveToFlickr();
+}, 30000);//1800000 = once every half hour
 
-//instagram.saveToFlickr();//at boot up
-instagram.resetUploadedFlag();
+instagram.saveToFlickr();//at boot up
+//instagram.resetUploadedFlag();
 
 
 //instagram.findError();
