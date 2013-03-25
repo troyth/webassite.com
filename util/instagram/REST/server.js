@@ -21,8 +21,14 @@ app.configure(function () {
 
 //GET ENDPOINTS
 app.get('/instagram/:collection', instagram.findAll);
+app.get('/instagram/:collection/count', instagram.countAll);
 app.get('/instagram/:collection/limit/:limit', instagram.findLimit);
 app.get('/instagram/:collection/variety/limit/:limit', instagram.findVariety);
+
+
+app.get('/instagram/:collection/undefinedcaption', instagram.findUndefined);
+
+
 
 app.get('/instagram/:collection/uploaded', instagram.findUploaded);
 app.get('/instagram/:collection/not-uploaded', instagram.findNotUploaded);
@@ -69,11 +75,11 @@ passport.use(new FlickrStrategy({
 
 
 
-var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebeijing','kinnebordeaux','kinnecannes','kinnechandigarh','kinnecopenhagen','kinnegeneva','kinnehyderabad','kinneistanbul','kinnejohannesburg','kinnekochi','kinnekumasi','kinnekyoto','kinnelondon','kinnemedellin','kinnemumbai','kinnenewdelhi','kinneparis','kinnerio','kinnerotterdam','kinnesanfrancisco','kinnesaopaulo','kinneshanghai','kinnetokyo','kinnevenice','kinnevienna', 'kinneahmedabad', 'kinneagra', 'kinnedelhi'];
+var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebeijing','kinnebordeaux','kinnecannes','kinnechandigarh','kinnecopenhagen','kinnegeneva','kinnehyderabad','kinneistanbul','kinnejohannesburg','kinnekochi','kinnekumasi','kinnekyoto','kinnelondon','kinnemedellin','kinnemumbai','kinnenewdelhi','kinneparis','kinnerio','kinnerotterdam','kinnesanfrancisco','kinnesaopaulo','kinneshanghai','kinnetokyo','kinnevenice','kinnevienna', 'kinneahmedabad', 'kinneagra', 'kinnedelhi', 'kinneginza', 'kinnehongkong'];
 
 var i = 0;
 
-//instagram.clear('kinneinstagram');
+
 
 function countAllTags(){
 	console.log('');console.log('');
@@ -83,20 +89,20 @@ function countAllTags(){
 	console.log('');console.log('');
 }
 
-//countAllTags();
+countAllTags();
 
 //instagram.count('kinneinstagram');
 
-var countTagIntervalID = setInterval(function(){
-	countAllTags();
-}, 60000);
+//var countTagIntervalID = setInterval(function(){
+	//countAllTags();
+//}, 60000);
 
 var saveToFlickrID = setInterval(function(){
-	instagram.saveToFlickr();
-}, 1800000);//1800000 = once every half hour
+	//instagram.saveToFlickr();
+}, 10000);//1800000 = once every half hour
 
-instagram.saveToFlickr();//at boot up
-//instagram.resetUploadedFlag();
+//instagram.saveToFlickr();//at boot up
+instagram.resetUploadedFlag();
 
 
 //instagram.findError();
@@ -113,9 +119,10 @@ function fetchTags(interval){
 }
 
 
+//instagram.fetch('kinnekyoto');
+//instagram.fetch('kinneatacama');
 
-
-fetchTags(30000);//fetch every half-minute, looking for a different tag each time
+//fetchTags(5000);//fetch every half-minute, looking for a different tag each time
 
 
 //instagram.count('kinneinstagram');

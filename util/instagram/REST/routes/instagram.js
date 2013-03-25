@@ -54,6 +54,10 @@ kinneLocations['kinnevienna'] = 'Vienna';
 kinneLocations['kinneahmedabad'] = 'Ahmedabad';
 kinneLocations['kinneagra'] = 'Agra';
 kinneLocations['kinnedelhi'] = 'Delhi';
+kinneLocations['kinneginza'] = 'Ginza';
+kinneLocations['kinnehongkong'] = 'Hong Kong';
+
+
 
 var region = [];
 
@@ -89,6 +93,11 @@ region['kinnevienna'] = 'europe';
 region['kinneahmedabad'] = 'south-asia';
 region['kinneagra'] = 'south-asia';
 region['kinnedelhi'] = 'south-asia';
+
+region['kinneginza'] = 'east-asia';
+region['kinnehongkong'] = 'east-asia';
+
+
 
 
 //Flickr - assumes the tokens don't ever expire (or won't during the 2 weeks of Kinne travel)
@@ -245,6 +254,31 @@ exports.findAll = function(req, res) {
     db.collection(col, function(err, collection) {
         collection.find().sort({"created_time":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
             res.jsonp(items);
+        });
+    });
+};
+
+exports.countAll = function(req, res) {
+    var col = req.params.collection;
+    console.log('countAll() in ' + col + ' collection');
+
+    db.collection(col, function(err, collection) {
+        collection.find().count(function(err, number) {
+            res.jsonp(number);
+        });
+    });
+};
+
+exports.findUndefined = function(req, res) {
+    var col = req.params.collection;
+    console.log('findAll() in ' + col + ' collection');
+
+    db.collection(col, function(err, collection) {
+        collection.find({caption: undefined}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
+            var rtn = [];
+            rtn.push('total' + items.length);
+            rtn.push(items);
+            res.jsonp(rtn);
         });
     });
 };
@@ -412,6 +446,8 @@ exports.fetch = function(tag){
         }else{
 
             var media;
+
+            console.log('fetch() found ' + medias.length + ' photos for ' + tag);
             
             for(var i = 0; i < medias.length; i++){
 
@@ -495,6 +531,8 @@ exports.saveToFlickr = function(){
        
 
         for(var i = 0; i < uploaded; i++){
+            console.log('uploading to flickr');
+
             var fullpath = path + filenames[i];
 
             var tags = results[i].tags;
@@ -508,12 +546,17 @@ exports.saveToFlickr = function(){
 
             //console.log('created: '+results[i].caption.created_time);
 
-            var unixTime = parseInt( results[i].caption.created_time ) * 1000;
+            if(results[i].caption != null){
+                var unixTime = parseInt( results[i].caption.created_time ) * 1000;
 
-            var d = new Date(unixTime);
+                var d = new Date(unixTime);
 
-            var desc = results[i].caption.text + ' -- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
+                var desc = results[i].caption.text + ' -- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
+            }else{
+                var desc = '';
+            }
 
+            
             var params = {
                 title: 'Submitted through instagram by '+ results[i].user.full_name,
                 description: desc,
@@ -550,7 +593,7 @@ exports.saveToFlickr = function(){
 
                         //console.log('*******response.photo.id: '+ response.photo.id);
 
-                        api('flickr.photosets.addPhoto', {photoset_id: "72157632988912392", photo_id: response.photo.id}, function(err) {
+                        api('flickr.photosets.addPhoto', {photoset_id: "72157633086370649", photo_id: response.photo.id}, function(err) {
                             //console.log('');
                             //console.log("Full photo info:", response.photo);
                         });
@@ -573,7 +616,7 @@ exports.saveToFlickr = function(){
     }
 
     db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(15).toArray(function(err, items) {
+        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(5).toArray(function(err, items) {
             console.log('');
             console.log('found total of non uploaded items: ' + items.length);
             totalFiles = items.length;
@@ -627,14 +670,18 @@ exports.saveToFlickr = function(){
 
 exports.resetUploadedFlag = function(){
     db.collection('kinneinstagram', function(err, collection) {
-        collection.update({ uploaded: true }, {"$set": { uploaded: false }}, {safe:true}, function(err, result) {
+        collection.update({ uploaded: true }, {"$set": { uploaded: false }}, {safe:true, multi:true}, function(err, result) {
             if (err) {
                 console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
                 console.log(err);
             } else {
                 //console.log('Success: added tweet to ' + col + ' collection');
                 //res.send(result[0]);
+                console.log('');
                 console.log('reset all photos to not yet uploaded');
+                console.dir(result);
+                console.log(result);
+                console.log('');
             }
         });
     });
@@ -683,8 +730,6 @@ exports.setKinneLocation = function(req, res){
 
     
 }
-
-
 
 
 
