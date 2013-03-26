@@ -20,6 +20,7 @@ app.configure(function () {
 });
 
 //GET ENDPOINTS
+/*
 app.get('/instagram/:collection', instagram.findAll);
 app.get('/instagram/:collection/count', instagram.countAll);
 app.get('/instagram/:collection/limit/:limit', instagram.findLimit);
@@ -52,7 +53,7 @@ app.get('/auth/flickr/callback',
     res.redirect('/');
   });
 
-
+*/
 passport.use(new FlickrStrategy({
     consumerKey: '1361ce967daf59821bc493392809c8e8',
     consumerSecret: '82a41cbf24541227',
@@ -89,7 +90,7 @@ function countAllTags(){
 	console.log('');console.log('');
 }
 
-countAllTags();
+//countAllTags();
 
 //instagram.count('kinneinstagram');
 
@@ -97,16 +98,22 @@ countAllTags();
 	//countAllTags();
 //}, 60000);
 
-var saveToFlickrID = setInterval(function(){
-	instagram.saveToFlickr();
-}, 30000);//1800000 = once every half hour
+//var saveToFlickrID = setInterval(function(){
+	//instagram.saveToFlickr();
+//}, 30000);//1800000 = once every half hour
 
-instagram.saveToFlickr();//at boot up
+//instagram.saveToFlickr();//at boot up
 //instagram.resetUploadedFlag();
+
+//instagram.countUploaded();
+
+//instagram.downloadFromInstagram();
+
+
 
 
 //instagram.findError();
-
+/*
 function fetchTags(interval){
 	setTimeout(function(){
 		instagram.fetch(tags[i]);
@@ -117,7 +124,7 @@ function fetchTags(interval){
 		fetchTags(interval);
 	}, interval);
 }
-
+*/
 
 //instagram.fetch('kinnekyoto');
 //instagram.fetch('kinneatacama');
