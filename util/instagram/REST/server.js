@@ -137,7 +137,7 @@ function fetchTags(interval){
 //instagram.count('kinneinstagram');
 //instagram.showAll('kinneinstagram');
 
-flickr.uploadToFlickr();
+flickr.callUploadToFlickr();
 //flickr.clenseFlickrSet();
 //instagram.countUploaded();
 //instagram.resetUploadedFlag();

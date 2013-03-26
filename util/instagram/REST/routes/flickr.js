@@ -44,7 +44,7 @@ var months = ["January", "February", "March", "April", "May", "June", "July", "A
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-var max = 5;
+var max = 50;
 
 var item,
 	res,
@@ -55,7 +55,12 @@ var returnFlag = false;
 
 var uploaded = 0;
 
-exports.uploadToFlickr = function(){
+exports.callUploadToFlickr = function(){
+
+	uploadToFlickr();
+}
+
+function uploadToFlickr(){
     var path = __dirname + '/images/';
 
     db.collection('kinneinstagram', function(err, collection) {
@@ -206,10 +211,20 @@ exports.uploadToFlickr = function(){
 
 
 function iterate(){
+	console.log('iterate()');
+
 	db.collection('kinneinstagram', function(err, collection) {
         collection.find( { uploaded: true } ).count(function(err, number) {
-			if(number < max){
-				uploadToFlickr();
+        	if(err){
+        		console.log("ERROR: in trying to count uploaded elements");
+        		console.log(err);
+        	}else{
+        		console.log("SUCCESS: counted total number of uploaded photos at "+ number);
+				if(number < max){
+					console.log('ITERATING!');
+					console.log('');
+					uploadToFlickr();
+				}
 			}
 		});
     });
