@@ -37,10 +37,10 @@ app.get('/instagram/:collection/not-uploaded', instagram.findNotUploaded);
 //Set all photos to uploaded remotely
 app.get('/instagram/kinneinstagram/set-uploaded', instagram.setUploadedFlag);
 
-
+*/
 //FLICKR AUTH
 app.get('/auth/flickr',
-  passport.authenticate('flickr', { scope: 'write' }),
+  passport.authenticate('flickr', { scope: 'delete' }),
   function(req, res){
     // The request will be redirected to Flickr for authentication, so this
     // function will not be called.
@@ -50,10 +50,12 @@ app.get('/auth/flickr/callback',
   passport.authenticate('flickr', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
+    console.log('returning from flickr auth');
+    console.log(req);
     res.redirect('/');
   });
 
-*/
+
 passport.use(new FlickrStrategy({
     consumerKey: '1361ce967daf59821bc493392809c8e8',
     consumerSecret: '82a41cbf24541227',
@@ -135,9 +137,10 @@ function fetchTags(interval){
 //instagram.count('kinneinstagram');
 //instagram.showAll('kinneinstagram');
 
-
-
-
+flickr.uploadToFlickr();
+//flickr.clenseFlickrSet();
+//instagram.countUploaded();
+//instagram.resetUploadedFlag();
 
 
 //setTimeout(function(){ instagram.count('kinneinstagram'); instagram.showAll('kinneinstagram'); }, 100);

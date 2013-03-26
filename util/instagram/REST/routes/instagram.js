@@ -161,6 +161,107 @@ exports.resetUploadedFlag = function(){
 }
 
 
+exports.uploadToFlickr = function(lim){
+       var path = __dirname + '/images/';
+
+    db.collection('kinneinstagram', function(err, collection) {
+        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(lim).toArray(function(err, items) {
+
+            for(var i = 0; i < lim; i++){
+                console.log('  ' + i + ' * uploading a photo to flickr');
+
+                var filename = items[i].images.standard_resolution.url;
+                filename = filename.split('/').pop();
+                var fullpath = path + filename;
+
+                var tags = items[i].tags;
+                tags.push( items[i].kinne_location.split(' ').join('-') );//replace spaces with dashes
+                tags.push( items[i].user.username );
+                tags.push( 'instagram' );
+                tags.push( 'kinne2013' );
+                tags.push( 'Studio-X' );
+                tags.push( 'GSAPP' );
+                tagsString = tags.join(' ');
+
+                //console.log('created: '+results[i].caption.created_time);
+
+                var unixTime = parseInt( items[i].created_time ) * 1000;
+                var d = new Date(unixTime);
+
+                if(items[i].caption != null){
+                    var desc = items[i].caption.text + ' -- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
+                }else{
+                    console.log('photo has blank caption');
+                    var desc = '-- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
+                }
+
+                var params = {
+                    title: 'Submitted through instagram by '+ items[i].user.full_name,
+                    description: desc,
+                    is_public: 1,
+                    is_friend: 0,
+                    is_family: 0,
+                    hidden: 2,
+                    content_type: 1,
+                    tags: tagsString,
+                    photo: fs.createReadStream(fullpath, {flags: 'r'})
+                };
+
+                // the method_name gets the special value of "upload" for uploads.
+                api('upload', params, function(err, response) {
+                    if(err){
+                        console.error("Could not upload photo. Error message:");
+                        console.error(err.toString());
+                        console.log('response: '+ response);
+                    }else{
+                        console.log('successfully uploaded photo with id '+ results[i].id + ' to flickr');
+
+                        db.collection('kinneinstagram', function(err, collection) {
+                            collection.update({ id: results[i].id }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
+                                if (err) {
+                                    console.log('error: An error has occurred trying to set uploaded flag for photo with id: '+ results[i].id);
+                                    console.log(err);
+                                } else {
+                                    console.log('set uploaded flag for photo with id '+ results[i].id);
+                                }
+                            });
+                        });
+
+                        // usually, the method name is precisely the name of the API method, as they are here:
+                        api('flickr.photos.getInfo', {photo_id: response.photoid}, function(err, response) {
+                            if(err){
+                                console.log('Error getting info for photo on flickr');
+                                console.log(err);
+                            }else{
+
+                                api('flickr.photosets.addPhoto', {photoset_id: "72157633086370649", photo_id: response.photo.id}, function(err) {
+                                    if(err){
+                                        console.log('Error: attempting to migrate to photoset with id 72157633086370649');
+                                        console.log(err);
+                                    }else{
+                                        console.log('Successfully migrated flickr photo to set with id 72157633086370649');
+                                        console.log('');console.log('');
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }//end for items
+
+
+
+//
+        });
+
+    });
+}
+
+
+
+
+
+
 
 
 
