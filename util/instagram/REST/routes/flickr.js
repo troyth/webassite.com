@@ -44,6 +44,8 @@ var months = ["January", "February", "March", "April", "May", "June", "July", "A
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
+var max = 5;
+
 var item,
 	res,
 	latitude,
@@ -57,7 +59,7 @@ exports.uploadToFlickr = function(){
     var path = __dirname + '/images/';
 
     db.collection('kinneinstagram', function(err, collection) {
-        collection.find( { uploaded: false, location: {$ne:null} } ).sort({"created_time":-1}).limit(1).toArray(function(err, items) {
+        collection.find( { uploaded: false } ).sort({"created_time":-1}).limit(1).toArray(function(err, items) {
 
         	/*
         	[ { _id: 514ed05d7c45ad38f0372c53,
@@ -141,6 +143,8 @@ exports.uploadToFlickr = function(){
                 }else{
                     console.log('SUCCESS: uploaded photo with response:');
                     console.dir(response);
+                    console.log('');
+
                     res = response;
 
                     db.collection('kinneinstagram', function(err, collection) {
@@ -151,7 +155,7 @@ exports.uploadToFlickr = function(){
 					    	}else{
 					    		console.log("SUCCESS: updated database photo with _id: "+ item._id + " with flickr_id: "+ response.photoid);
 					    		console.log(result);
-					    		console.log('');console.log('');
+					    		console.log('');
 
 								api('flickr.photosets.addPhoto', {photoset_id: "72157632988912392", photo_id: response.photoid}, function(err, response2) {
 				                	if(err){
@@ -166,12 +170,18 @@ exports.uploadToFlickr = function(){
 					                				if(err){
 					                					console.log("ERROR: trying to set geolocation of photo with id "+ response.photoid + ' with lat: '+ item.location.latitude + ' and lon: '+ item.location.longitude);
 					                					console.log(err);
+					                					iterate();
 					                				}else{
 					                					console.log("SUCCESS: set geolocation of photo with id "+ response.photoid + ' with lat: '+ item.location.latitude + ' and lon: '+ item.location.longitude);
 					                					console.log(response3);
+
+					                					///////*******
+					                					iterate();
 					                				}
 					                		});
 					                	}else{
+
+					                		///////*******
 					                		iterate();
 					                	}
 				                	}
@@ -196,10 +206,13 @@ exports.uploadToFlickr = function(){
 
 
 function iterate(){
-	uploaded++;
-	if(uploaded < max){
-		uploadToFlickr();
-	}
+	db.collection('kinneinstagram', function(err, collection) {
+        collection.find( { uploaded: true } ).count(function(err, number) {
+			if(number < max){
+				uploadToFlickr();
+			}
+		});
+    });
 }
 
 
