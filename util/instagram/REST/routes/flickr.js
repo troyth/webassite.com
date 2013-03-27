@@ -1,6 +1,9 @@
 var mongo = require('mongodb');
 var fs = require('fs');
 var Flickr = require('flickr-with-uploads').Flickr;
+//var Magic = require('mmmagic').Magic;
+
+//var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 
 
 var Server = mongo.Server,
@@ -104,6 +107,23 @@ function uploadToFlickr(){
             var filename = item.images.standard_resolution.url;
             filename = filename.split('/').pop();
             var fullpath = path + filename;
+
+            console.log('file to upload: '+ filename);
+
+            if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
+            	//removeFromDB();//DANGEROUS!!
+            }
+
+            /* USE TO DETECT IF PROPER IMAGE FILE OR NOT - NOT BUILDING!
+            magic.detectFile(fullpath, function(err, result) {
+			  if (err) throw err;
+			  console.log(result);
+			  // output on Windows with 32-bit node:
+			  //    PE32 executable (DLL) (GUI) Intel 80386, for MS Windows
+			});
+*/
+
+			console.dir(item);
 
             var tags = item.tags;
             tags.push( item.kinne_location.split(' ').join('-') );//replace spaces with dashes
@@ -317,4 +337,28 @@ function removePhotosFromPhotoset(){
 
 }
 
+/*
+function removeFromDB(){
+
+	db.collection('kinneinstagram', function(err, collection) {
+        collection.find( { uploaded: false } ).sort({"created_time":-1}).limit(1).toArray(function(err, items) {
+
+        	item = items[0];
+
+            var filename = item.images.standard_resolution.url;
+            filename = filename.split('/').pop();
+          
+
+            console.log('file to upload: '+ filename);
+
+            if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
+            	collection.remove( { _id: item._id }, 1 );
+            	process.exit(1);
+            }
+
+        });
+    });
+}
+
+*/
 
