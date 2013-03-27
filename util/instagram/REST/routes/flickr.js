@@ -123,6 +123,8 @@ function uploadToFlickr(){
 			});
 */
 
+			console.dir(item);
+
             var tags = item.tags;
             tags.push( item.kinne_location.split(' ').join('-') );//replace spaces with dashes
             tags.push( item.user.username );

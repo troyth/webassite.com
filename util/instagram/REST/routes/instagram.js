@@ -1,8 +1,5 @@
 var mongo = require('mongodb');
-<<<<<<< HEAD
 var ig = require('instagram-node').instagram();
-=======
->>>>>>> sync
 
 var fs = require('fs');
 var Flickr = require('flickr-with-uploads').Flickr;
@@ -22,7 +19,6 @@ var Server = mongo.Server,
  *******************************************************************************************************
  *******************************************************************************************************
 */
-<<<<<<< HEAD
 var RESPONSE_LIMIT = 300;
 
 var kinneLocations = [];
@@ -104,8 +100,6 @@ region['kinnehongkong'] = 'east-asia';
 
 
 
-=======
->>>>>>> sync
 //Flickr - assumes the tokens don't ever expire (or won't during the 2 weeks of Kinne travel)
 var consumer_key = '1361ce967daf59821bc493392809c8e8';
 var consumer_secret = '82a41cbf24541227';
@@ -135,19 +129,16 @@ db.open(function(err, db) {
     }
 });
 
-<<<<<<< HEAD
 //GSAPPwidget client application
 //ig.use({ access_token: 'YOUR_ACCESS_TOKEN' });
 ig.use({ client_id: 'c590ebe3eda04afebe925e4c4d056fa5',
          client_secret: 'f4344c2e20ba4822b646e5ed50202282' });
 
-=======
->>>>>>> sync
 
 /*
  *******************************************************************************************************
  *******************************************************************************************************
- *	HELPER FUNCTIONS
+ *  HELPER FUNCTIONS
  *******************************************************************************************************
  *******************************************************************************************************
 */
@@ -159,7 +150,6 @@ function api(method_name, data, callback) {
 }
 
 
-<<<<<<< HEAD
 function prependHash(arr){
     for(var i = 0; i < arr.length; i++){
         arr[i] = '#' + arr[i];
@@ -169,20 +159,20 @@ function prependHash(arr){
 }
 
 /*
- *	showAll(col)
+ *  showAll(col)
  *
- *	logs all tweets in collection col to the console
+ *  logs all tweets in collection col to the console
  *
 */
 exports.showAll = function(col){
-	console.log('-------showAll() from collection: '+ col);
-	db.collection(col, function(err, collection) {
+    console.log('-------showAll() from collection: '+ col);
+    db.collection(col, function(err, collection) {
         collection.find().toArray(function(err, items) {
-        	if(err){
-        		console.log('Error: showAll() fired an error:');
-        		console.log(err);
-        	}else{
-            	console.log(items);
+            if(err){
+                console.log('Error: showAll() fired an error:');
+                console.log(err);
+            }else{
+                console.log(items);
             }
         });
     });
@@ -191,14 +181,14 @@ exports.showAll = function(col){
 
 
 /*
- *	clear(col)
+ *  clear(col)
  *
- *	Deletes all documents in the col collection
+ *  Deletes all documents in the col collection
  *
 */
 exports.clear = function(col){
-	console.log('-------clear() from collection: ' + col);
-	db.collection(col, function(err, collection) {
+    console.log('-------clear() from collection: ' + col);
+    db.collection(col, function(err, collection) {
         collection.remove();
     });
 }
@@ -210,14 +200,14 @@ exports.clear = function(col){
  *
 */
 exports.count = function(col){
-	db.collection(col, function(err, collection) {
-		var total = collection.count(function(err, total) {
-			if(err){
-				console.log('Error: error trying to count total documents in ' + col + ' collection');
-			}else{
-				console.log('####### TOTAL INSTAGRAM PHOTOS in ' + col + ' collection is: '+ total + ' #######');
-			}
-		});
+    db.collection(col, function(err, collection) {
+        var total = collection.count(function(err, total) {
+            if(err){
+                console.log('Error: error trying to count total documents in ' + col + ' collection');
+            }else{
+                console.log('####### TOTAL INSTAGRAM PHOTOS in ' + col + ' collection is: '+ total + ' #######');
+            }
+        });
     });
 }
 
@@ -234,98 +224,32 @@ exports.countByTag = function(col, tag){
                 console.log('Error: error trying to count total documents in ' + col + ' collection with tag: '+ tag);
             }else{
                 console.log('####### TOTAL INSTAGRAM PHOTOS in ' + col + ' collection with tag ' + tag + ' is: '+ total + ' #######');
-=======
-/*
- *******************************************************************************************************
- *******************************************************************************************************
- *  FLICKR
- *******************************************************************************************************
- *******************************************************************************************************
-*/
-
-var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-
-var downloaded = 0;
-var totalFiles;
-
-function downloadRequestCallback(){
-    downloaded++;
-    if(downloaded >= totalFiles){
-        console.log('total files downloaded: '+ totalFiles);
-    }
-}
-
-var _items;
-
-exports.downloadFromInstagram = function(){
-    var path = __dirname + '/images/';
-
-
-    db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(100).toArray(function(err, items) {
-            if(err){
-                console.log('error in trying to find all uploaded photos');
-                console.log(err);
-            }else{
-                console.log('');
-                console.log('attempting to download ' + items.length + ' photos from instagram');
-                totalFiles = items.length;
-                _items = items;
-                console.log('_items.length: '+ _items.length);
-
-                if(items.length > 0 ){
-                    for(var i = 0; i < totalFiles; i++){
-                        var filename = items[i].images.standard_resolution.url;
-                        filename = filename.split('/').pop();
-                        var pathname = path + filename;
-                        //pipe the image to the pathname then trigger the downloadCallback callback
-                        request( items[i].images.standard_resolution.url, downloadRequestCallback ).pipe(fs.createWriteStream( pathname ));
-
-                        collection.update({ id: _items[i].id }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
-                            if (err) {
-                                console.log('error: An error has occurred trying to set uploaded flag for photo with id: '+ _items[i].id);
-                                console.log(err);
-                            } else {
-                                console.log('set uploaded flag for photo');
-                            }
-                        });
-
-
-                    }
-                    return true;
-                }else{
-                    return false;//no more items
-                }
->>>>>>> sync
             }
         });
     });
 }
 
 
-<<<<<<< HEAD
 
 
 /*
  *******************************************************************************************************
  *******************************************************************************************************
- *	INSTAGRAM API MIRROR RESTful ACCESS FUNCTIONS
+ *  INSTAGRAM API MIRROR RESTful ACCESS FUNCTIONS
  *******************************************************************************************************
  *******************************************************************************************************
 */
 
 /*
- *	findAll(req, res)
+ *  findAll(req, res)
  *
- *	Returns (up to) the RESPONSE_LIMIT most recent tweets in reverse chronological order 
+ *  Returns (up to) the RESPONSE_LIMIT most recent tweets in reverse chronological order 
  *  from the :collection collection that have come from the Bowery region
  *
 */
 exports.findAll = function(req, res) {
     var col = req.params.collection;
-	console.log('findAll() in ' + col + ' collection');
+    console.log('findAll() in ' + col + ' collection');
 
     db.collection(col, function(err, collection) {
         collection.find().sort({"created_time":-1}).limit(RESPONSE_LIMIT).toArray(function(err, items) {
@@ -577,149 +501,10 @@ exports.fetch = function(tag){
 
     
 };// end fetch
-=======
-exports.countUploaded = function(req, res){
-    db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: true }).count(function(err, number) {
-            console.log('countUploaded: '+ number);
-        });
-    });
-}
-
-
-exports.resetUploadedFlag = function(){
-    db.collection('kinneinstagram', function(err, collection) {
-        collection.update({ uploaded: true }, {"$set": { uploaded: false }}, {safe:true, multi:true}, function(err, result) {
-            if (err) {
-                console.log('error: An error has occurred in trying to upsert into the DB kinneinstagram collection');
-                console.log(err);
-            } else {
-                //console.log('Success: added tweet to ' + col + ' collection');
-                //res.send(result[0]);
-                console.log('');
-                console.log('reset all photos to not yet uploaded');
-                console.dir(result);
-                console.log(result);
-                console.log('');
-            }
-        });
-    });
-}
-
-
-exports.uploadToFlickr = function(lim){
-       var path = __dirname + '/images/';
-
-    db.collection('kinneinstagram', function(err, collection) {
-        collection.find({ uploaded: false }).sort({"created_time":-1}).limit(lim).toArray(function(err, items) {
-
-            for(var i = 0; i < lim; i++){
-                console.log('  ' + i + ' * uploading a photo to flickr');
-
-                var filename = items[i].images.standard_resolution.url;
-                filename = filename.split('/').pop();
-                var fullpath = path + filename;
-
-                var tags = items[i].tags;
-                tags.push( items[i].kinne_location.split(' ').join('-') );//replace spaces with dashes
-                tags.push( items[i].user.username );
-                tags.push( 'instagram' );
-                tags.push( 'kinne2013' );
-                tags.push( 'Studio-X' );
-                tags.push( 'GSAPP' );
-                tagsString = tags.join(' ');
-
-                //console.log('created: '+results[i].caption.created_time);
-
-                var unixTime = parseInt( items[i].created_time ) * 1000;
-                var d = new Date(unixTime);
-
-                if(items[i].caption != null){
-                    var desc = items[i].caption.text + ' -- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
-                }else{
-                    console.log('photo has blank caption');
-                    var desc = '-- submitted ' + days[ d.getDay() ] + ', ' + months[ d.getMonth() ] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' at ' + d.getHours() + ':' + d.getMinutes();
-                }
-
-                var params = {
-                    title: 'Submitted through instagram by '+ items[i].user.full_name,
-                    description: desc,
-                    is_public: 1,
-                    is_friend: 0,
-                    is_family: 0,
-                    hidden: 2,
-                    content_type: 1,
-                    tags: tagsString,
-                    photo: fs.createReadStream(fullpath, {flags: 'r'})
-                };
-
-                // the method_name gets the special value of "upload" for uploads.
-                api('upload', params, function(err, response) {
-                    if(err){
-                        console.error("Could not upload photo. Error message:");
-                        console.error(err.toString());
-                        console.log('response: '+ response);
-                    }else{
-                        console.log('successfully uploaded photo with id '+ results[i].id + ' to flickr');
-
-                        db.collection('kinneinstagram', function(err, collection) {
-                            collection.update({ id: results[i].id }, {"$set": { uploaded: true }}, {safe:true, upsert: true}, function(err, result) {
-                                if (err) {
-                                    console.log('error: An error has occurred trying to set uploaded flag for photo with id: '+ results[i].id);
-                                    console.log(err);
-                                } else {
-                                    console.log('set uploaded flag for photo with id '+ results[i].id);
-                                }
-                            });
-                        });
-
-                        // usually, the method name is precisely the name of the API method, as they are here:
-                        api('flickr.photos.getInfo', {photo_id: response.photoid}, function(err, response) {
-                            if(err){
-                                console.log('Error getting info for photo on flickr');
-                                console.log(err);
-                            }else{
-
-                                api('flickr.photosets.addPhoto', {photoset_id: "72157633086370649", photo_id: response.photo.id}, function(err) {
-                                    if(err){
-                                        console.log('Error: attempting to migrate to photoset with id 72157633086370649');
-                                        console.log(err);
-                                    }else{
-                                        console.log('Successfully migrated flickr photo to set with id 72157633086370649');
-                                        console.log('');console.log('');
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }//end for items
-
-
-
-//
-        });
-
-    });
-}
 
 
 
 
-
-
-
-
-
-
-
-
->>>>>>> sync
-
-
-
-
-<<<<<<< HEAD
 /*
  *******************************************************************************************************
  *******************************************************************************************************
@@ -730,9 +515,6 @@ exports.uploadToFlickr = function(lim){
 
 var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-=======
-
->>>>>>> sync
 
 
 exports.saveToFlickr = function(){
@@ -868,7 +650,6 @@ exports.saveToFlickr = function(){
 }
 
 
-<<<<<<< HEAD
 exports.resetUploadedFlag = function(){
     db.collection('kinneinstagram', function(err, collection) {
         collection.update({ uploaded: true }, {"$set": { uploaded: false }}, {safe:true, multi:true}, function(err, result) {
@@ -887,8 +668,6 @@ exports.resetUploadedFlag = function(){
         });
     });
 }
-=======
->>>>>>> sync
 
 exports.setUploadedFlag = function(req, res){
     db.collection('kinneinstagram', function(err, collection) {
@@ -933,7 +712,6 @@ exports.setKinneLocation = function(req, res){
 
     
 }
-
 
 
 

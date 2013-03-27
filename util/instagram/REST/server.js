@@ -1,6 +1,6 @@
 var express = require('express'),
-	passport = require('passport'),
-	FlickrStrategy = require('passport-flickr').Strategy
+  passport = require('passport'),
+  FlickrStrategy = require('passport-flickr').Strategy
     //tweets = require('./routes/tweets'),
     instagram = require('./routes/instagram'),
     flickr = require('./routes/flickr');
@@ -15,15 +15,11 @@ app.configure(function () {
     app.use(express.bodyParser());
     app.use(express.cookieParser()); 
     app.use(express.session({ secret: 'keyboard cat' }));
-	app.use(passport.initialize());
-	app.use(passport.session());
+  app.use(passport.initialize());
+  app.use(passport.session());
 });
 
 //GET ENDPOINTS
-<<<<<<< HEAD
-=======
-/*
->>>>>>> sync
 app.get('/instagram/:collection', instagram.findAll);
 app.get('/instagram/:collection/count', instagram.countAll);
 app.get('/instagram/:collection/limit/:limit', instagram.findLimit);
@@ -40,17 +36,10 @@ app.get('/instagram/:collection/not-uploaded', instagram.findNotUploaded);
 //Set all photos to uploaded remotely
 app.get('/instagram/kinneinstagram/set-uploaded', instagram.setUploadedFlag);
 
-<<<<<<< HEAD
 
 //FLICKR AUTH
 app.get('/auth/flickr',
   passport.authenticate('flickr', { scope: 'write' }),
-=======
-*/
-//FLICKR AUTH
-app.get('/auth/flickr',
-  passport.authenticate('flickr', { scope: 'delete' }),
->>>>>>> sync
   function(req, res){
     // The request will be redirected to Flickr for authentication, so this
     // function will not be called.
@@ -60,11 +49,6 @@ app.get('/auth/flickr/callback',
   passport.authenticate('flickr', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-<<<<<<< HEAD
-=======
-    console.log('returning from flickr auth');
-    console.log(req);
->>>>>>> sync
     res.redirect('/');
   });
 
@@ -75,10 +59,10 @@ passport.use(new FlickrStrategy({
     callbackURL: "http://webassite.com/util/instagram/REST/auth/flickr/callback"
   },
   function(token, tokenSecret, profile, done) {
-  	console.log('***** GOT A TOKEN!!! OF: '+ token + ' with tokenSecret: '+ tokenSecret);
+    console.log('***** GOT A TOKEN!!! OF: '+ token + ' with tokenSecret: '+ tokenSecret);
 
-  	//flickr.saveToFlickr(token, tokenSecret);
-  	/*
+    //flickr.saveToFlickr(token, tokenSecret);
+    /*
     User.findOrCreate({ flickrId: profile.id }, function (err, user) {
       return done(err, user);
     });*/
@@ -98,28 +82,23 @@ var i = 0;
 
 
 function countAllTags(){
-	console.log('');console.log('');
-	for(var j = 0; j < tags.length; j++){
-		instagram.countByTag('kinneinstagram', tags[j]);
-	}
-	console.log('');console.log('');
+  console.log('');console.log('');
+  for(var j = 0; j < tags.length; j++){
+    instagram.countByTag('kinneinstagram', tags[j]);
+  }
+  console.log('');console.log('');
 }
 
-<<<<<<< HEAD
 countAllTags();
-=======
-//countAllTags();
->>>>>>> sync
 
 //instagram.count('kinneinstagram');
 
 //var countTagIntervalID = setInterval(function(){
-	//countAllTags();
+  //countAllTags();
 //}, 60000);
 
-<<<<<<< HEAD
 var saveToFlickrID = setInterval(function(){
-	instagram.saveToFlickr();
+  instagram.saveToFlickr();
 }, 30000);//1800000 = once every half hour
 
 instagram.saveToFlickr();//at boot up
@@ -128,39 +107,17 @@ instagram.saveToFlickr();//at boot up
 
 //instagram.findError();
 
-=======
-//var saveToFlickrID = setInterval(function(){
-	//instagram.saveToFlickr();
-//}, 30000);//1800000 = once every half hour
-
-//instagram.saveToFlickr();//at boot up
-//instagram.resetUploadedFlag();
-
-//instagram.countUploaded();
-
-//instagram.downloadFromInstagram();
-
-
-
-
-//instagram.findError();
-/*
->>>>>>> sync
 function fetchTags(interval){
-	setTimeout(function(){
-		instagram.fetch(tags[i]);
-		i++;
-		if(i >= tags.length){
-			i = 0;
-		}
-		fetchTags(interval);
-	}, interval);
+  setTimeout(function(){
+    instagram.fetch(tags[i]);
+    i++;
+    if(i >= tags.length){
+      i = 0;
+    }
+    fetchTags(interval);
+  }, interval);
 }
-<<<<<<< HEAD
 
-=======
-*/
->>>>>>> sync
 
 //instagram.fetch('kinnekyoto');
 //instagram.fetch('kinneatacama');
@@ -171,27 +128,20 @@ function fetchTags(interval){
 //instagram.count('kinneinstagram');
 //instagram.showAll('kinneinstagram');
 
-<<<<<<< HEAD
 
 
 
-=======
-flickr.callUploadToFlickr();
-//flickr.clenseFlickrSet();
-//instagram.countUploaded();
-//instagram.resetUploadedFlag();
->>>>>>> sync
 
 
 //setTimeout(function(){ instagram.count('kinneinstagram'); instagram.showAll('kinneinstagram'); }, 100);
 
 //print out the current counts every 20 seconds
 //var interval_id = setInterval(function(){ 
-		//instagram.count('movements');
-		//instagram.count('streetcache');
-		//instagram.fetch('movements', block);
-		//instagram.fetchAtStreetcache();
-//	}, 15000);//fetch every 20 seconds
+    //instagram.count('movements');
+    //instagram.count('streetcache');
+    //instagram.fetch('movements', block);
+    //instagram.fetchAtStreetcache();
+//  }, 15000);//fetch every 20 seconds
 
 
 
