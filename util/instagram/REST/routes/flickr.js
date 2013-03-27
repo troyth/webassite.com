@@ -1,11 +1,9 @@
-<<<<<<< HEAD
-var fs = require('fs');
-var Flickr = require('flickr-with-uploads').Flickr;
-
-=======
 var mongo = require('mongodb');
 var fs = require('fs');
 var Flickr = require('flickr-with-uploads').Flickr;
+//var Magic = require('mmmagic').Magic;
+
+//var magic = new Magic(mmm.MAGIC_MIME_TYPE);
 
 
 var Server = mongo.Server,
@@ -27,7 +25,6 @@ db.open(function(err, db) {
 
 
 
->>>>>>> sync
 var consumer_key = '1361ce967daf59821bc493392809c8e8';
 var consumer_secret = '82a41cbf24541227';
 var oauth_token = '72157632975405302-c06fccc501805e34';
@@ -41,40 +38,6 @@ function api(method_name, data, callback) {
 	return client.createRequest(method_name, data, true, callback).send();
 }
 
-<<<<<<< HEAD
-
-exports.saveToFlickr = function(){
-
-	var fullpath = '/srv/www/webassite.com/public_html/util/instagram/REST/images/d30db8f48a5311e28d6622000a1fbc43_6.jpg';
-	var params = {
-	  title: 'Submitted through instagram by sepidehkhazaee',
-	  description: "#kinnekochi",
-	  is_public: 1,
-	  is_friend: 0,
-	  is_family: 0,
-	  hidden: 2,
-	  content_type: 1,
-	  tags: "sepidehkhazaee kinnekochi kochi kinne2013",
-	  photo: fs.createReadStream(fullpath, {flags: 'r'})
-	};
-
-	// the method_name gets the special value of "upload" for uploads.
-	api('upload', params, function(err, response) {
-	  if (err) {
-	    console.error("Could not upload photo: ", err.toString() + ". Error message:");
-	    console.error();
-	  }
-	  else {
-	    // usually, the method name is precisely the name of the API method, as they are here:
-	    api('flickr.photos.getInfo', {photo_id: response.photoid}, function(err, response) {
-	      api('flickr.photosets.addPhoto', {photoset_id: 72157632970276717, photo_id: response.photo.id}, function(err) {
-	        console.log("Full photo info:", response.photo);
-	      });
-	    });
-	  }
-	});
-}
-=======
 var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -146,6 +109,19 @@ function uploadToFlickr(){
             var fullpath = path + filename;
 
             console.log('file to upload: '+ filename);
+
+            if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
+            	//removeFromDB();//DANGEROUS!!
+            }
+
+            /* USE TO DETECT IF PROPER IMAGE FILE OR NOT - NOT BUILDING!
+            magic.detectFile(fullpath, function(err, result) {
+			  if (err) throw err;
+			  console.log(result);
+			  // output on Windows with 32-bit node:
+			  //    PE32 executable (DLL) (GUI) Intel 80386, for MS Windows
+			});
+*/
 
             var tags = item.tags;
             tags.push( item.kinne_location.split(' ').join('-') );//replace spaces with dashes
@@ -359,5 +335,28 @@ function removePhotosFromPhotoset(){
 
 }
 
+/*
+function removeFromDB(){
 
->>>>>>> sync
+	db.collection('kinneinstagram', function(err, collection) {
+        collection.find( { uploaded: false } ).sort({"created_time":-1}).limit(1).toArray(function(err, items) {
+
+        	item = items[0];
+
+            var filename = item.images.standard_resolution.url;
+            filename = filename.split('/').pop();
+          
+
+            console.log('file to upload: '+ filename);
+
+            if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
+            	collection.remove( { _id: item._id }, 1 );
+            	process.exit(1);
+            }
+
+        });
+    });
+}
+
+*/
+
