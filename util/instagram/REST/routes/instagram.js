@@ -449,9 +449,158 @@ exports.setKinneLocation = function(req, res){
         });
 
     }
-
-    
 }
+
+exports.confirmKinneLocation = function(){
+    db.collection('kinneinstagram', function(err, collection) {
+        collection.find({kinne_location:null}).toArray(function(err, items){
+            console.log('items without kinne_location: '+ items.length);
+
+            for(var i = 0; i < items.length; i++){
+                for(var j = 0; j < items[i].tags.length; j++){
+                    if(kinneLocations[ items[i].tags[j] ] != undefined){
+                        console.dir(items[i]);
+                        var k_l = kinneLocations[ items[i].tags[j] ];
+                        var reg = region[ items[i].tags[j] ];
+
+                        collection.update({ _id: items[i]._id }, {"$set": { kinne_location: k_l, region: reg }}, {safe:true}, function(err, result) {
+                            if(err){
+                                console.log('error trying to insert kinne location and region');
+                                console.log(err);
+                            }else{
+                                console.log('success! added '+ k_l + ' in ' + reg);
+                                console.log('');console.log('');console.log('');console.log('');
+                                process.exit(1);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    });
+
+}
+
+
+exports.callTestKinneLocation = function(){
+    testKinneLocation();
+}
+
+var countering = 0;
+
+function testKinneLocation(){
+    db.collection('kinneinstagram', function(err, collection) {
+        collection.find({kinne_location: {$ne : null} }).toArray(function(err, items){
+            if(err){
+                console.log('ERRRRRRO');
+                console.log(err);
+            }else{
+                console.log(items.length);
+          
+                for(var i = 0; i < items.length; i++){
+                    
+                    for(var j = 0; j < items[i].tags.length; j++){
+                        if( tags.indexOf( items[i].tags[j] ) > -1 ){
+                            if( items[i].kinne_location != kinneLocations[ items[i].tags[j] ] ){
+                                console.log(items[i].kinne_location);
+                                console.log(kinneLocations[ items[i].tags[j] ]);
+                                console.log('');
+                            }
+
+                        }
+                    }
+
+                }
+
+                console.log('countering:  ' + countering);
+            }
+
+        });
+    });
+
+}
+
+var tags = ['kinneamman','kinneatacama','kinneathens','kinnebangalore','kinnebeijing','kinnebordeaux','kinnecannes','kinnechandigarh','kinnecopenhagen','kinnegeneva','kinnehyderabad','kinneistanbul','kinnejohannesburg','kinnekochi','kinnekumasi','kinnekyoto','kinnelondon','kinnemedellin','kinnemumbai','kinnenewdelhi','kinneparis','kinnerio','kinnerotterdam','kinnesanfrancisco','kinnesaopaulo','kinneshanghai','kinnetokyo','kinnevenice','kinnevienna', 'kinneahmedabad', 'kinneagra', 'kinnedelhi', 'kinneginza', 'kinnehongkong'];
+
+
+
+var kinneLocations = [];
+kinneLocations['kinneamman'] = 'Amman';
+kinneLocations['kinneatacama'] = 'Atacama';
+kinneLocations['kinneathens'] = 'Athens';
+kinneLocations['kinnebangalore'] = 'Bangalore';
+kinneLocations['kinnebeijing'] = 'Beijing';
+kinneLocations['kinnebordeaux'] = 'Bordeaux';
+kinneLocations['kinnecannes'] = 'Cannes';
+kinneLocations['kinnechandigarh'] = 'Chandigarh';
+kinneLocations['kinnecopenhagen'] = 'Copenhagen';
+kinneLocations['kinnegeneva'] = 'Geneva';
+kinneLocations['kinnehyderabad'] = 'Hyderabad';
+kinneLocations['kinneistanbul'] = 'Istanbul';
+kinneLocations['kinnejohannesburg'] = 'Johannesburg';
+kinneLocations['kinnekochi'] = 'Kochi';
+kinneLocations['kinnekumasi'] = 'Kumasi';
+kinneLocations['kinnekyoto'] = 'Kyoto';
+kinneLocations['kinnelondon'] = 'London';
+kinneLocations['kinnemedellin'] = 'Medellin';
+kinneLocations['kinnemumbai'] = 'Mumbai';
+kinneLocations['kinnenewdelhi'] = 'New Delhi';
+kinneLocations['kinneparis'] = 'Paris';
+kinneLocations['kinnerio'] = 'Rio de Janeiro';
+kinneLocations['kinnerotterdam'] = 'Rotterdam';
+kinneLocations['kinnesanfrancisco'] = 'San Francisco';
+kinneLocations['kinnesaopaulo'] = 'Sao Paulo';
+kinneLocations['kinneshanghai'] = 'Shanghai';
+kinneLocations['kinnetokyo'] = 'Tokyo';
+kinneLocations['kinnevenice'] = 'Venice';
+kinneLocations['kinnevienna'] = 'Vienna';
+kinneLocations['kinneahmedabad'] = 'Ahmedabad';
+kinneLocations['kinneagra'] = 'Agra';
+kinneLocations['kinnedelhi'] = 'Delhi';
+kinneLocations['kinneginza'] = 'Ginza';
+kinneLocations['kinnehongkong'] = 'Hong Kong';
+
+
+
+var region = [];
+
+region['kinneamman'] = 'middle-east';
+region['kinneatacama'] = 'latin-america';
+region['kinneathens'] = 'europe';
+region['kinnebangalore'] = 'south-asia';
+region['kinnebeijing'] = 'east-asia';
+region['kinnebordeaux'] = 'europe';
+region['kinnecannes'] = 'europe';
+region['kinnechandigarh'] = 'south-asia';
+region['kinnecopenhagen'] = 'europe';
+region['kinnegeneva'] = 'europe';
+region['kinnehyderabad'] = 'south-asia';
+region['kinneistanbul'] = 'middle-east';
+region['kinnejohannesburg'] = 'africa';
+region['kinnekochi'] = 'south-asia';
+region['kinnekumasi'] = 'africa';
+region['kinnekyoto'] = 'east-asia';
+region['kinnelondon'] = 'europe';
+region['kinnemedellin'] = 'latin-america';
+region['kinnemumbai'] = 'south-asia';
+region['kinnenewdelhi'] = 'south-asia';
+region['kinneparis'] = 'europe';
+region['kinnerio'] = 'latin-america';
+region['kinnerotterdam'] = 'europe';
+region['kinnesanfrancisco'] = 'north-america';
+region['kinnesaopaulo'] = 'latin-america';
+region['kinneshanghai'] = 'east-asia';
+region['kinnetokyo'] = 'east-asia';
+region['kinnevenice'] = 'europe';
+region['kinnevienna'] = 'europe';
+region['kinneahmedabad'] = 'south-asia';
+region['kinneagra'] = 'south-asia';
+region['kinnedelhi'] = 'south-asia';
+
+region['kinneginza'] = 'east-asia';
+region['kinnehongkong'] = 'east-asia';
+
+
 
 
 

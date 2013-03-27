@@ -108,7 +108,6 @@ function uploadToFlickr(){
             filename = filename.split('/').pop();
             var fullpath = path + filename;
 
-            console.log('file to upload: '+ filename);
 
             if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
             	//removeFromDB();//DANGEROUS!!
@@ -123,7 +122,7 @@ function uploadToFlickr(){
 			});
 */
 
-			console.dir(item);
+			
 
             var tags = item.tags;
             tags.push( item.kinne_location.split(' ').join('-') );//replace spaces with dashes
