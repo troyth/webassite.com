@@ -3,7 +3,11 @@ var GROW_BUBBLE_INTERVAL = 20;
 
 $(document).ready(function() {
 	//declare the total number of images to allow for looping
+<<<<<<< HEAD
 	var IDX_MAX = 2232;
+=======
+	var IDX_MAX = 2170;
+>>>>>>> sync
 	var IDX_MIN = 1;
 
 
@@ -39,7 +43,11 @@ $(document).ready(function() {
 
 			var icon = document.createElement ("img");
 			//@todo: add icons
+<<<<<<< HEAD
 			var html = '<div id="index-' + idx +  '" class="bubble ' + bubbles[idx].side + '" style="color:' + bubbles[idx].color + '; position:absolute; top:' + bubbles[idx].positiony + 'px; left:' + bubbles[idx].positionx + 'px; width:-100px; height:-100px; background:transparent ' + bubbles[idx].src + ' no-repeat 0 0; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"><div class="text" style="display:none;">' + bubbles[idx].text +'</div>'+ '<img class="icon initial" src=  "' + bubbles[idx].icon + '">' + '<div class="body" style="display:none;">' + bubbles[idx].body + '</div>' + '</div>';
+=======
+			var html = '<div id="index-' + idx +  '" class="bubble ' + bubbles[idx].side + '" style="color:' + bubbles[idx].color + '; position:absolute; top:' + bubbles[idx].positiony + 'px; left:' + bubbles[idx].positionx + 'px; width:-100px; height:-100px; background:transparent ' + bubbles[idx].src + ' no-repeat 0 0; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"><div class="text" style="display:none;">' + bubbles[idx].text +'</div>'+ '<img class="icon initial" src=  "' + bubbles[idx].icon + '">' + '</div>';
+>>>>>>> sync
 	 
 			$('#bubbles').append( html );
 
@@ -139,7 +147,11 @@ $(document).ready(function() {
 
 			if( reentryFrame == frameIndex ){
 				$(this).removeClass('off');
+<<<<<<< HEAD
 				$(this).addClass('reenter');
+=======
+				//$(this).addClass('reenter');
+>>>>>>> sync
 			}
 		});
 	}
@@ -147,7 +159,11 @@ $(document).ready(function() {
 	function decrementBubbles(frameIndex){
 		console.log('decrementBubbles')
 
+<<<<<<< HEAD
 		$('.bubble.reenter').each(function(){
+=======
+		$('.bubble:not(.off)').each(function(){
+>>>>>>> sync
 			var id = $(this).attr('id');
 			id = id.substr(6);
 			id = parseInt( id );
@@ -155,7 +171,11 @@ $(document).ready(function() {
 			var originalX = bubbles[id].positionx;
 
 			var current_left = parseInt( $(this).css('left') );
+<<<<<<< HEAD
 			var MINIMUM_HEIGHT =200
+=======
+			var MINIMUM_HEIGHT =200;
+>>>>>>> sync
 
 			var current_width = parseInt( $(this).css('width') );
 			var current_height = parseInt( $(this).css('height') );
@@ -306,6 +326,7 @@ $(document).ready(function() {
 
 	$('#show-about').bind('click', showAbout);
 
+<<<<<<< HEAD
 
 
 
@@ -321,6 +342,25 @@ $(document).ready(function() {
 	$('#show-about2').bind('click', showAboutheader);
 
 	$('#close-about2').bind('click', hideAboutheader);
+=======
+	$('#innerabout').hide();
+
+
+function hideAbout2(){
+		$('#innerabout').hide();
+
+}
+	function showAbout2(){
+		
+	$('#innerabout').show();
+		}
+
+
+
+	$('#aboutbody').bind('click', showAbout2);
+
+	$('#close-about2').bind('click', hideAbout2);
+>>>>>>> sync
 
 	
 
@@ -329,7 +369,11 @@ $(document).ready(function() {
 		var html;
 
 		for(var i = 1; i <= halfBufferSize; i++){
+<<<<<<< HEAD
 			html = '<li class="buffer-item buffer-' + i + '" style="background-image:url(../img/Bowery'+ i +'.jpg);"></li>';
+=======
+			html = '<li class="buffer-item buffer-' + i + '" style="background-image:url(img/Bowery'+ i +'.jpg);"></li>';
+>>>>>>> sync
 			$('#image-buffer').append( html );
 		}
 	}
@@ -361,10 +405,19 @@ $(document).ready(function() {
 		currentFrame = parseInt( currentFrame );
 		var i = currentFrame - halfBufferSize;
 
+<<<<<<< HEAD
 		if( $('.buffer-' + i).length <= 0){
 			var html = '<li class="buffer-item buffer-' + i + '" style="background-image:url(http://group6.webassite.com/step4/img/Bowery'+ i +'.jpg);"></li>';
 
 			$('#image-buffer').append( html );
+=======
+		if(i > 0){
+			if( $('.buffer-' + i).length <= 0){
+				var html = '<li class="buffer-item buffer-' + i + '" style="background-image:url(http://group6.webassite.com/step4/img/Bowery'+ i +'.jpg);"></li>';
+
+				$('#image-buffer').append( html );
+			}
+>>>>>>> sync
 		}
 
 		

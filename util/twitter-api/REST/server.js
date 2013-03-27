@@ -8,7 +8,7 @@ var app = express();
 app.enable("jsonp callback");
 
 app.configure(function () {
-    app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+    //app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
     app.use(express.bodyParser());
 });
 

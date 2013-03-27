@@ -1,0 +1,17 @@
+body{
+	color:red;
+	font: 16/22 Times, "Times New Roman", serif;
+	text-align:left;
+}
+
+body h1.green-header{
+	color:black;
+}
+
+.green-header{
+	color:green;
+}
+
+.blue-blah{
+	color:blue;
+}

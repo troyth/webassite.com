@@ -1,0 +1,407 @@
+<!doctype html>
+<html>
+ 
+	<head>
+		<title>Survivors on Bowery</title>
+		<link rel="stylesheet" type="text/css" href="http://reset5.googlecode.com/hg/reset.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style6.css">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/jquery.masonry.min.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+
+        <script>
+            $(document).ready(function() {
+
+            	/*
+                $('#map').scrollToFixed({
+                    marginTop: 75,
+                    zIndex: 10
+                });
+            	*/
+
+                //$('#map').affix();
+
+                /*
+                setTimeout(function () {
+			      $('#map').affix({
+			        offset: {
+			          top: 0
+			        }
+			      })
+			    }, 100);*/
+				
+
+				$('.gallery').each( function(i){
+
+					console.log('gallery index ' + i + ' is being processed');
+					console.dir(this);
+
+					var _this = this;
+
+					$(_this).imagesLoaded( function(){
+						$(_this).masonry({
+							itemSelector: '.gallery-item'
+						});
+					});
+
+				});
+
+				$('.index-gallery').imagesLoaded( function(){
+		            $('.index-gallery').masonry({
+					  itemSelector: '.index-gallery-item',
+					  columnWidth: 140
+					});
+		        });
+
+
+				$('.spy-bari').bind('click', function(){
+					$('html, body').animate({
+					     scrollTop: $("#spy-bari").offset().top
+					 }, 200);
+				});
+
+
+				$('.spy-lighting').bind('click', function(){
+					$('html, body').animate({
+					     scrollTop: $("#spy-lighting").offset().top
+					 }, 200);
+				});
+
+
+				$('#map-nav').each(function(){
+					var $spy = $(this).scrollspy('refresh')
+				});
+				
+
+
+
+
+
+            });
+        </script>
+
+
+        	<!--
+        	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+				<script>
+   					$(document).ready(function (){
+        				$("#click").click(function (){
+           					//$(this).animate(function(){
+               					$('html, body').animate({
+                 					scrollTop: $("#div1").offset().top
+                 			  		}, 2000);
+           					//});
+       					});
+    				});
+			</script>
+
+				<div id="div1" style="height: 1000px; width 100px">
+				test
+				</div>
+				<br/>
+				<div id="div2" style="height: 1000px; width 100px">
+				test 2
+				</div>
+				<button id="click">click me</button>
+			-->
+				
+ 	
+	</head>
+	 
+	<body data-spy="scroll" data-target=".map-nav">
+	
+	<div id="wrapper">
+
+		<!-- PLACEHOLDER -->
+		<div class="index">
+
+			<div class="index-title">
+				<h1>the SURVIVORS</h1>
+			</div><!-- /.index-title -->
+
+			<div class="on-bowery">
+				<p>...ON BOWERY</p>
+			</div><!-- /.on-bowery -->
+
+			<div class="index-gallery">
+
+			    <div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x138">
+				</div>
+
+				<div class="index-gallery-item col2">
+				    <img src="http://placehold.it/270x138">
+				</div>
+
+				<div class="index-gallery-item col2">
+				    <img src="http://placehold.it/270x138">
+				</div>
+
+				<div class="index-gallery-item col2">
+				    <img src="http://placehold.it/270x138">
+				</div>
+
+				<div class="index-gallery-item col3">
+				    <img src="http://placehold.it/410x213">
+				</div>
+
+				<div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x213">
+				</div>
+
+		
+
+				<div id="index7" class="index-gallery-item col2">
+			    	<div>
+			    		<p>"I REMEMBER WHEN I USED TO PASS HOOKERS & WALK OVER BUMS TO GET INTO MY BLDG".</p>
+			    			<br>
+			    		<p><strong>- JIM BOP</strong></p>
+			    	</div><!-- /.index7 -->
+			    </div>	<!-- /.index-gallery-item -->
+
+				<div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x87">
+				</div>
+
+
+				<div class="index-gallery-item col2">
+				    <img src="http://placehold.it/270x297">
+				</div>
+
+
+				<div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x171">
+				</div>
+
+				<div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x171">
+				</div>
+
+				<div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x171">
+				</div>
+
+				<div class="index-gallery-item col2">
+				    <img src="http://placehold.it/270x171">
+				</div>
+
+				<div class="index-gallery-item col1">
+				    <img src="http://placehold.it/130x103">
+				</div>
+			</div><!-- /.index-gallery -->
+
+
+		</div> <!-- /.index -->
+
+
+
+
+
+		<div id="main">
+
+
+			<div id="map">
+				<p class="map-logo-a">the</p>
+				<p class="map-logo-b">SURVIVORS</p>
+				<p class="map-logo-c">on Bowery</p>
+
+				<div id="map-images">
+					<img class="map-background" src="http://group5.webassite.com/Survivors/images/Map/0_BackgroundMap.png">
+
+					<ul class="map-nav nav">
+					
+						<li>
+							<a href="#spy-whitehouse" class="spy-whitehouse">
+							</a>
+						</li>
+
+						<li>
+							<a href="#spy-bari" class="spy-bari">
+							</a>
+						</li>
+
+						<li>
+							<a href="#spy-mission" class="spy-mission">
+							</a>
+						</li>
+
+						<li>
+							<a href="#spy-germania" class="spy-germania">
+							</a>
+						</li>
+		
+						<li>
+							<a href="#spy-lighting" class="spy-lighting">
+							</a>
+						</li>
+
+						<li>
+							<a href="#spy-capitale" class="spy-capitale">
+							</a>
+						</li>
+									
+					</ul><!-- /#map-nav -->
+					
+				</div><!--#map-images-->
+
+				<p class="map-logo-d">INDEX &nbsp&nbsp ABOUT &nbsp&nbsp SUGGEST A SURVIVOR</p>
+			</div><!-- map -->
+
+
+
+
+			<div id="spy-bari" class="survivor">
+
+				<div class="title">
+					<h2><strong>Bari Restaurant & Pizzeria Equipment Corp.</strong></h2>
+				</div><!-- /.title -->
+
+				<div class="survivingsince">
+					<h3><strong>Surviving Since 1940s</strong></h3>
+				</div><!-- /.survivingsince -->
+
+				<div class="info">
+					<h4>
+						240 Bowery, New York, NY 10012<br>
+						212-925-3845<br>
+						<a href="mailto:request@bariequipment.com">request@bariequipment.com</a><br>
+						<a href="http://www.bariequipment.com" target="_blank">www.bariequipment.com</a><br>
+					</h4>
+				</div><!-- /.info -->
+
+				<div>
+					<img class="regular-item" src="http://group5.webassite.com/Survivors/images/Bari/bari1.jpg">
+					<img class="regular-item" src="http://group5.webassite.com/Survivors/images/Bari/bari2.jpg">
+				</div>
+
+				<div class="description">
+					<h5>
+					<p>
+						"We are here to stay," the Baris said as they stood next to their globally renowned manufactured pizza ovens on sale at their main showroom at 240 Bowery. The Bari Restaurant and Pizzeria Equipment store, located at Prince Street and the Bowery, is one of the dozens of restaurant supply businesses in the area. Founded in the 1940's by Anton Mayer's great grandfather, Nicola Bari, the Bari business has stood the test of time and survived the recent redevelopments pressures on the Bowery.
+					</p>
+					<br>
+					<p>
+						The Bari family owns their stores, a fact which has permitted them to keep their business running without having to deal with the raising rents, which currently affect many Bowery merchants.
+					</p>
+					<br>
+					<p>
+						"If you look outside today, it is one of the most desirable places in New York City, which was not the case 20 years ago," said Anton, when "there were bums and drunks in the corners and nobody wanted to walk through here." As Anton continues to narrate the Bari family history - his uncles and cousins enthusiastically greet incoming customers with great hospitality - a quality that has set their business apart for decades.
+					</p>
+					<br>
+					<p>
+						The Bari family used to own The Sunshine Hotel, one of the last single room occupancy hotels that used to exist in New York's skid row. However, the Baris sold the building in recent years - due to increased property taxes - and since, the ground floor has been converted into a diner and an art gallery.
+					</p>	
+					<br>
+					<p>
+						In 2004, cousin Mike Bari told the Times about the meaning of The Bowery: "It's not a street. It's not a road. It's not a boulevard...it's just the Bowery." (New York Times, July 25 2004).
+					</p>
+					</h5>
+				</div><!-- /.description -->
+
+				<div class="video">
+					<iframe src="http://player.vimeo.com/video/60344710" width="695" height="392" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+				</div><!-- /.video -->
+
+				<div class="gallery">
+					<img class="gallery-item" src="http://group5.webassite.com/Survivors/images/Bari/bari3.jpg">
+					<a target="_blank" href="http://www.nytimes.com/2004/07/25/nyregion/new-york-at-work-the-city-s-other-restaurant-row.html?src=pm">
+						<img class="gallery-item" src="http://group5.webassite.com/Survivors/images/Bari/bari4.jpg"></a>
+					<img class="gallery-item" src="http://group5.webassite.com/Survivors/images/Bari/bari5.png">
+					<img class="gallery-item" src="http://group5.webassite.com/Survivors/images/Bari/bari5.jpg">
+					<img class="gallery-item" src="http://group5.webassite.com/Survivors/images/Bari/bari6.jpg">
+					<img class="gallery-item" src="http://group5.webassite.com/Survivors/images/Bari/bari7.jpg">
+				</div><!-- /.gallery -->
+
+			</div><!--#spy-bari--><!-- /.survivor -->
+
+
+
+
+			<div id="spy-lighting" class="survivor">
+
+				<div class="title">
+					<h2><strong>Lighting by Gregory</strong></h2>
+				</div><!-- /.title -->
+
+				<div class="survivingsince">
+					<h3><strong>Surviving Since 1978</strong></h3>
+				</div><!-- /.survivingsince -->
+
+				<div class="info">
+					<h4>
+						158 Bowery, New York, NY 10012<br>
+						212-226-1276<br>
+						<a href="mailto:david@lightingbygregory.com">david@lightingbygregory.com</a><br>
+						<a href="http://www.lightingbygregory.com" target="_blank">www.lightingbygregory.com</a><br>
+					</h4>
+				</div><!-- /.info -->
+
+				
+					<img class="regular-item" src="http://group5.webassite.com/Survivors/images/lighting/lighting1.jpg">
+					<img class="regular-item" src="http://group5.webassite.com/Survivors/images/lighting/lighting2.jpg">
+				
+
+				<div class="description">
+					<h5>
+						<p>
+							Lighting by Gregory, a new york retail landmark for lighting fixtures, has been around for almost four decades and seems to be growing steadily, while other less fortunate businesses on the Bowery are fading out slowly. According to Silverstein, Vice-president of Sales - who has been working in the store since his teenage years - the Bowery "has gentrified and the property values have increased tremendously". 
+						</p>
+						<br>
+						<p>
+							He reminisces of a time when the street was inhabited by homeless people, everyone knew each other and traditional retailing was the only way to shop for your lighting needs. Currently, Lighting by Gregory have put great effort to acquire a strong international web-based clientele, in order to adapt to the changing global economy, which has given the store a competitive advantage over the others.  "Customers are often doing their online shopping first", says Silverstein, "nobody walks in here on weekends without a print out from the internet". However, they still come to the showroom to feel and touch their options and talk to the highly trained staff.  "Human beings are always better than a computer", Silverstein adds. 
+						</p>
+						<br>
+						<p>
+							The quaint-looking facade fools the average passerby, Lighting by Gregory's client list ranges from Yoko Ono to the Harry Winston store. Many Woody Allen films have featured lighting fixtures from Lighting by Gregory, proving once more the store's strong presence amongst New Yorker clientele. For Silverstein, "the future looks good" and sees the area continuing to develop vertically. However, after discussing for a while the upcoming developments on the Bowery, a hint of nostalgia seems to take over him, when he concludes by saying: "I do miss the old days!". 
+						</p>
+					</h5>
+				</div><!-- /.description -->
+
+				<div class="regular-item">
+					<iframe src="http://player.vimeo.com/video/60905893" width="225" height="234" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen seamless></iframe> <p>
+				</div><!-- /.regular-item -->
+
+				<a class="regular-item" target="_blank" href="http://online.wsj.com/article/SB10001424053111903520204576481973812283848.html"><img  src="http://group5.webassite.com/Survivors/images/lighting/lighting3.jpg"></a>
+						
+				<img class="regular-item" src="http://group5.webassite.com/Survivors/images/lighting/lighting4.jpg">
+				<img class="regular-item" src="http://group5.webassite.com/Survivors/images/lighting/lighting5.jpg">
+
+				<div class="regular-item">
+					<iframe width="225" height="127" src="http://www.youtube.com/embed/weoTvvnhInk" frameborder="0" allowfullscreen seamless></iframe>
+				</div><!-- /.regular-item -->
+	
+			</div><!--#spy-lighting--><!-- /.survivor -->	
+
+			<div id="spy-whitehouse" class="survivor">
+
+				<div class="title">
+					<h2><strong>Bari Restaurant & Pizzeria Equipment Corp.</strong></h2>
+				</div><!-- /.title -->
+
+				<div class="survivingsince">
+					<h3><strong>Surviving Since 1940s</strong></h3>
+				</div><!-- /.survivingsince -->
+
+				<div class="info">
+					<h4>
+						240 Bowery, New York, NY 10012<br>
+						212-925-3845<br>
+						<a href="mailto:request@bariequipment.com">request@bariequipment.com</a><br>
+						<a href="http://www.bariequipment.com" target="_blank">www.bariequipment.com</a><br>
+					</h4>
+				</div><!-- /.info -->
+
+			</div><!--#spy-bari--><!-- /.survivor -->	
+
+
+
+		</div><!-- /#main -->
+
+		
+
+	</div><!-- #wrapper -->
+
+	</body>
+
+</html>

@@ -29,7 +29,11 @@
 	vertical-align:middle;
 	font-weight: bold;
 	word-wrap: break-word;
+<<<<<<< HEAD
 	padding-top: 100px;
+=======
+	padding-top: 120px;
+>>>>>>> sync
 }
 
 .icon.initial {
@@ -58,12 +62,38 @@ display:none;
 
 }
 
+<<<<<<< HEAD
 
+=======
+#about2{
+
+	background: transparent url('../img/Icon/white_rectangle.png') no-repeat 0 0;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+}
+
+#aboutbody {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	text-transform:uppercase;
+}
+
+#innerabout {
+	font-family: 'Roboto', Arial, sans-serif;
+	font-size:10px;
+}
+>>>>>>> sync
 
 #about{
 	height:100%;
 	width:100%;
+<<<<<<< HEAD
 	position:fixed;
+=======
+	position:center;
+>>>>>>> sync
 	z-index: 1000;
 	top:0%;
 	left:0%;
@@ -76,6 +106,7 @@ display:none;
 	background-size: cover;
 
 	text-align: center;
+<<<<<<< HEAD
 }
 
 #about .inner{
@@ -84,6 +115,43 @@ display:none;
 	text-align: left;
 }
 
+=======
+	padding-top: 100px;
+	font-family:'Roboto', Arial, sans-serif;
+	font-size:22px;
+	font-weight:bold;
+}
+
+#about .inner{
+	width:700px;
+	margin:30px auto;
+	text-align:center;
+}
+
+#title {
+	padding-top:100px;
+	font-family:'Roboto', Arial, sans-serif;
+	font-size:60px;
+	text-transform: uppercase;
+	font-weight:bold;
+
+	}
+
+.icons {
+	display:inline-block;
+
+}
+
+#close-about2{
+	font-family:'Roboto', Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 30px;
+	position:fixed;
+	top:50px;
+	left:50px;
+
+}
+>>>>>>> sync
 
 .buffer-item{
 	display: none;

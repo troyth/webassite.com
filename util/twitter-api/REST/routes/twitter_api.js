@@ -50,8 +50,13 @@ var streamBoundsStart = [];
 streamBoundsStart['movements'] = [];
 streamBoundsStart['streetcache'] = [];
 
+<<<<<<< HEAD
 streamBoundsStart['streetcache'][0] = -73.998609;//-73.995076;//-73.994401
 streamBoundsStart['streetcache'][1] = 40.717073;//40.720136;//40.717371
+=======
+streamBoundsStart['streetcache'][0] = -73.995076;//-73.994401
+streamBoundsStart['streetcache'][1] = 40.720136;//40.717371
+>>>>>>> sync
 
 streamBoundsStart['movements'][0] = -180;//-73.994401
 streamBoundsStart['movements'][1] = -90;//40.717371
@@ -60,8 +65,13 @@ var streamBoundsEnd = [];
 streamBoundsEnd['movements'] = [];
 streamBoundsEnd['streetcache'] = [];
 
+<<<<<<< HEAD
 streamBoundsEnd['streetcache'][0] = -73.986817;//-73.9900;//-73.991482
 streamBoundsEnd['streetcache'][1] = 40.729753;//40.723254;//40.725795
+=======
+streamBoundsEnd['streetcache'][0] = -73.9900;//-73.991482
+streamBoundsEnd['streetcache'][1] = 40.723254;//40.725795
+>>>>>>> sync
 
 streamBoundsEnd['movements'][0] = 180;//-73.991482
 streamBoundsEnd['movements'][1] = 90;//40.725795
@@ -112,6 +122,12 @@ exports.sendTweet = function(req, res){
 
     var status = default1text+ tweettext + default2text;
 
+<<<<<<< HEAD
+=======
+    console.log( status );
+    console.log('default1text: '+ default1text);
+    console.log('');console.log('');
+>>>>>>> sync
 
     streetcacheTwit.verifyCredentials(function (err, data) {
         console.log(data);
@@ -451,6 +467,40 @@ exports.countByHashtagLimited = function(req, res) {
     });
 };
 
+/*
+ *  countByHashtagLimited(req, res)
+ *
+ *  Returns the number of tweets for a given :hashtag within the last :seconds
+*/
+exports.countByHashtagTimeWindow = function(req, res) {
+    var col = req.params.collection;
+    var hashtag = req.params.hashtag;//prepend #
+    var time_window = req.params.timewindow * 1000;//multiply seconds to milliseconds
+    console.log('countByHashtagTimeWindow() called on '+ col +' collection with hashtag: '+ hashtag);
+
+    var d = new Date();
+    var current_time = d.getTime();
+    //current_time = current_time - (d.getTimezoneOffset() * 60 * 1000);//add the offset to convert server time to UTC
+    var min_time = current_time - time_window;
+
+    var m = new Date(min_time);
+
+    //console.log("calling findStreamRecentTimeWindow() with min_time: "+ m.toString() );
+  
+    db.collection(col, function(err, collection) {
+        collection.find({'hashtags': hashtag,  "timestamp": { $gt: min_time } }).limit(RESPONSE_LIMIT).toArray(function(err, total) {
+            if(err) {
+                console.log('error: An error has occurred in trying to return the tweets with hashtag: '+ hashtag + ' within timewindow: '+time_window);
+                console.log(err);
+            } else {
+                console.log('Success: Returned '+ total +' tweets with hashtag: '+ hashtag + ' within timewindow: '+ time_window);
+                res.jsonp(total);
+            }
+            
+        });
+    });
+};
+
 
 
 
@@ -498,7 +548,11 @@ exports.countByBlockLimited = function(req, res) {
     var col = req.params.collection;
     var blockNumber = req.params.block;//prepend #
     var time_window = req.params.timewindow * 1000;//multiply seconds to milliseconds
+<<<<<<< HEAD
     console.log('findByHashtag called on ' + col + ' collection from block number: '+ blockNumber);
+=======
+    console.log('countByBlockLimited called on ' + col + ' collection with block: '+ block);
+>>>>>>> sync
 
     var d = new Date();
     var current_time = d.getTime();
@@ -514,6 +568,7 @@ exports.countByBlockLimited = function(req, res) {
 
     switch(blockNumber){
     	case '1':
+<<<<<<< HEAD
     		db.collection(col, function(err, collection) {
                 collection.find({'hashtags': { $in : [ '273bowery', '269bowery', '267bowery', '265bowery', '263bowery', '261bowery', '259bowery', '257bowery', '255bowery', '2stanton' ]},  "timestamp": { $gt: min_time } }).count(function(err, total) {
                     if(err) {
@@ -530,6 +585,12 @@ exports.countByBlockLimited = function(req, res) {
     	case '2':
     		db.collection(col, function(err, collection) {
                 collection.find({'hashtags': { $in : [ '245bowery', '243bowery', '241bowery', '239bowery', '235bowery', '231bowery', '229bowery', '227bowery', '225bowery', '223bowery', '221bowery', '219bowery', '217bowery', '215bowery', '4rivington', '6rivington', '8rivington', '12rivington', '16rivington', '181chrystie', '183chrystie', '187chrystie', '189chrystie', '191chrystie', '195chrystie', '199chrystie', '201chrystie', '203chrystie', '205chrystie' ]},  "timestamp": { $gt: min_time } }).count(function(err, total) {
+=======
+    		//block = new Array(block2);
+
+            db.collection(col, function(err, collection) {
+                collection.find({'hashtags': { $in : [ '273bowery', '269bowery', '267bowery', '265bowery', '263bowery', '261bowery', '259bowery', '257bowery', '255bowery', '2stanton' ] },  "timestamp": { $gt: min_time } }).count(function(err, total) {
+>>>>>>> sync
                     if(err) {
                         console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
                         console.log(err);
@@ -540,10 +601,20 @@ exports.countByBlockLimited = function(req, res) {
                     
                 });
             });
+<<<<<<< HEAD
     		break;
     	case '3':
     		db.collection(col, function(err, collection) {
                 collection.find({'hashtags': { $in : [ '213bowery','209bowery','207bowery','199bowery','197bowery','195bowery','193bowery','191bowery','189bowery','187bowery','185bowery','183bowery','6delancey','10delancey','12delancey','14delancey','16delancey','18delancey','155chrystie','157chrystie','159chrystie','163chrystie','165chrystie','167chrystie','169chrystie','173chrystie','17rivington','15rivington','11rivington','7rivington','5rivington' ]},  "timestamp": { $gt: min_time } }).count(function(err, total) {
+=======
+
+    		break;
+    	case '2':
+    		//block = new Array(block3);
+
+            db.collection(col, function(err, collection) {
+                collection.find({'hashtags': { $in : [ '245bowery', '243bowery', '241bowery', '239bowery', '235bowery', '231bowery', '229bowery', '227bowery', '225bowery', '223bowery', '221bowery', '219bowery', '217bowery', '215bowery', '4rivington', '6rivington', '8rivington', '12rivington', '16rivington', '181chrystie', '183chrystie', '187chrystie', '189chrystie', '191chrystie', '195chrystie', '199chrystie', '201chrystie', '203chrystie', '205chrystie' ] },  "timestamp": { $gt: min_time } }).count(function(err, total) {
+>>>>>>> sync
                     if(err) {
                         console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
                         console.log(err);
@@ -554,13 +625,67 @@ exports.countByBlockLimited = function(req, res) {
                     
                 });
             });
+<<<<<<< HEAD
+=======
+
+>>>>>>> sync
     		break;
+        case '3':
+            //block = new Array(block1);
+            db.collection(col, function(err, collection) {
+                collection.find({'hashtags': { $in : [ '213bowery','209bowery','207bowery','199bowery','197bowery','195bowery','193bowery','191bowery','189bowery','187bowery','185bowery','183bowery','6delancey','10delancey','12delancey','14delancey','16delancey','18delancey','155chrystie','157chrystie','159chrystie','163chrystie','165chrystie','167chrystie','169chrystie','173chrystie','17rivington','15rivington','11rivington','7rivington','5rivington' ] },  "timestamp": { $gt: min_time } }).count(function(err, total) {
+                    if(err) {
+                        console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
+                        console.log(err);
+                    } else {
+                        console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
+                        res.jsonp(total);
+                    }
+                    
+                });
+            });
+
+
+            break;
     	default:
+<<<<<<< HEAD
     		console.log('countByBlockLimited(): improper block specified;');
     		break;
     }
 
 
+=======
+            console.log('error! block is not 1, 2 or 3');
+    		errorThrow = true;
+    		break;
+    }
+
+    console.log('block is array with: ');
+    console.dir(block);
+
+    if( !errorThrow && false){
+
+    	for(var i = 0; i < block.length; i++){
+    		block[i] = block[i];
+    	}
+
+  
+	    db.collection(col, function(err, collection) {
+	        collection.find({'hashtags': { $in : block },  "timestamp": { $gt: min_time } }).count(function(err, total) {
+	        	if(err) {
+	                console.log('error: An error has occurred in trying to count the tweets on block: '+ block + ' within timewindow: '+time_window);
+	                console.log(err);
+	            } else {
+	                console.log('Success: Counted '+ total +' tweets on block: '+ block + ' within timewindow: '+ time_window);
+	                res.jsonp(total);
+	            }
+	            
+	        });
+	    });
+	}else{
+		//@todo: need to send a res with status NOT OK
+	}
+>>>>>>> sync
 };
 
 
@@ -771,6 +896,7 @@ exports.fetch = function(col, block){
 
     });
 
+<<<<<<< HEAD
 };// end fetch
 
 
@@ -822,6 +948,9 @@ exports.fetchAtStreetcache = function(){
     });
 
 };// end fetchAtStreetcache
+=======
+};
+>>>>>>> sync
 
 
 

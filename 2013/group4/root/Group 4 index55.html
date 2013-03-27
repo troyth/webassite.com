@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      /* basic css to make the map full screen
+      */
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      /* the HTML element that the google map is written into
+      */  
+      #map_canvas { height: 100% }
+      .clock {font-family:Arial; font-size:30px; color:White; margin-left:1000px; line-height:3em;}
+      #clock-list{
+        list-style: none;
+      }
+    
+    #streetcache {font-family:Arial; font-size:30px; color:White; margin-bottom:90px; margin-left:200px; z-index:1000;}
+      #clock-wrapper{
+        position:fixed;
+        z-index:1000;
+        opacity:.6;
+        overflow: hidden;
+        bottom: 0px;
+      }
+
+      #scache{
+        position:fixed;
+        z-index:1000;
+        opacity:.6;
+        overflow: hidden;
+        bottom: 0px;
+      }
+
+       form{
+        position:fixed;
+        top:100;
+        left:100;
+        background-color:red;
+        color:white;
+        width:300px;
+        height:200px;
+        z-index:99999999;
+      }
+
+    </style>
+    
+
+<!-- include the google maps API. 
+
+    Note you must include your developer key. If you set sensor=True then the map will be able to respond
+    to GPS location from devices according to the docs here: 
+
+    https://developers.google.com/maps/documentation/javascript/tutorial#Loading_the_Maps_API
+-->    
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKNTSBxr87BHbpHmwoDilPb7Qw7EpLEKs&sensor=false">
+</script>
+
+
+
+<script type="text/javascript">
+/* this is where we add our own custom maps functionality */
+
+/*  store coordinates for destinations to map. Note: later these will be taken from the twitter API
+    - to find out coordinates, use this site: http://itouchmap.com/latlong.html
+*/   
+ 
+var cooperSquare = new google.maps.LatLng(40.727511,-73.991488);
+var chathamSquare = new google.maps.LatLng(40.713531,-73.998019);
+
+var c_long, c_lat = 0;
+var tweets_plotted = [];
+
+var INTERVAL_TIME = 30000;//30 seconds interval before pinging the API again
+
+/*
+ *  mapPan
+ *
+ *  Pans the map, adds the clock
+*/
+function mapPan(map){
+  console.log('mapPan() called');
+
+  setInterval(function() {
+    map.panBy(-10, 40); 
+
+    var dateObj = new Date();
+
+    var seconds = dateObj.getSeconds();
+    var minutes = dateObj.getMinutes();
+    var hours = dateObj.getHours();
+
+    var mapcenter = map.getCenter();
+    var htmlString = '<li class="clock">' + hours + ":" + minutes + ":" + seconds + '</li>';
+
+    $('#clock-list').append( htmlString );
+  }, 2000);
+}
+
+var tweetsArray = [];
+
+/*
+ *  upsertTweetsArray(tweet)
+ * 
+ *  Helper function to only insert new tweets in the tweetsArray
+ *
+*/
+function upsertTweetsArray(tweet){
+  for(var i = 0; i < tweetsArray.length; i++){
+    if( tweetsArray[i]._id == tweet._id){
+      return false;
+    }
+  }
+  //no conflict found, so add to tweetsArray and return true
+  console.log('adding new tweet');
+  tweetsArray.push( tweet );
+  return true;
+}
+
+function plotStreamedTweets(map){
+
+  var target_url = "http://webassite.com/util/twitter-api/REST/tweets/streetcache/recent/43200";//in seconds 86400=day, 43200=12 hrs
+  $.ajax({
+    type : "GET",
+    dataType : "jsonp",
+    url : target_url, // ?callback=?
+    success: function(data){
+      console.log('success, data:');
+      // loop through data
+      console.dir(data);
+
+      
+      for(var i = 0; i < data.length; i++){
+
+        if( data[i].geo != null){
+          if( upsertTweetsArray(data[i]) ){
+
+            console.log('adding point to : '+ data[i].geo.coordinates[0] + " : " + data[i].geo.coordinates[1] );
+
+            var pos = new google.maps.LatLng( data[i].geo.coordinates[0], data[i].geo.coordinates[1] );
+
+
+            var contentString = '<div id="content">'+
+                '<div id="siteNotice">'+
+                '</div>'+
+                '<h2 id="firstHeading" class="firstHeading">Uluru</h2>'+
+                '<div id="bodyContent">'+
+                <form method="post" action="http://webassite.com/util/twitter-api/REST/tweet/streetcache">
+                <input type="text" name="default1" value="@streetcache ">
+                <input type="text" name="tweettext">
+                <input type="text" name="default2" value=" streetcache.net">
+                <input type="submit" value="Submit">
+                </form></div>'+
+                              '</div>';
+
+               
+ 
+
+
+
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            var marker = new google.maps.Marker({
+              map: map, // the map for the object is our map, which is called 'map'
+              position: pos, // the position for the marker should be the new museum location we created at the start
+              title:"@"+data[i].user.screen_name, // the marker can have a title 
+              icon: "assets/marker.png",
+              animation: google.maps.Animation.DROP // make the marker DROP onto the map...
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.open(map, this);
+            });
+          
+
+
+           
+          }//if not already in tweetsArray
+        }//if data[i].geo != null
+      }
+
+      setTimeout(plotStreamedTweets, INTERVAL_TIME);
+    },
+    error: function(xhr, status, error){
+      console.log('error, status: ' + status + ' error:');
+      console.dir(error);
+    },
+    complete: function(data){
+      console.log('complete, data:');
+    }
+  });
+
+}
+
+
+// initialize the google maps API functionality  
+function initialize() {
+  // set up some options such as intial zoom level and where to center the map
+  var mapOptions = {
+    zoom: 18,
+    center: cooperSquare, // center on Cooper Square coordinates
+    mapTypeId: google.maps.MapTypeId.SATELLITE // map type is either ROADMAP, SATELLITE, etc.
+  };
+
+  // create a variable to reference the map itself
+  var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+  map.setTilt(0);
+
+  mapPan(map);
+
+  plotStreamedTweets(map);
+  
+  
+  /*
+  -- image bounds --
+
+  use a geocoding service like this one @ http://itouchmap.com/latlong.html to very precisely set the bounds of the South-West and North-East corners of your image. i found that i had to mess with this for a while
+  */
+  var swBound = new google.maps.LatLng(40.720136,-73.995076);
+  var neBound = new google.maps.LatLng(40.723254,-73.9900 );
+  var bounds = new google.maps.LatLngBounds(swBound, neBound);
+  
+    srcImage = null;
+  overlay = new BoweryOverlay(bounds, srcImage, map); 
+
+} // finished with the 'initialize loop'
+
+
+
+
+</script>
+</head>
+
+<!-- here are calling the initialize function as the map is loaded -->
+<body onload="initialize()">
+
+<!--
+    <div id="clock-wrapper"> 
+      <p>
+        <ul id="clock-list">
+        </ul>
+        </p>
+    </div>-->
+
+    <!-- <div style="position:fixed; z-index:99; bottom:40px;left:50px; opacity:1"><img src="https://dl.dropbox.com/u/49816350/NEIGHBORHOODWATCH.png" width=111 height=110></div> -->
+    
+
+ 
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+
+    <div id="scache"><p id="streetcache"><strong><br>S<br>T<br>R<br>E<br>E<br>T<br>C<br>A<br>C<br>H<br>E</strong></p></div>  
+
+
+    
+    <div style="opacity:0.8;">
+      <div class="solid-top" style="position:fixed;top:0px;left:0px;width:100%;height:15%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;top:0px;left:0px;width:10%;height:100%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;bottom:0px;left:0px;width:100%;height:15%;background-color:black;z-index:98"></div>
+      <div class="solid" style="position:fixed;top:0px;right:0px;width:30%;height:100%;background-color:black;z-index:98"></div>
+    </div>
+
+  </body>
+</html>
