@@ -108,8 +108,9 @@ function uploadToFlickr(){
             filename = filename.split('/').pop();
             var fullpath = path + filename;
 
+            console.log('filename: '+ filename);
 
-            if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
+            if(filename == '5c1a73268b8511e28e5722000a9f195f_7.jpg'){
             	//removeFromDB();//DANGEROUS!!
             }
 
@@ -350,7 +351,7 @@ function removeFromDB(){
 
             console.log('file to upload: '+ filename);
 
-            if(filename == '2637177e8d0011e2a74822000a9e2993_7.jpg'){
+            if(filename == '5c1a73268b8511e28e5722000a9f195f_7.jpg'){
             	collection.remove( { _id: item._id }, 1 );
             	process.exit(1);
             }
@@ -358,6 +359,6 @@ function removeFromDB(){
         });
     });
 }
-
 */
+
 
